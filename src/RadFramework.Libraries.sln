@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Libraries", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Servers.Web", "RadFramework.Servers.Web\RadFramework.Servers.Web.csproj", "{41A0AABC-0DFE-45F4-B1E8-EB45A6AC6198}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Servers.Web.ControlPanel", "RadFramework.Servers.Web.ControlPanel\RadFramework.Servers.Web.ControlPanel.csproj", "{0E6B0660-B81F-49E5-B839-C67EBDE990AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{41A0AABC-0DFE-45F4-B1E8-EB45A6AC6198}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41A0AABC-0DFE-45F4-B1E8-EB45A6AC6198}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41A0AABC-0DFE-45F4-B1E8-EB45A6AC6198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E6B0660-B81F-49E5-B839-C67EBDE990AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E6B0660-B81F-49E5-B839-C67EBDE990AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E6B0660-B81F-49E5-B839-C67EBDE990AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E6B0660-B81F-49E5-B839-C67EBDE990AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

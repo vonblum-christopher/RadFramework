@@ -1,6 +1,7 @@
 using RadFramework.Libraries.Extensibility.Pipeline;
 using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Net.Web;
 using RadFramework.Libraries.Threading.Internals;
 
 namespace RadFramework.Libraries.Net.Http;
@@ -10,7 +11,7 @@ public class HttpServerWithPipeline : IDisposable
     private readonly ExtensionPipeline<HttpConnection> httpPipeline;
     private HttpServer server;
     private HttpServerContext ServerContext;
-    private readonly ExtensionPipeline<(HttpConnection connection, Exception e)> httpErrorPipeline;
+    private readonly ExtensionPipeline<HttpError> httpErrorPipeline;
 
     public HttpServerWithPipeline(
         int port,
@@ -22,7 +23,7 @@ public class HttpServerWithPipeline : IDisposable
         iocContainer.RegisterSingleton<HttpServerContext>();
         ServerContext = iocContainer.Resolve<HttpServerContext>();
         this.httpPipeline = new ExtensionPipeline<HttpConnection>(httpPipelineDefinition, iocContainer);
-        this.httpErrorPipeline = new ExtensionPipeline<(HttpConnection connection, Exception e)>(httpErrorPipelineDefinition, iocContainer);
+        this.httpErrorPipeline = new ExtensionPipeline<HttpError>(httpErrorPipelineDefinition, iocContainer);
         server = new HttpServer(port, ProcessRequestUsingPipeline, null, webSocketConnected);
     }
 
@@ -34,14 +35,14 @@ public class HttpServerWithPipeline : IDisposable
         {
             if (!httpPipeline.Process(connection))
             {
-                httpErrorPipeline.Process((connection, null));
+                httpErrorPipeline.Process(new HttpError { Connection = connection, Exception = null });
             }
         }
         catch (Exception e)
         {
             try
             {
-                httpErrorPipeline.Process((connection, e));
+                httpErrorPipeline.Process(new HttpError { Connection = connection, Exception = null });
             }
             catch (Exception ee)
             {

@@ -8,7 +8,7 @@ using RadFramework.Libraries.Utils;
 
 namespace RadFramework.Libraries.Net.Socket;
 
-public class TelemetrySocketManager
+public class TelemetrySocketManager : IDisposable
 {
     public IContractSerializer HeaderSerializer { get; set; } = new JsonContractSerializer();
 
@@ -58,4 +58,11 @@ public class TelemetrySocketManager
         }
     }
 
+    public void Dispose()
+    {
+        foreach (KeyValuePair<byte[], SocketBond> socketBond in clientToSocketsMapping)
+        {
+            socketBond.Value.Dispose();
+        }
+    }
 }

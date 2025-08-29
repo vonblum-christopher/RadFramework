@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Net.Mime;
+using System.Reflection;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Extensibility.Pipeline;
 using RadFramework.Libraries.Extensibility.Pipeline.Synchronous;
@@ -44,10 +45,16 @@ namespace RadFramework.Servers.Web
                 iocContainer,
                 (request, socket) => socketManager.RegisterNewClientSocket(socket));
             
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
+            ManualResetEvent shutdownEvent = new ManualResetEvent(false);
+
+            shutdownEvent.WaitOne();
             
-            pipelineDrivenHttpServer.Dispose();
+            AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
+            {
+                socketManager.Dispose();
+                pipelineDrivenHttpServer.Dispose();
+                shutdownEvent.Set();
+            };
         }
 
         /// <summary>
