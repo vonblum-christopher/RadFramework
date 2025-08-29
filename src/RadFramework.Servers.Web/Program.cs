@@ -29,7 +29,6 @@ namespace RadFramework.Servers.Web
             PipelineDefinition httpPipelineDefinition = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
             PipelineDefinition httpErrorPipelineDefinition = LoadHttpPipelineConfig("Config/HttpErrorPipelineConfig.json");            
             
-            
             iocContainer.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
             
             // when a web socket connection gets established this class takes care of the socket connection
@@ -43,7 +42,7 @@ namespace RadFramework.Servers.Web
                 httpPipelineDefinition,
                 httpErrorPipelineDefinition,
                 iocContainer,
-                socket => socketManager.RegisterNewClientSocket(socket));
+                (request, socket) => socketManager.RegisterNewClientSocket(socket));
             
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
