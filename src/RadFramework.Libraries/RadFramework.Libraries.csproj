@@ -6,6 +6,7 @@
         <Nullable>disable</Nullable>
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -21,13 +22,15 @@
       <Folder Include="src\AopCompiler\" />
       <Folder Include="src\Aspects\" />
       <Folder Include="src\DataTypes\Large\" />
+      <Folder Include="src\Encryption\4D\" />
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\Extensibility\Component\" />
-      <Folder Include="src\FileTransfer\" />
+      <Folder Include="src\Versioning\File\" />
       <Folder Include="src\GenericUi\Console\" />
       <Folder Include="src\GenericUi\Gtk\" />
       <Folder Include="src\GenericUi\Web\" />
+      <Folder Include="src\Telemetry\UdpWithHashAndOrder\" />
       <Folder Include="src\TextTemplating\" />
       <Folder Include="src\TextTranslation\" />
     </ItemGroup>
@@ -36,17 +39,11 @@
       <None Update="dep\libLinuxThreadAffinityAdapter.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Remove="src\Telemetry\**" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="res\ConsoleInteractionProviderTranslations.json" />
       <EmbeddedResource Include="res\ConsoleInteractionProviderTranslations.json" />
-      <EmbeddedResource Remove="src\Telemetry\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="src\Telemetry\**" />
     </ItemGroup>
 
 </Project>

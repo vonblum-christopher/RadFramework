@@ -1,4 +1,4 @@
 #!/bin/sh
 ./own.sh
-git add *
-git gui
+sudo git add *
+sudo git gui
