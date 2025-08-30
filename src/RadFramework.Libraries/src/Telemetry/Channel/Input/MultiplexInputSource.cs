@@ -1,9 +1,9 @@
-using System;
-using System.Threading;
-using RadFramework.Libraries.Telemetry.Encryption;
-using Tests;
+using RadFramework.Libraries.Telemetry.Channel.Encryption;
+using RadFramework.Libraries.Telemetry.Channel.Packaging;
+using RadFramework.Libraries.Threading.ThreadPools.Queued;
+using RadFramework.Libraries.Threading.ThreadPools.Simple;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel.Input
 {
     
     
@@ -16,7 +16,7 @@ namespace RadFramework.Libraries.Telemetry
         
         private readonly GetInputStream _endpointConnection;
         private readonly ITelemetryCryptoProvider _cryptoProvider;
-        private QueuedMultiThreadProcessorWithDispatchCapabilities<byte[]> packageProcessor;
+        private QueuedThreadPoolWithLongRunningOperationsDispatchCapabilities<byte[]> packageProcessor;
         private MultiThreadProcessor packageReader;
         private bool disposed;
 
@@ -25,15 +25,15 @@ namespace RadFramework.Libraries.Telemetry
             _endpointConnection = endpointConnection;
             _cryptoProvider = cryptoProvider;
 
-            packageProcessor = new QueuedMultiThreadProcessorWithDispatchCapabilities<byte[]>(
+            packageProcessor = new QueuedThreadPoolWithLongRunningOperationsDispatchCapabilities<byte[]>(
                 Environment.ProcessorCount,
                 250,
                 ThreadPriority.Highest,
                 (package) => OnPackageReceived?.Invoke(package),
-                dispatchLimit : Environment.ProcessorCount * 2,
+                Environment.ProcessorCount * 2,
                 threadDescription : "MultiplexInputSource_Read");
             
-            packageReader = new MultiThreadProcessor(ThreadPriority.Highest, ReadPackages);
+            packageReader = new SimpleThreadPool(ThreadPriority.Highest, ReadPackages);
         }
         
         private void ReadPackages()

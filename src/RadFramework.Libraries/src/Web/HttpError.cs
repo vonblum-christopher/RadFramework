@@ -1,6 +1,4 @@
-using RadFramework.Libraries.Net.Http;
-
-namespace RadFramework.Libraries.Net.Web;
+namespace RadFramework.Libraries.Web;
 
 public class HttpError
 {

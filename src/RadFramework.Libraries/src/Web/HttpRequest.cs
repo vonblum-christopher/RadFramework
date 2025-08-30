@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Net.Http;
+namespace RadFramework.Libraries.Web;
 
 public class HttpRequest
 {

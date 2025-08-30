@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Net.Telemetry.DataSource;
+namespace RadFramework.Libraries.Telemetry.DataSource;
 
 public class SharedMemoryDataSource
 {

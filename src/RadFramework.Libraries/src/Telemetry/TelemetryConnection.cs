@@ -1,9 +1,8 @@
-using RadFramework.Libraries.Net.Socket;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Serialization;
-using ZeroFormatter.Internal;
+using RadFramework.Libraries.Utils;
 
-namespace RadFramework.Libraries.Net.Telemetry;
+namespace RadFramework.Libraries.Telemetry;
 
 public class TelemetryConnection : ITelemetryConnection
 {

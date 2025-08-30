@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Telemetry.Encryption
+namespace RadFramework.Libraries.Telemetry.Channel.Encryption
 {
     public class NoCryptoProvider : ITelemetryCryptoProvider
     {

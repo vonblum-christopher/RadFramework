@@ -1,9 +1,7 @@
-using System;
-using System.Threading;
-using RadFramework.Libraries.Telemetry.Encryption;
-using Tests;
+using RadFramework.Libraries.Telemetry.Channel.Encryption;
+using RadFramework.Libraries.Telemetry.Channel.Packaging;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel.Output
 {
     /// <summary>
     /// Writes input to a connection consisting of multiple transmission resources. (file streams, network streams, named pipes)

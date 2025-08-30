@@ -1,7 +1,6 @@
 using RadFramework.Libraries.Extensibility.Pipeline.Extension;
-using RadFramework.Libraries.Net.Telemetry;
 
-namespace RadFramework.Libraries.Net.Socket.Pipelines;
+namespace RadFramework.Libraries.Telemetry.Pipelines;
 
 public interface ITelemetryExtensionPipe : IExtensionPipe<TelemetryConnection>
 {

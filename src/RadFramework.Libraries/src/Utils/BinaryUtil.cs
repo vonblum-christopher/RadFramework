@@ -1,4 +1,4 @@
-namespace ZeroFormatter.Internal
+namespace RadFramework.Libraries.Utils
 {
     public static class BinaryUtil
     {

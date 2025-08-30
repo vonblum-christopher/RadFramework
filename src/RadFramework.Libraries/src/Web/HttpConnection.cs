@@ -1,6 +1,6 @@
 using System.Net.Sockets;
 
-namespace RadFramework.Libraries.Net.Http;
+namespace RadFramework.Libraries.Web;
 
 public class HttpConnection : IDisposable
 {

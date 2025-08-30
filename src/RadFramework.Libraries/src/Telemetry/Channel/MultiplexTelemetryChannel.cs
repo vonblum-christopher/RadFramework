@@ -1,8 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
+using RadFramework.Libraries.Serialization;
+using RadFramework.Libraries.Telemetry.Channel.Input;
+using RadFramework.Libraries.Telemetry.Channel.Output;
+using RadFramework.Libraries.Telemetry.Channel.Packaging;
+using RadFramework.Libraries.Telemetry.Processing;
+using RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers;
+using RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel
 {
     public class MultiplexTelemetryChannel : TelemetryChannelBase
     {
@@ -21,9 +25,9 @@ namespace RadFramework.Libraries.Telemetry
                     {PackageKind.Request, tuple => executeRequestDelegate(tuple.packageKind, tuple.payload)},
                     {PackageKind.Event, tuple => handleEventDelegate(tuple.packageKind, tuple.payload)}
                 }), 
-                new PackageShedulerRouterMock(new StayInCurrentThreadSheduler()),
+                new PackageShedulerRouterMock(new StayInCurrentThreadDelegateSheduler()),
                 new TelemetryPackageWrapper(contractSerializer),
-                new QueuedThreadShedulerWithDispatchCapabilities(250, ThreadPriority.Highest),
+                new QueuedDelegateShedulerWithLongRunningOperationsDispatchCapabilities(250, ThreadPriority.Highest, ),
                 new QueuedThreadShedulerWithDispatchCapabilities(250, ThreadPriority.Highest))
         {
         }

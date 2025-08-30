@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Core.Patterns.DisposableContext
+namespace RadFramework.Libraries.Patterns.DisposableContext
 {
     public interface IExecutionContextBound : IDisposable
     {

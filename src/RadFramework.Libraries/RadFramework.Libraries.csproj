@@ -36,6 +36,17 @@
       <None Update="dep\libLinuxThreadAffinityAdapter.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Remove="src\Telemetry\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="res\ConsoleInteractionProviderTranslations.json" />
+      <EmbeddedResource Include="res\ConsoleInteractionProviderTranslations.json" />
+      <EmbeddedResource Remove="src\Telemetry\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="src\Telemetry\**" />
     </ItemGroup>
 
 </Project>

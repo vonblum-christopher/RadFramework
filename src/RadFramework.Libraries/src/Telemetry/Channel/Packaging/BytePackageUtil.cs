@@ -1,7 +1,4 @@
-using System.IO;
-using System.Linq;
-
-namespace Tests
+namespace RadFramework.Libraries.Telemetry.Channel.Packaging
 {
     public static class BytePackageUtil
     {

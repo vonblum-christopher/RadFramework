@@ -1,12 +1,11 @@
 using System.Collections.Concurrent;
 using RadFramework.Libraries.Caching;
-using RadFramework.Libraries.Net.Socket.Requests;
-using RadFramework.Libraries.Net.Telemetry;
 using RadFramework.Libraries.Serialization;
 using RadFramework.Libraries.Serialization.Json.ContractSerialization;
+using RadFramework.Libraries.Telemetry.Actions.ClientToServer;
 using RadFramework.Libraries.Utils;
 
-namespace RadFramework.Libraries.Net.Socket;
+namespace RadFramework.Libraries.Telemetry;
 
 public class TelemetrySocketManager : IDisposable
 {

@@ -1,10 +1,8 @@
 using RadFramework.Libraries.Extensibility.Pipeline;
 using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Ioc;
-using RadFramework.Libraries.Net.Web;
-using RadFramework.Libraries.Threading.Internals;
 
-namespace RadFramework.Libraries.Net.Http;
+namespace RadFramework.Libraries.Web;
 
 public class HttpServerWithPipeline : IDisposable
 {

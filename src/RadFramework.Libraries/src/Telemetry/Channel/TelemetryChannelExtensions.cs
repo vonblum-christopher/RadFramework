@@ -1,4 +1,6 @@
-namespace RadFramework.Libraries.Telemetry
+using RadFramework.Libraries.Telemetry.Abstractions;
+
+namespace RadFramework.Libraries.Telemetry.Channel
 {
     public static class TelemetryChannelExtensions
     {

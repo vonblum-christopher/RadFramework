@@ -1,6 +1,6 @@
-using System;
+using RadFramework.Libraries.Serialization;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel.Packaging
 {
     public class TelemetryPackageWrapper : ITelemetryPackageWrapper
     {

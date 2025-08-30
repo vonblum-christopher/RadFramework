@@ -1,6 +1,6 @@
-using System;
+using RadFramework.Libraries.Telemetry.Channel.Packaging;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Processing
 {
     public interface ITelemetryPackageRouterSelector
     {

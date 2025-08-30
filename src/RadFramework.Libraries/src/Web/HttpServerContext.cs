@@ -2,7 +2,7 @@ using System.Reflection;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Logging;
 
-namespace RadFramework.Libraries.Net.Http;
+namespace RadFramework.Libraries.Web;
 
 public class HttpServerContext
 {

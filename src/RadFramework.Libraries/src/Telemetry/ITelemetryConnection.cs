@@ -1,6 +1,6 @@
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Net.Socket;
+namespace RadFramework.Libraries.Telemetry;
 
 public interface ITelemetryConnection
 {

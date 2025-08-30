@@ -1,6 +1,4 @@
-using System;
-
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel.Packaging
 {
     [Flags]
     public enum PackageKind

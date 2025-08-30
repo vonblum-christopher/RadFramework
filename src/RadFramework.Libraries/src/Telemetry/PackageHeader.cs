@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Net.Socket;
+namespace RadFramework.Libraries.Telemetry;
 
 public class PackageHeader
 {

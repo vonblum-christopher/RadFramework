@@ -1,8 +1,13 @@
-using System;
 using System.Collections.Concurrent;
-using System.Threading;
+using RadFramework.Libraries.Serialization;
+using RadFramework.Libraries.Telemetry.Abstractions;
+using RadFramework.Libraries.Telemetry.Channel.Input;
+using RadFramework.Libraries.Telemetry.Channel.Output;
+using RadFramework.Libraries.Telemetry.Channel.Packaging;
+using RadFramework.Libraries.Telemetry.Processing;
+using RadFramework.Libraries.Threading.ThreadPools.Queued;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel
 {
     public abstract class TelemetryChannelBase : ITelemetryChannel
     {
@@ -13,9 +18,9 @@ namespace RadFramework.Libraries.Telemetry
         private readonly ITelemtryPackageThreadShedulerRouter _packageThreadShedulerRouter;
         
         // used to shift serialization of packages that only invoke the remote site out of the thread (events only does not make sense for requests)
-        private IThreadSheduler _outputSerializationSheduler;
+        private IDelegateSheduler _outputSerializationSheduler;
         // ensures that deserialization does not block the reader thread
-        private IThreadSheduler _inputDeserializationSheduler;
+        private IDelegateSheduler _inputDeserializationSheduler;
         
         ConcurrentDictionary<Guid, (ManualResetEvent Callback, object Response)> requestCallbackRegistry = new ConcurrentDictionary<Guid, (ManualResetEvent Callback, object Response)>();
 
@@ -26,8 +31,8 @@ namespace RadFramework.Libraries.Telemetry
             ITelemetryPackageRouterSelector packageRouterSelector,
             ITelemtryPackageThreadShedulerRouter packageThreadShedulerRouter, 
             ITelemetryPackageWrapper packageWrapper,
-            IThreadSheduler outputSerializationSheduler,
-            IThreadSheduler inputDeserializationSheduler)
+            IDelegateSheduler outputSerializationSheduler,
+            IDelegateSheduler inputDeserializationSheduler)
         {
             requestCallbackRegistry = new ConcurrentDictionary<Guid, (ManualResetEvent Callback, object Response)>();
             _connectionSink = connectionSink;

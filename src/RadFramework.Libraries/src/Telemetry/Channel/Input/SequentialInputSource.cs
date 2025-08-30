@@ -1,9 +1,7 @@
-using System;
-using System.Threading;
-using RadFramework.Libraries.Telemetry.Encryption;
-using Tests;
+using RadFramework.Libraries.Telemetry.Channel.Encryption;
+using RadFramework.Libraries.Telemetry.Channel.Packaging;
 
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel.Input
 {
     public class SequentialInputSource : ITelemetryStreamConnectionSource
     {

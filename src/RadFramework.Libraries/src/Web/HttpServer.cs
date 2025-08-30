@@ -1,10 +1,10 @@
 using System.Net.Sockets;
-using RadFramework.Libraries.Net.Socket;
 using RadFramework.Libraries.Serialization.Json.ContractSerialization;
+using RadFramework.Libraries.Socket;
 using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 
-namespace RadFramework.Libraries.Net.Http;
+namespace RadFramework.Libraries.Web;
 
 public class HttpServer : IDisposable
 {

@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Net.Socket.Requests;
+namespace RadFramework.Libraries.Telemetry.Actions.ClientToServer;
 
 public class ClientDisconnects
 {

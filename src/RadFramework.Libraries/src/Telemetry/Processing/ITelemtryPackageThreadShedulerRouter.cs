@@ -1,7 +1,10 @@
-namespace RadFramework.Libraries.Telemetry
+using RadFramework.Libraries.Telemetry.Channel.Packaging;
+using RadFramework.Libraries.Threading.ThreadPools.Queued;
+
+namespace RadFramework.Libraries.Telemetry.Processing
 {
     public interface ITelemtryPackageThreadShedulerRouter
     {
-        IThreadSheduler GetShedulerByPackageKind(PackageKind packageKind);
+        IDelegateSheduler GetShedulerByPackageKind(PackageKind packageKind);
     }
 }

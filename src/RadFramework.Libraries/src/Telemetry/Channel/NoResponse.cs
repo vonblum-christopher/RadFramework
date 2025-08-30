@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel
 {
     public class NoResponse
     {

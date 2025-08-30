@@ -1,6 +1,4 @@
-using MessagePack;
-
-namespace RadFramework.Libraries.Telemetry
+namespace RadFramework.Libraries.Telemetry.Channel.Packaging
 {
     [MessagePackObject]
     public class PayloadPackage : NestedPackage, IPayloadPackage
