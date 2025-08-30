@@ -24,6 +24,7 @@
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\Extensibility\Component\" />
+      <Folder Include="src\FileTransfer\" />
       <Folder Include="src\GenericUi\Console\" />
       <Folder Include="src\GenericUi\Gtk\" />
       <Folder Include="src\GenericUi\Web\" />
