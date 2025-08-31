@@ -7,7 +7,6 @@ using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Logging;
 using RadFramework.Libraries.Serialization;
 using RadFramework.Libraries.Serialization.Json.ContractSerialization;
-using RadFramework.Libraries.Telemetry;
 using RadFramework.Libraries.Web;
 using RadFramework.Servers.Web.Config;
 
@@ -33,28 +32,28 @@ namespace RadFramework.Servers.Web
             iocContainer.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
             
             // when a web socket connection gets established this class takes care of the socket connection
-            iocContainer.RegisterSingleton<TelemetrySocketManager>();
+            /*iocContainer.RegisterSingleton<TelemetrySocketManager>();
 
-            TelemetrySocketManager socketManager = iocContainer.Resolve<TelemetrySocketManager>();
+            TelemetrySocketManager socketManager = iocContainer.Resolve<TelemetrySocketManager>();*/
             
             // the server that passes the requests to the pipelines
             HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
                 80,
                 httpPipelineDefinition,
                 httpErrorPipelineDefinition,
-                iocContainer,
-                (request, socket) => socketManager.RegisterNewClientSocket(socket));
+                iocContainer);
+                //(request, socket) => socketManager.RegisterNewClientSocket(socket));
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
-
-            shutdownEvent.WaitOne();
             
             AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
             {
-                socketManager.Dispose();
+                //socketManager.Dispose();
                 pipelineDrivenHttpServer.Dispose();
                 shutdownEvent.Set();
             };
+            
+            shutdownEvent.WaitOne();
         }
 
         /// <summary>
