@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using RadFramework.Libraries.Ioc.Registrations;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
@@ -8,7 +9,11 @@ namespace RadFramework.Libraries.Ioc.Factory
     {
         private DependencyInjectionLambdaGenerator lambdaGenerator = new DependencyInjectionLambdaGenerator();
 
-        public Func<IocContainer, object> CreateInstanceFactory(CachedType type, IocContainer container, InjectionOptions injectionOptions)
+        public Func<IocContainer, object> CreateInstanceFactory(
+            RegistrationBase registration,
+            CachedType type,
+            IocContainer container,
+            InjectionOptions injectionOptions)
         {
             CachedConstructorInfo constructor =
                 (injectionOptions.ChooseInjectionConstructor ?? container.InjectionOptions.ChooseInjectionConstructor)(

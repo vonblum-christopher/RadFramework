@@ -1,4 +1,4 @@
-using RadFramework.Libraries.Serialization.Json.ContractSerialization;
+using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.TextTranslation.Abstractions;
 
 namespace RadFramework.Libraries.TextTranslation.Loaders

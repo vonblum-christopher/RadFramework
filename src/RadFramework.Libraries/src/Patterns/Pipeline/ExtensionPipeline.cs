@@ -1,16 +1,16 @@
 using RadFramework.Libraries.Ioc;
 
-namespace RadFramework.Libraries.Extensibility.Pipeline.Extension;
+namespace RadFramework.Libraries.Patterns.Pipeline;
 
 public class ExtensionPipeline<TContext>
 {
     private readonly IIocContainer _serviceProvider;
     public LinkedList<IExtensionPipe<TContext>> pipes;
 
-    public ExtensionPipeline(PipelineDefinition definition, IIocContainer serviceProvider)
+    public ExtensionPipeline(PipelineBuilder builder, IIocContainer serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        this.pipes = new LinkedList<IExtensionPipe<TContext>>(definition.Definitions.Select(CreatePipe));
+        this.pipes = new LinkedList<IExtensionPipe<TContext>>(builder.Definitions.Select(CreatePipe));
     }
         
     public ExtensionPipeline(IEnumerable<IExtensionPipe<TContext>> pipes)

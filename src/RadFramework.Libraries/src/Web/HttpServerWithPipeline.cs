@@ -1,6 +1,5 @@
-using RadFramework.Libraries.Extensibility.Pipeline;
-using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Patterns.Pipeline;
 
 namespace RadFramework.Libraries.Web;
 
@@ -13,8 +12,8 @@ public class HttpServerWithPipeline : IDisposable
 
     public HttpServerWithPipeline(
         int port,
-        PipelineDefinition httpPipelineDefinition,
-        PipelineDefinition httpErrorPipelineDefinition,
+        PipelineBuilder httpPipelineBuilder,
+        PipelineBuilder httpErrorPipelineBuilder,
         IocContainer iocContainer,
         Action<HttpRequest, System.Net.Sockets.Socket> webSocketConnected = null)
     {

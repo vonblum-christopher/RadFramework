@@ -1,12 +1,11 @@
 ﻿using RadDevelopers.Servers.Web.Config;
 using RadDevelopers.Servers.Web.Pipelines.HttpError;
 using RadFramework.Libraries.Caching;
-using RadFramework.Libraries.Extensibility.Pipeline;
-using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Logging;
+using RadFramework.Libraries.Patterns.Pipeline;
 using RadFramework.Libraries.Serialization;
-using RadFramework.Libraries.Serialization.Json.ContractSerialization;
+using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.Web;
 
 namespace RadDevelopers.Servers.Web
@@ -25,14 +24,14 @@ namespace RadDevelopers.Servers.Web
             SetupIocContainer(iocContainer);
             
             // build and register HttPPipeline
-            PipelineDefinition httpPipelineDefinition = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
+            PipelineBuilder httpPipelineBuilder = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
             
-            iocContainer.RegisterSingletonInstance<IHttpPipe>(new ExtensionPipeline<IHttpPipe>(httpPipelineDefinition, iocContainer));
+            iocContainer.RegisterSingletonInstance<IHttpPipe>(new ExtensionPipeline<IHttpPipe>(httpPipelineBuilder, iocContainer));
             
             
-            PipelineDefinition httpErrorPipelineDefinition = LoadHttpPipelineConfig("Config/HttpErrorPipelineConfig.json");            
+            PipelineBuilder httpErrorPipelineBuilder = LoadHttpPipelineConfig("Config/HttpErrorPipelineConfig.json");            
 
-            iocContainer.RegisterSingletonInstance<IHttpErrorPipeline>(new ExtensionPipeline<HttpConnection>(httpPipelineDefinition, iocContainer));
+            iocContainer.RegisterSingletonInstance<IHttpErrorPipeline>(new ExtensionPipeline<HttpConnection>(httpPipelineBuilder, iocContainer));
             
             iocContainer.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
             
@@ -44,8 +43,8 @@ namespace RadDevelopers.Servers.Web
             // the server that passes the requests to the pipelines
             HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
                 80,
-                httpPipelineDefinition,
-                httpErrorPipelineDefinition,
+                httpPipelineBuilder,
+                httpErrorPipelineBuilder,
                 iocContainer);
                 //(request, socket) => socketManager.RegisterNewClientSocket(socket));
             
@@ -102,9 +101,9 @@ namespace RadDevelopers.Servers.Web
         /// </summary>
         /// <param name="configFilePath"></param>
         /// <returns></returns>
-        private static PipelineDefinition LoadHttpPipelineConfig(string configFilePath)
+        private static PipelineBuilder LoadHttpPipelineConfig(string configFilePath)
         {
-            PipelineDefinition httpPipelineDefinition = new();
+            PipelineBuilder httpPipelineBuilder = new();
 
             HttpPipelineConfig config = (HttpPipelineConfig)JsonContractSerializer.Instance.Deserialize(
                 typeof(HttpPipelineConfig),
@@ -116,11 +115,11 @@ namespace RadDevelopers.Servers.Web
             
             foreach (var pipeType in types) 
             {
-                httpPipelineDefinition
+                httpPipelineBuilder
                     .Append(Type.GetType(pipeType));
             }
 
-            return httpPipelineDefinition;
+            return httpPipelineBuilder;
         }
     }
 }

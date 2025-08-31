@@ -1,13 +1,16 @@
+using System.Collections.Immutable;
 using RadFramework.Libraries.Ioc.Factory;
 
 namespace RadFramework.Libraries.Ioc
 {
     public interface IIocContainer : IServiceProvider
     {
-        IEnumerable<(IocKey, Func<object> resolve)> Services { get; }
+        IEnumerable<IocService> ServiceList { get; }
+        IImmutableDictionary<IocKey, IocService> ServiceLookup { get; }
 
         object Resolve(Type t);
         object Resolve(string key, Type t);
+        object Resolve(IocKey key);
 
         public T Activate<T>(InjectionOptions injectionOptions = null);
 

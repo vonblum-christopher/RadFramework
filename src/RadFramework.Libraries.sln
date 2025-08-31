@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.TaskB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.WindowManager", "RadDevelopers.Servers.WindowManager\RadDevelopers.Servers.WindowManager.csproj", "{91635F41-EDB6-49C5-B445-C8417B5FB6EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Libraries.Tests", "RadFramework.Libraries.Tests\RadFramework.Libraries.Tests.csproj", "{EE40289D-CE4A-40EB-8BE2-ADC5584C49F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{91635F41-EDB6-49C5-B445-C8417B5FB6EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91635F41-EDB6-49C5-B445-C8417B5FB6EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91635F41-EDB6-49C5-B445-C8417B5FB6EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE40289D-CE4A-40EB-8BE2-ADC5584C49F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE40289D-CE4A-40EB-8BE2-ADC5584C49F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE40289D-CE4A-40EB-8BE2-ADC5584C49F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE40289D-CE4A-40EB-8BE2-ADC5584C49F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E6684932-56E7-4FDB-917E-14AE35F53283} = {E3E761C0-8DC8-4E99-84E7-251652071F40}
@@ -70,5 +76,6 @@ Global
 		{3B7DE752-F139-4B70-A914-AA9C5BF08E25} = {CFED4212-99FB-48D3-923E-8C406A65834D}
 		{BCF85A0D-3540-471D-961E-44B79EFA62B5} = {CFED4212-99FB-48D3-923E-8C406A65834D}
 		{91635F41-EDB6-49C5-B445-C8417B5FB6EA} = {CFED4212-99FB-48D3-923E-8C406A65834D}
+		{EE40289D-CE4A-40EB-8BE2-ADC5584C49F4} = {E3E761C0-8DC8-4E99-84E7-251652071F40}
 	EndGlobalSection
 EndGlobal

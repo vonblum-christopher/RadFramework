@@ -1,4 +1,4 @@
-using RadFramework.Libraries.Extensibility.Pipeline.Extension;
+using RadFramework.Libraries.Patterns.Pipeline;
 
 namespace RadFramework.Libraries.Web;
 

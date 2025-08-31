@@ -1,6 +1,6 @@
 using RadFramework.Libraries.Serialization.Json.Parser;
 
-namespace RadFramework.Libraries.Serialization.Json
+namespace RadFramework.Libraries.Serialization.Json.Dom
 {
     public class JsonObject : IJsonObjectTreeModel
     {

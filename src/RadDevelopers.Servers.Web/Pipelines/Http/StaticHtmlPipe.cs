@@ -1,5 +1,5 @@
 using System.Reflection;
-using RadFramework.Libraries.Extensibility.Pipeline.Extension;
+using RadFramework.Libraries.Patterns.Pipeline;
 using RadFramework.Libraries.Web;
 
 namespace RadDevelopers.Servers.Web.Pipelines.Http;

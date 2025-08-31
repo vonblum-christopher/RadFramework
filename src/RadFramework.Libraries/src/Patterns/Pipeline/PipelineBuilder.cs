@@ -1,17 +1,17 @@
-namespace RadFramework.Libraries.Extensibility.Pipeline
+namespace RadFramework.Libraries.Patterns.Pipeline
 {
     [Serializable]
-    public class PipelineDefinition
+    public class PipelineBuilder
     {
         public IEnumerable<PipeDefinition> Definitions => definitions;
         private List<PipeDefinition> definitions = new();
 
-        public PipelineDefinition(IEnumerable<PipeDefinition> definitions)
+        public PipelineBuilder(IEnumerable<PipeDefinition> definitions)
         {
             this.definitions = new List<PipeDefinition>(definitions);
         }
 
-        public PipelineDefinition()
+        public PipelineBuilder()
         {
         }
         

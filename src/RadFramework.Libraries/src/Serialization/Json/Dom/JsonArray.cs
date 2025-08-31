@@ -1,7 +1,7 @@
 using System.Collections;
 using RadFramework.Libraries.Serialization.Json.Parser;
 
-namespace RadFramework.Libraries.Serialization.Json
+namespace RadFramework.Libraries.Serialization.Json.Dom
 {
     public class JsonArray : IEnumerable<object>, IJsonObjectTreeModel
     {

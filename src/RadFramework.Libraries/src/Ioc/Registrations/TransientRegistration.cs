@@ -13,15 +13,19 @@ namespace RadFramework.Libraries.Ioc.Registrations
         
         private static ConcurrentDictionary<IocKey, Func<IocContainer, object>> factoryCache = new ConcurrentDictionary<IocKey, Func<IocContainer, object>>();
         
-        public TransientRegistration(IocKey key,
-            ServiceFactoryLambdaGenerator lambdaGenerator, IocContainer iocContainer)
+        public TransientRegistration(
+            IocKey key,
+            Type tImplementation,
+            ServiceFactoryLambdaGenerator lambdaGenerator,
+            IocContainer iocContainer)
         {
             this.iocContainer = iocContainer;
 
             this.construct = new Lazy<Func<IocContainer, object>>(
                 () => 
-                    factoryCache.GetOrAdd(key ,
-                        tuple => lambdaGenerator.CreateInstanceFactory(tImplementation, iocContainer, InjectionOptions)));
+                    factoryCache.GetOrAdd(
+                        key,
+                        tuple => lambdaGenerator.CreateInstanceFactory(this,tImplementation, iocContainer, InjectionOptions)));
         }
 
         public override object ResolveService()

@@ -1,9 +1,9 @@
 using System.Reflection;
-using RadFramework.Libraries.GenericUi.Console.Abstractions;
+using RadFramework.Libraries.Abstractions.Console;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
-using RadFramework.Libraries.Serialization.Json.ContractSerialization;
+using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.TextTranslation;
 using RadFramework.Libraries.TextTranslation.Abstractions;
 using RadFramework.Libraries.TextTranslation.Loaders;
@@ -42,11 +42,11 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                 
                 int i = 1;
                 
-                Dictionary<int,(Type serviceType, Func<object> resolve)> choices = new Dictionary<int, (Type serviceType, Func<object> resolve)>();
+                Dictionary<int, IocService> choices = new();
 
-                foreach ((Type serviceType, Func<object> resolve) service in iocContainer.Services)
+                foreach (IocService service in iocContainer.ServiceList)
                 {
-                    _console.WriteLine($"{i}) {service.serviceType.FullName}");
+                    _console.WriteLine($"{i}) {service.Key.RegistrationKeyType.InnerMetaData.FullName}");
                     choices[i] = service;
                     i++;
                 }
@@ -75,9 +75,12 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                     continue;
                 }
                 
-                var selectedService = choices[choice];
+                IocService selectedService = choices[choice];
 
-                RenderService(selectedService.serviceType, iocContainer.Resolve(selectedService.serviceType));
+                RenderService(
+                    selectedService.RegistrationBase.ImplementationType, 
+                    iocContainer
+                        .Resolve(selectedService.RegistrationBase.ImplementationType));
             }
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using RadFramework.Libraries.Ioc.Factory;
 using RadFramework.Libraries.Ioc.Registrations;
 using RadFramework.Libraries.Reflection.Caching.Queries;
@@ -8,16 +9,38 @@ namespace RadFramework.Libraries.Ioc
     public class IocContainer : IIocContainer
     {
 
-        public IEnumerable<(IocKey, Func<object> resolve)> Services
+        public IEnumerable<IocService> ServiceList
         {
             get
             {
-                return registrations
-                    .Select<KeyValuePair<IocKey, RegistrationBase>, (IocKey serviceType, Func<object> resolve)>
-                        (r => (r.Key, () => r.Value.ResolveService()));
+                return registrations.Select(r => 
+                    new IocService
+                    {
+                        Key = r.Key, 
+                        InstanceResolver = r.Value.ResolveService,
+                        RegistrationBase = r.Value
+                    });
             }
         }
-
+        
+        public IImmutableDictionary<IocKey, IocService> ServiceLookup
+        {
+            get
+            {
+                return registrations.Select(r =>
+                    new IocService
+                    {
+                        Key = r.Key,
+                        InstanceResolver = r.Value.ResolveService,
+                        RegistrationBase = r.Value
+                    })
+                    .ToImmutableDictionary(
+                        k => k.Key, 
+                        v => v);
+            }
+            
+        }
+        
         public readonly InjectionOptions InjectionOptions;
         protected ServiceFactoryLambdaGenerator LambdaGenerator { get; } = new ServiceFactoryLambdaGenerator();
         
@@ -42,7 +65,9 @@ namespace RadFramework.Libraries.Ioc
         
         public InjectionOptions RegisterTransient(Type tInterface, Type tImplementation)
         {
-            return (registrations[new IocKey { RegistrationKeyType = tInterface }] = new TransientRegistration(tImplementation, LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = tInterface };
+            
+            return (registrations[key] = new TransientRegistration(key, tImplementation, LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -50,7 +75,9 @@ namespace RadFramework.Libraries.Ioc
 
         public InjectionOptions RegisterTransient<TInterface, TImplementation>()
         {
-            return (registrations[new IocKey { RegistrationKeyType = typeof(TInterface) }] = new TransientRegistration(typeof(TImplementation), LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = typeof(TInterface) };
+            
+            return (registrations[key] = new TransientRegistration(key, typeof(TImplementation), LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -58,7 +85,8 @@ namespace RadFramework.Libraries.Ioc
 
         public InjectionOptions RegisterTransient(Type tImplementation)
         {
-            return (registrations[new IocKey { RegistrationKeyType = tImplementation }] = new TransientRegistration(tImplementation, LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = tImplementation };
+            return (registrations[key] = new TransientRegistration(key, tImplementation, LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -66,8 +94,8 @@ namespace RadFramework.Libraries.Ioc
         
         public InjectionOptions RegisterTransient<TImplementation>()
         {
-            Type tImplementation = typeof(TImplementation);
-            return (registrations[new IocKey { RegistrationKeyType = tImplementation }] = new TransientRegistration(tImplementation, LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = typeof(TImplementation) };
+            return (registrations[new IocKey { RegistrationKeyType = key.RegistrationKeyType }] = new TransientRegistration(key, key.RegistrationKeyType, LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -86,7 +114,9 @@ namespace RadFramework.Libraries.Ioc
         
         public InjectionOptions RegisterSingleton(Type tInterface, Type tImplementation)
         {
-            return (registrations[new IocKey { RegistrationKeyType = tInterface }] = new SingletonRegistration(tImplementation, LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = tInterface };
+            
+            return (registrations[key] = new SingletonRegistration(key,tImplementation, LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -94,7 +124,9 @@ namespace RadFramework.Libraries.Ioc
 
         public InjectionOptions RegisterSingleton<TInterface, TImplementation>()
         {
-            return (registrations[new IocKey { RegistrationKeyType = typeof(TInterface) }] = new SingletonRegistration(typeof(TImplementation), LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = typeof(TInterface) };
+            
+            return (registrations[key] = new SingletonRegistration(key, typeof(TImplementation), LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -102,7 +134,9 @@ namespace RadFramework.Libraries.Ioc
 
         public InjectionOptions RegisterSingleton(Type tImplementation)
         {
-            return (registrations[new IocKey { RegistrationKeyType = tImplementation }] = new SingletonRegistration(tImplementation, LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = tImplementation };
+            
+            return (registrations[key] = new SingletonRegistration(key, tImplementation, LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -111,7 +145,8 @@ namespace RadFramework.Libraries.Ioc
         public InjectionOptions RegisterSingleton<TImplementation>()
         {
             Type tImplementation = typeof(TImplementation);
-            return (registrations[new IocKey(){ RegistrationKeyType = tImplementation}] = new SingletonRegistration(tImplementation, LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = tImplementation};
+            return (registrations[key] = new SingletonRegistration(key, tImplementation, LambdaGenerator, this)
             {
                 InjectionOptions = InjectionOptions.Clone()
             }).InjectionOptions;
@@ -154,7 +189,9 @@ namespace RadFramework.Libraries.Ioc
         
         public object Activate(Type t, InjectionOptions injectionOptions = null)
         {
-            return new TransientRegistration(t, LambdaGenerator, this)
+            var key = new IocKey { RegistrationKeyType = t };
+            
+            return new TransientRegistration(key, t, LambdaGenerator, this)
             {
                 InjectionOptions = injectionOptions ?? this.InjectionOptions
             }.ResolveService();
@@ -177,12 +214,18 @@ namespace RadFramework.Libraries.Ioc
         
         public object Resolve(Type t, string key)
         {
-            if (!registrations.ContainsKey(new IocKey { RegistrationKeyType = t, Key = key}))
+            var iocKey = new IocKey { RegistrationKeyType = t, Key = key };
+            if (!registrations.ContainsKey(iocKey))
             {
                 throw new RegistrationNotFoundException(t);
             }
             
-            return registrations[new IocKey { RegistrationKeyType = t, Key = key}].ResolveService();
+            return Resolve(iocKey);
+        }
+        
+        public object Resolve(IocKey key)
+        {
+            return registrations[key].ResolveService();
         }
 
         public object GetService(Type serviceType)

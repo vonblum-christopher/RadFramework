@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.GenericUi.Console.Abstractions
+namespace RadFramework.Libraries.Abstractions.Console
 {
     public class CommandLineProvider : IConsole
     {

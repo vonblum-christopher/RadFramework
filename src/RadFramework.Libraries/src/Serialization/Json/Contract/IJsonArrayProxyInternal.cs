@@ -1,4 +1,6 @@
-namespace RadFramework.Libraries.Serialization.Json.ContractSerialization;
+using RadFramework.Libraries.Serialization.Json.Dom;
+
+namespace RadFramework.Libraries.Serialization.Json.Contract;
 
 internal interface IJsonArrayProxyInternal
 {

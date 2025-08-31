@@ -1,6 +1,6 @@
-using RadFramework.Libraries.Extensibility.Pipeline.Extension;
+using RadFramework.Libraries.Patterns.Pipeline;
 
-namespace RadDevelopers.Servers.Web.Pipelines.Http;
+namespace RadDevelopers.Servers.Web.Pipelines.WebSocketConnected;
 
 public interface IWebSocketConnectedPipe : IExtensionPipe<WebSocketConnection>
 {
