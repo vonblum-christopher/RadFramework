@@ -5,7 +5,7 @@ namespace RadDevelopers.Servers.Web.Pipelines.Http;
 
 public class ServeIndexFile: IHttpPipe
 {
-    public void Process(HttpConnection connection, ExtensionPipeContext pipeContext)
+    public void Process(HttpConnection input, ExtensionPipeContext pipeContext)
     {
     }
 }

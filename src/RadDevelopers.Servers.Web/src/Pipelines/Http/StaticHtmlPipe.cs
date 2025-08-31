@@ -14,13 +14,13 @@ public class StaticHtmlPipe : IHttpPipe
         "html"
     };
     
-    public void Process(HttpConnection connection, ExtensionPipeContext pipeContext)
+    public void Process(HttpConnection input, ExtensionPipeContext pipeContext)
     {
-        string urlPath = connection.Request.UrlPath;
+        string urlPath = input.Request.UrlPath;
         
-        if (connection.Request.UrlPath == "/" || connection.Request.UrlPath == "")
+        if (input.Request.UrlPath == "/" || input.Request.UrlPath == "")
         {
-            connection.Response.TryServeStaticHtmlFile(WWWRootPath + "/index.html");
+            input.Response.TryServeStaticHtmlFile(WWWRootPath + "/index.html");
             pipeContext.Return();
             return;
         }
@@ -40,7 +40,7 @@ public class StaticHtmlPipe : IHttpPipe
 
             if (htmlExtensions.Contains(fileExtension))
             {
-                connection.Response.TryServeStaticHtmlFile(WWWRootPath + connection.Request.UrlPath);
+                input.Response.TryServeStaticHtmlFile(WWWRootPath + input.Request.UrlPath);
                 pipeContext.Return();
                 return;             
             }

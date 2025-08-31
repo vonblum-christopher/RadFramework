@@ -5,8 +5,8 @@ namespace RadDevelopers.Servers.Web.Pipelines.HttpError;
 
 public class Send500InternalServerError : IHttpErrorPipe
 {
-    public void Process(RadFramework.Libraries.Web.HttpError connection, ExtensionPipeContext pipeContext)
+    public void Process(RadFramework.Libraries.Web.HttpError input, ExtensionPipeContext pipeContext)
     {
-        connection.Response.Send500();
+        input.Response.Send500();
     }
 }

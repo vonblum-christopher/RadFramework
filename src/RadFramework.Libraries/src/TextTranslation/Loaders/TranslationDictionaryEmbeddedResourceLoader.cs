@@ -19,7 +19,12 @@ namespace RadFramework.Libraries.TextTranslation.Loaders
         {
             using (StreamReader sr = new StreamReader(_assembly.GetManifestResourceStream(_resourceName)))
             {
-                return (IEnumerable<TranslationDictionary>)JsonContractSerializer.Instance.DeserializeFromJsonString(typeof(TranslationDictionary[]), sr.ReadToEnd());
+                return (IEnumerable<TranslationDictionary>)
+                    JsonContractSerializer
+                        .Instance
+                        .DeserializeFromJsonString(
+                            typeof(TranslationDictionary[]), 
+                            sr.ReadToEnd());
             }
         }
     }

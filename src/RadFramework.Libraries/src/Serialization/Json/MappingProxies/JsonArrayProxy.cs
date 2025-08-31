@@ -5,13 +5,7 @@ namespace RadFramework.Libraries.Serialization.Json.Contract;
 
 public class JsonArrayProxy<TEntry> : IEnumerable<TEntry>, IJsonArrayProxyInternal
 {
-    private IEnumerable<TEntry> DataAsEnumerableOfEntry
-    {
-        get
-        {
-            return Data.OfType<TEntry>();
-        }
-    }
+    private IEnumerable<TEntry> DataAsEnumerableOfEntry => Data.OfType<TEntry>();
 
     public IEnumerator<TEntry> GetEnumerator()
     {

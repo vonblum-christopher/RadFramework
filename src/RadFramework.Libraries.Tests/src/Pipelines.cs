@@ -1,4 +1,6 @@
-﻿using RadFramework.Libraries.Ioc;
+﻿using RadFramework.Libraries.Abstractions.Console;
+using RadFramework.Libraries.GenericUi.Console.Interaction;
+using RadFramework.Libraries.Ioc;
 
 namespace RadFramework.Libraries.Tests;
 
@@ -8,7 +10,13 @@ public class Tests
     public void Setup()
     {
     }
-
+    [Test]
+    public void GenericUiConsole()
+    {
+        ConsoleInteractionProvider prov = new ConsoleInteractionProvider(new CommandLineProvider());
+        
+        prov.RenderService(typeof(TypeA), new TypeA());
+    }
     [Test]
     public void Test1()
     {

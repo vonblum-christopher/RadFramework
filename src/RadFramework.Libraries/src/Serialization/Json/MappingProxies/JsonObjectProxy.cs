@@ -26,14 +26,16 @@ namespace RadFramework.Libraries.Serialization.Json.Contract
                 {
                     if (typeof(IEnumerable).IsAssignableFrom(targetMethod.ReturnType))
                     {
-                        IJsonArrayProxyInternal arrayProxy = (IJsonArrayProxyInternal)typeof(JsonArrayProxy<>)
-                            .MakeGenericType(
-                                targetMethod
-                                    .ReturnType
-                                    .GetGenericArguments()[0])
-                            .GetConstructors()
-                            .Single()
-                            .Invoke(null);
+                        IJsonArrayProxyInternal arrayProxy = 
+                            (IJsonArrayProxyInternal)
+                                typeof(JsonArrayProxy<>)
+                                    .MakeGenericType(
+                                        targetMethod
+                                            .ReturnType
+                                            .GetGenericArguments()[0])
+                                    .GetConstructors()
+                                    .Single()
+                                    .Invoke(null);
 
                         arrayProxy.Data = a;
 

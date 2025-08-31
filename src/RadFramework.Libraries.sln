@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.Web",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Programs.FileTransfer", "RadDevelopers.Programs.FileTransfer\RadDevelopers.Programs.FileTransfer.csproj", "{C36BBFFC-89C9-406E-9E18-58EE792F873A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.Database", "RadDevelopers.Servers.Database\RadDevelopers.Servers.Database.csproj", "{9391F4A3-9415-425B-A018-E62AD6DCA3D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.TreeDb", "RadDevelopers.Servers.TreeDb\RadDevelopers.Servers.TreeDb.csproj", "{9391F4A3-9415-425B-A018-E62AD6DCA3D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E3E761C0-8DC8-4E99-84E7-251652071F40}"
 EndProject
@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Servers", "Servers", "{CFED
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.Mail", "RadDevelopers.Servers.Mail\RadDevelopers.Servers.Mail.csproj", "{4E71331A-4349-41DA-9765-A35F0ADA42F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.Build", "RadDevelopers.Servers.Build\RadDevelopers.Servers.Build.csproj", "{3B7DE752-F139-4B70-A914-AA9C5BF08E25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.BuildPipelines", "RadDevelopers.Servers.BuildPipelines\RadDevelopers.Servers.BuildPipelines.csproj", "{3B7DE752-F139-4B70-A914-AA9C5BF08E25}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Servers.TaskBoards", "RadDevelopers.Servers.TaskBoards\RadDevelopers.Servers.TaskBoards.csproj", "{BCF85A0D-3540-471D-961E-44B79EFA62B5}"
 EndProject

@@ -7,19 +7,19 @@ public class FaviconPipe : IHttpPipe
 {
     private string WWWRootPath = "wwwroot";
     
-    public void Process(HttpConnection connection, ExtensionPipeContext pipeContext)
+    public void Process(HttpConnection input, ExtensionPipeContext pipeContext)
     {
-        string fileExtension = connection.Request.UrlPath.Substring(connection.Request.UrlPath.LastIndexOf('.') + 1);
+        string fileExtension = input.Request.UrlPath.Substring(input.Request.UrlPath.LastIndexOf('.') + 1);
 
         if (fileExtension == "ico")
         {
-            connection.Response.SendFile(
-                connection
+            input.Response.SendFile(
+                input
                     .ServerContext
                     .Cache
                     .GetOrSet(
-                        connection.Request.UrlPath, 
-                        () => File.ReadAllBytes(WWWRootPath + connection.Request.UrlPath)));
+                        input.Request.UrlPath, 
+                        () => File.ReadAllBytes(WWWRootPath + input.Request.UrlPath)));
             
             pipeContext.Return();
             return;

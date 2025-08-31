@@ -5,9 +5,9 @@ namespace RadDevelopers.Servers.Web.Pipelines.WebSocketConnected;
 
 public class WebsocketConnectedPipe: IHttpPipe
 {
-    public void Process(HttpConnection connection, ExtensionPipeContext pipeContext)
+    public void Process(HttpConnection input, ExtensionPipeContext pipeContext)
     {
-        connection.Dispose();
+        input.Dispose();
     }
     
     
