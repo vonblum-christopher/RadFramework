@@ -1,6 +1,8 @@
 ﻿using RadDevelopers.Servers.Web.Config;
+using RadDevelopers.Servers.Web.Pipelines.HttpError;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Extensibility.Pipeline;
+using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Logging;
 using RadFramework.Libraries.Serialization;
@@ -21,10 +23,16 @@ namespace RadDevelopers.Servers.Web
             IocContainer iocContainer = new IocContainer();
             
             SetupIocContainer(iocContainer);
-
-            // the two core pipelines of the webserver
+            
+            // build and register HttPPipeline
             PipelineDefinition httpPipelineDefinition = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
+            
+            iocContainer.RegisterSingletonInstance<IHttpPipe>(new ExtensionPipeline<IHttpPipe>(httpPipelineDefinition, iocContainer));
+            
+            
             PipelineDefinition httpErrorPipelineDefinition = LoadHttpPipelineConfig("Config/HttpErrorPipelineConfig.json");            
+
+            iocContainer.RegisterSingletonInstance<IHttpErrorPipeline>(new ExtensionPipeline<HttpConnection>(httpPipelineDefinition, iocContainer));
             
             iocContainer.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
             

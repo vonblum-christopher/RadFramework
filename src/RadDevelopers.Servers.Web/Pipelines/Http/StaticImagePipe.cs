@@ -15,19 +15,19 @@ public class StaticImagePipe : IHttpPipe
         "jpg"
     };
     
-    public void Process(HttpConnection context, ExtensionPipeContext pipeContext)
+    public void Process(HttpConnection connection, ExtensionPipeContext pipeContext)
     {
-        string fileExtension = context.Request.UrlPath.Substring(context.Request.UrlPath.LastIndexOf('.') + 1);
+        string fileExtension = connection.Request.UrlPath.Substring(connection.Request.UrlPath.LastIndexOf('.') + 1);
 
         if (imgExtensions.Contains(fileExtension))
         {
-            context.Response.SendFile(
-                context
+            connection.Response.SendFile(
+                connection
                     .ServerContext
                     .Cache
                     .GetOrSet(
-                        context.Request.UrlPath, 
-                        () => File.ReadAllBytes(WWWRootPath + context.Request.UrlPath)));
+                        connection.Request.UrlPath, 
+                        () => File.ReadAllBytes(WWWRootPath + connection.Request.UrlPath)));
             
             pipeContext.Return();
             return;

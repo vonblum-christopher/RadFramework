@@ -4,9 +4,10 @@ namespace RadFramework.Libraries.Ioc
 {
     public interface IIocContainer : IServiceProvider
     {
-        IEnumerable<(Type serviceType, Func<object> resolve)> Services { get; }
+        IEnumerable<(IocKey, Func<object> resolve)> Services { get; }
 
         object Resolve(Type t);
+        object Resolve(string key, Type t);
 
         public T Activate<T>(InjectionOptions injectionOptions = null);
 

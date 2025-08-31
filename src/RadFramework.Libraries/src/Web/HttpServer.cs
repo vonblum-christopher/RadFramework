@@ -6,21 +6,20 @@ using RadFramework.Libraries.Threading.ThreadPools.Queued;
 
 namespace RadFramework.Libraries.Web;
 
+public 
+
 public class HttpServer : IDisposable
 {
     private readonly HttpRequestHandler processRequest;
-    private readonly Action<HttpRequest, System.Net.Sockets.Socket> webSocketConnected;
     private SocketConnectionListener listener;
     private QueuedThreadPool<System.Net.Sockets.Socket> httpRequestProcessingPool;
     
     public HttpServer(
         int port,
         HttpRequestHandler processRequest, 
-        Action<System.Net.Sockets.Socket, PoolThread, Exception> onException, 
-        Action<HttpRequest, System.Net.Sockets.Socket> webSocketConnected = null)
+        Action<System.Net.Sockets.Socket, PoolThread, Exception> onException)
     {
         this.processRequest = processRequest;
-        this.webSocketConnected = webSocketConnected;
 
         httpRequestProcessingPool = 
             new QueuedThreadPool<System.Net.Sockets.Socket>(
@@ -64,17 +63,6 @@ public class HttpServer : IDisposable
         {
             var header = HttpRequestParser.ReadHeader(currentHeaderLine);
             requestModel.Headers.Add(header.header, header.value);
-        }
-
-        if (webSocketConnected != null && ((requestModel.Headers.ContainsKey("Upgrade") && requestModel.Headers["Upgrade"] == "websocket") 
-                                        && (requestModel.Headers.ContainsKey("Connection") && requestModel.Headers["Connection"] == "Upgrade")))
-        {
-            networkStream.Dispose();
-            requestReader.Dispose();
-
-            webSocketConnected(requestModel, socketConnection);
-            
-            return;
         }
             
         HttpConnection connection =

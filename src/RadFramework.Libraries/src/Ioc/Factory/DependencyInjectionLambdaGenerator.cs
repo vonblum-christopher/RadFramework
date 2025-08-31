@@ -8,13 +8,16 @@ namespace RadFramework.Libraries.Ioc.Factory
     public class DependencyInjectionLambdaGenerator
     {
         private static CachedMethodInfo dependencyMethod;
-        
+        private static CachedMethodInfo dependencyMethodWithKey;
         static DependencyInjectionLambdaGenerator()
         {
             CachedType argType = typeof (IocContainer);
 
             dependencyMethod = argType
                 .Query(t => t.GetMethod(nameof(IocContainer.Resolve), new Type[] {typeof(Type)}));
+            
+            dependencyMethodWithKey = argType
+                .Query(t => t.GetMethod(nameof(IocContainer.Resolve), new Type[] { typeof(string), typeof(Type)}));
         }
 
         public Func<IocContainer, object> CreateConstructorInjectionLambda(CachedConstructorInfo injectionConstructor)

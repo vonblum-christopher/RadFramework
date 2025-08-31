@@ -3,6 +3,7 @@
     "RadDevelopers.Servers.Web.Pipelines.Http.ServeIndexFile, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "RadDevelopers.Servers.Web.Pipelines.Http.StaticImagePipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "RadDevelopers.Servers.Web.Pipelines.Http.StaticHtmlPipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "RadDevelopers.Servers.Web.Pipelines.Http.FaviconPipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    "RadDevelopers.Servers.Web.Pipelines.Http.FaviconPipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "RadDevelopers.Servers.Web.Pipelines.Http.WebsocketConnectedPipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ]
 }

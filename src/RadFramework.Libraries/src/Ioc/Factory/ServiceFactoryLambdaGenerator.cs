@@ -8,10 +8,10 @@ namespace RadFramework.Libraries.Ioc.Factory
     {
         private DependencyInjectionLambdaGenerator lambdaGenerator = new DependencyInjectionLambdaGenerator();
 
-        public Func<IocContainer, object> CreateInstanceFactory(CachedType type, InjectionOptions containerInjectionOptions, InjectionOptions injectionOptions)
+        public Func<IocContainer, object> CreateInstanceFactory(CachedType type, IocContainer container, InjectionOptions injectionOptions)
         {
             CachedConstructorInfo constructor =
-                (injectionOptions.ChooseInjectionConstructor ?? containerInjectionOptions.ChooseInjectionConstructor)(
+                (injectionOptions.ChooseInjectionConstructor ?? container.InjectionOptions.ChooseInjectionConstructor)(
                     type
                         .Query(ClassQueries.GetPublicConstructors)
                         .Select(c => (CachedConstructorInfo) c));
@@ -21,7 +21,7 @@ namespace RadFramework.Libraries.Ioc.Factory
             List<Action<IocContainer, object>> injectionLambdas = new List<Action<IocContainer, object>>();
 
             var chooseInjectionMethods = injectionOptions.ChooseInjectionMethods ??
-                                          containerInjectionOptions.ChooseInjectionMethods;
+                                         container.InjectionOptions.ChooseInjectionMethods;
             
             if (chooseInjectionMethods != null)
             {
@@ -38,7 +38,7 @@ namespace RadFramework.Libraries.Ioc.Factory
             }
 
             var chooseInjectionProperties = injectionOptions.ChooseInjectionProperties ??
-                                            containerInjectionOptions.ChooseInjectionProperties;
+                                            container.InjectionOptions.ChooseInjectionProperties;
             
             if (chooseInjectionProperties != null)
             {

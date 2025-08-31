@@ -20,9 +20,8 @@ public class HttpServerWithPipeline : IDisposable
     {
         iocContainer.RegisterSingleton<HttpServerContext>();
         ServerContext = iocContainer.Resolve<HttpServerContext>();
-        this.httpPipeline = new ExtensionPipeline<HttpConnection>(httpPipelineDefinition, iocContainer);
-        this.httpErrorPipeline = new ExtensionPipeline<HttpError>(httpErrorPipelineDefinition, iocContainer);
-        server = new HttpServer(port, ProcessRequestUsingPipeline, null, webSocketConnected);
+
+        server = new HttpServer(port, ProcessRequestUsingPipeline, null);
     }
 
     private void ProcessRequestUsingPipeline(HttpConnection connection)

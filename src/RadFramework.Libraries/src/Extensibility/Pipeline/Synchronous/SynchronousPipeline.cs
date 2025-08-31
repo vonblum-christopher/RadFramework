@@ -1,3 +1,4 @@
+using RadFramework.Libraries.Extensibility.Pipeline.Extension;
 using RadFramework.Libraries.Ioc;
 
 namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
@@ -25,14 +26,19 @@ namespace RadFramework.Libraries.Extensibility.Pipeline.Synchronous
 
         public TOut Process(TIn input)
         {
-            object result = input;
-            
+            ExtensionPipeContext pipeContext = new ExtensionPipeContext();
+        
             foreach (var pipe in pipes)
             {
-                result = pipe.Process(result);
+                pipe.Process(input, pipeContext);
+
+                if (pipeContext.ShouldReturn)
+                {
+                    break;
+                }
             }
 
-            return (TOut) result;
+            return pipeContext.ShouldReturn;
         }
     }
 }
