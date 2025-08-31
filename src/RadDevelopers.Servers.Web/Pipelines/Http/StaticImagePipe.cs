@@ -1,8 +1,7 @@
 using RadFramework.Libraries.Extensibility.Pipeline.Extension;
-using RadFramework.Libraries.Utils;
 using RadFramework.Libraries.Web;
 
-namespace RadFramework.Servers.Web.Pipelines.Http;
+namespace RadDevelopers.Servers.Web.Pipelines.Http;
 
 public class StaticImagePipe : IHttpPipe
 {

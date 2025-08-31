@@ -1,4 +1,4 @@
-namespace RadFramework.Servers.Web.Config;
+namespace RadDevelopers.Servers.Web.Config;
 
 public interface IocContainerConfig
 {

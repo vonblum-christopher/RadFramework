@@ -10,7 +10,7 @@ namespace RadFramework.Libraries.Extensibility.Pipeline
         public PipeDefinition(Type type, string key = null)
         {
             Type = type;
-            Key = key ?? type.FullName;
+            Key = key ?? type.AssemblyQualifiedName;
         }
     }
 }

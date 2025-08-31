@@ -1,16 +1,13 @@
-﻿using System.Net.Mime;
-using System.Reflection;
+﻿using RadDevelopers.Servers.Web.Config;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Extensibility.Pipeline;
-using RadFramework.Libraries.Extensibility.Pipeline.Synchronous;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Logging;
 using RadFramework.Libraries.Serialization;
 using RadFramework.Libraries.Serialization.Json.ContractSerialization;
 using RadFramework.Libraries.Web;
-using RadFramework.Servers.Web.Config;
 
-namespace RadFramework.Servers.Web
+namespace RadDevelopers.Servers.Web
 {
     public static class Program
     {
@@ -104,13 +101,16 @@ namespace RadFramework.Servers.Web
             HttpPipelineConfig config = (HttpPipelineConfig)JsonContractSerializer.Instance.Deserialize(
                 typeof(HttpPipelineConfig),
                 File.ReadAllBytes(configFilePath));
-            
-            config
+
+            var types = config
                 .Pipes
-                .ToList()
-                .ForEach(pipeType => 
-                    httpPipelineDefinition.
-                        Append(Type.GetType(pipeType)));
+                .ToList();
+            
+            foreach (var pipeType in types) 
+            {
+                httpPipelineDefinition
+                    .Append(Type.GetType(pipeType));
+            }
 
             return httpPipelineDefinition;
         }

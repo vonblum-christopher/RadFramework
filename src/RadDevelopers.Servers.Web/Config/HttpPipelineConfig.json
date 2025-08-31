@@ -1,7 +1,8 @@
 {
   "Pipes" : [
-    "RadFramework.Servers.Web.Pipelines.Http.StaticImagePipe, RadFramework.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "RadFramework.Servers.Web.Pipelines.Http.StaticHtmlPipe, RadFramework.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "RadFramework.Servers.Web.Pipelines.Http.FaviconPipe, RadFramework.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    "RadDevelopers.Servers.Web.Pipelines.Http.ServeIndexFile, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "RadDevelopers.Servers.Web.Pipelines.Http.StaticImagePipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "RadDevelopers.Servers.Web.Pipelines.Http.StaticHtmlPipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "RadDevelopers.Servers.Web.Pipelines.Http.FaviconPipe, RadDevelopers.Servers.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ]
 }
