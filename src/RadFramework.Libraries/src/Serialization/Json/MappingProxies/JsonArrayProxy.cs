@@ -1,7 +1,7 @@
 using System.Collections;
 using RadFramework.Libraries.Serialization.Json.Dom;
 
-namespace RadFramework.Libraries.Serialization.Json.Contract;
+namespace RadFramework.Libraries.Serialization.Json.MappingProxies;
 
 public class JsonArrayProxy<TEntry> : IEnumerable<TEntry>, IJsonArrayProxyInternal
 {

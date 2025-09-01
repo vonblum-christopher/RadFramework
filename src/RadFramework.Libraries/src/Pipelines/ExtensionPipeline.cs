@@ -1,28 +1,15 @@
 using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Pipelines.Base;
+using RadFramework.Libraries.Pipelines.Builder;
 
-namespace RadFramework.Libraries.Patterns.Pipeline;
+namespace RadFramework.Libraries.Pipelines;
 
-public class ExtensionPipeline<TInput, TOutput>
+public class ExtensionPipeline<TInput, TOutput> : ExtensionPipelineBase
 {
-    private readonly IIocContainer _serviceProvider;
-    public LinkedList<IExtensionPipe> pipes;
-
-    public ExtensionPipeline(PipelineBuilder builder, IIocContainer serviceProvider)
+    public ExtensionPipeline(IEnumerable<PipeDefinition> pipeDefinitions, IIocContainer container) : base(pipeDefinitions, container)
     {
-        _serviceProvider = serviceProvider;
-        this.pipes = new LinkedList<IExtensionPipe>(builder.Definitions.Select(CreatePipe));
     }
-        
-    public ExtensionPipeline(IEnumerable<IExtensionPipe<TInput, TOutput>> pipes)
-    {
-        this.pipes = new LinkedList<IExtensionPipe>(pipes);
-    }
-
-    private IExtensionPipe<TInput, TOutput> CreatePipe(PipeDefinition def)
-    {
-        return (IExtensionPipe<TInput, TOutput>) _serviceProvider.Activate(def.Type);
-    }
-
+    
     public TOutput Process(TInput input)
     {
         return Process(input, new ExtensionPipeContext<TOutput>()).ReturnValue;

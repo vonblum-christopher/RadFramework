@@ -8,6 +8,10 @@ namespace RadFramework.Libraries.Ioc
         IEnumerable<IocService> ServiceList { get; }
         IImmutableDictionary<IocKey, IocService> ServiceLookup { get; }
 
+        bool HasService(Type t);
+        bool HasService(string key, Type t);
+        bool HasService(IocKey key);
+        
         object Resolve(Type t);
         object Resolve(string key, Type t);
         object Resolve(IocKey key);

@@ -14,10 +14,10 @@ namespace RadFramework.Libraries.TextTranslation.Loaders
         
         public IEnumerable<TranslationDictionary> LoadDictionaries()
         {
-            return JsonContractSerializer
+            return (IEnumerable<TranslationDictionary>)JsonContractSerializer
                     .Instance
                     .DeserializeFromJsonString(
-                        typeof(TranslationDictionary[]), 
+                        typeof(IEnumerable<TranslationDictionary>), 
                         File.ReadAllText(_path));
         }
     }

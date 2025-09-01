@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
-using RadFramework.Libraries.Serialization.Json.Contract;
 using RadFramework.Libraries.Serialization.Json.Dom;
+using RadFramework.Libraries.Serialization.Json.MappingProxies;
 
 namespace RadFramework.Libraries.Serialization.Json.Writer;
 

@@ -6,14 +6,13 @@ using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc
 {
-    public class IocContainer : IIocContainer
+    public partial class IocContainer : IIocContainer
     {
-
         public IEnumerable<IocService> ServiceList
         {
             get
             {
-                return registrations.Select(r => 
+                return Enumerable.Select<KeyValuePair<IocKey, RegistrationBase>, IocService>(registrations, r => 
                     new IocService
                     {
                         Key = r.Key, 
@@ -22,18 +21,18 @@ namespace RadFramework.Libraries.Ioc
                     });
             }
         }
-        
+
         public IImmutableDictionary<IocKey, IocService> ServiceLookup
         {
             get
             {
-                return registrations.Select(r =>
-                    new IocService
-                    {
-                        Key = r.Key,
-                        InstanceResolver = r.Value.ResolveService,
-                        RegistrationBase = r.Value
-                    })
+                return Enumerable.Select<KeyValuePair<IocKey, RegistrationBase>, IocService>(registrations, r =>
+                        new IocService
+                        {
+                            Key = r.Key,
+                            InstanceResolver = r.Value.ResolveService,
+                            RegistrationBase = r.Value
+                        })
                     .ToImmutableDictionary(
                         k => k.Key, 
                         v => v);
@@ -41,26 +40,19 @@ namespace RadFramework.Libraries.Ioc
             
         }
         
-        public readonly InjectionOptions InjectionOptions;
-        protected ServiceFactoryLambdaGenerator LambdaGenerator { get; } = new ServiceFactoryLambdaGenerator();
-        
-        private ConcurrentDictionary<IocKey, RegistrationBase> registrations = new ConcurrentDictionary<IocKey, RegistrationBase>();
-
-        public IocContainer(InjectionOptions injectionOptions)
+        public bool HasService(Type t)
         {
-            this.InjectionOptions = injectionOptions;
+            return HasService(new IocKey() { RegistrationKeyType = t });
         }
 
-        public IocContainer()
+        public bool HasService(string key, Type t)
         {
-            this.InjectionOptions = new InjectionOptions
-            {
-                ChooseInjectionConstructor = ctors => ctors
-                        .OrderByDescending(c => c.Query(MethodBaseQueries.GetParameters).Length)
-                        .First(),
-                
-                ConstructorParameterInjection = infos => infos
-            };
+            return HasService(new IocKey() { RegistrationKeyType = t });
+        }
+
+        public bool HasService(IocKey key)
+        {
+            return registrations.ContainsKey(key);
         }
         
         public InjectionOptions RegisterTransient(Type tInterface, Type tImplementation)
@@ -170,67 +162,6 @@ namespace RadFramework.Libraries.Ioc
         public void RegisterSingletonInstance<TInterface>(object instance)
         {
             registrations[new IocKey(){ RegistrationKeyType = typeof(TInterface)}] = new SingletonInstanceRegistration(instance);
-        }
-
-        public object Resolve(string key, Type t)
-        {
-            if (!registrations.ContainsKey(new IocKey { RegistrationKeyType = t, Key = key}))
-            {
-                throw new RegistrationNotFoundException(t);
-            }
-            
-            return Resolve(t, key);
-        }
-
-        public T Activate<T>(InjectionOptions injectionOptions = null)
-        {
-            return (T)Activate(typeof(T), injectionOptions);
-        }
-        
-        public object Activate(Type t, InjectionOptions injectionOptions = null)
-        {
-            var key = new IocKey { RegistrationKeyType = t };
-            
-            return new TransientRegistration(key, t, LambdaGenerator, this)
-            {
-                InjectionOptions = injectionOptions ?? this.InjectionOptions
-            }.ResolveService();
-        }
-        
-        public T Resolve<T>()
-        {
-            return (T)Resolve(typeof(T));
-        }
-        
-        public object Resolve(Type t)
-        {
-            if (!registrations.ContainsKey(new IocKey { RegistrationKeyType = t}))
-            {
-                throw new RegistrationNotFoundException(t);
-            }
-            
-            return Resolve(t, null);
-        }
-        
-        public object Resolve(Type t, string key)
-        {
-            var iocKey = new IocKey { RegistrationKeyType = t, Key = key };
-            if (!registrations.ContainsKey(iocKey))
-            {
-                throw new RegistrationNotFoundException(t);
-            }
-            
-            return Resolve(iocKey);
-        }
-        
-        public object Resolve(IocKey key)
-        {
-            return registrations[key].ResolveService();
-        }
-
-        public object GetService(Type serviceType)
-        {
-            return Resolve(serviceType);
         }
     }
 }

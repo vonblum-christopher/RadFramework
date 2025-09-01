@@ -3,7 +3,7 @@ using RadDevelopers.Servers.Web.Pipelines.HttpError;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Logging;
-using RadFramework.Libraries.Patterns.Pipeline;
+using RadFramework.Libraries.Pipelines.Builder;
 using RadFramework.Libraries.Serialization;
 using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.Web;
@@ -22,6 +22,8 @@ namespace RadDevelopers.Servers.Web
             IocContainer iocContainer = new IocContainer();
             
             SetupIocContainer(iocContainer);
+
+            SetupPipelines(iocContainer);
             
             // build and register HttPPipeline
             PipelineBuilder httpPipelineBuilder = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
@@ -58,6 +60,11 @@ namespace RadDevelopers.Servers.Web
             };
             
             shutdownEvent.WaitOne();
+        }
+
+        private static void SetupPipelines(IocContainer iocContainer)
+        {
+            iocContainer.
         }
 
         /// <summary>

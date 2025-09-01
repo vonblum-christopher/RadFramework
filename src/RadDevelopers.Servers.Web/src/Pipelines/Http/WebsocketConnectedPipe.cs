@@ -1,24 +1,30 @@
-using RadFramework.Libraries.Patterns.Pipeline;
+using RadFramework.Libraries.Pipelines;
+using RadFramework.Libraries.Pipelines.Base;
 using RadFramework.Libraries.Web;
 
 namespace RadDevelopers.Servers.Web.Pipelines.Http;
 
-public class WebsocketConnectedPipe: IHttpPipe
+public class WebsocketConnectedPipe : ExtensionPipeBase<HttpConnection, HttpConnection>
 {
     public WebsocketConnectedPipe()
     {
         
     }
     
-    public void Process(HttpConnection input, ExtensionPipeContext pipeContext)
+    public override void Process(HttpConnection input, ExtensionPipeContext<HttpConnection> pipeContext)
     {
         if (((input.Request.Headers.ContainsKey("Upgrade") && input.Request.Headers["Upgrade"] == "websocket") 
                                            && (input.Request.Headers.ContainsKey("Connection") && input.Request.Headers["Connection"] == "Upgrade")))
         {
             input.DisposeReaderAndStream();
             
-            input.UnderlyingSocket
+            input.UnderlyingSocket.Close();
+
+            // async (use thread pool)
+            pipeContext.Manager.Fork<IPipeline>();
             
+            pipeContext.Manager.Get().Process
+                
             pipeContext.Return();
         }
     }

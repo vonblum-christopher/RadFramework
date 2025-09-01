@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
-using RadFramework.Libraries.Serialization.Json.Contract;
 using RadFramework.Libraries.Serialization.Json.Dom;
+using RadFramework.Libraries.Serialization.Json.MappingProxies;
 using RadFramework.Libraries.Serialization.Json.Parser;
 using RadFramework.Libraries.Serialization.Json.Writer;
 

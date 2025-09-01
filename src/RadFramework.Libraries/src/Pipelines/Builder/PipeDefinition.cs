@@ -1,6 +1,6 @@
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Patterns.Pipeline
+namespace RadFramework.Libraries.Pipelines.Builder
 {
     [Serializable]
     public class PipeDefinition

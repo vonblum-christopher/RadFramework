@@ -7,7 +7,7 @@ public class HttpConnection : IDisposable
     public HttpServerContext ServerContext { get; set; }
     private HttpResponse response;
     
-    public HttpRequest Request;
+    public HttpRequest Request { get; set; }
     public HttpResponse Response => response ??= new(this);
 
     public StreamReader RequestReader;

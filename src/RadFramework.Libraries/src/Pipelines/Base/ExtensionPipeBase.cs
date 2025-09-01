@@ -1,11 +1,11 @@
-namespace RadFramework.Libraries.Patterns.Pipeline;
+namespace RadFramework.Libraries.Pipelines.Base;
 
 public abstract class ExtensionPipeBase<TInput, TOutput> : IExtensionPipe<TInput, TOutput>
 {
-    public virtual ExtensionPipeContext<TOutput> Process(TInput input, ExtensionPipeContext<TOutput> pipeContext)
+    public abstract void Process(TInput input, ExtensionPipeContext<TOutput> pipeContext);
+
+    public void Process(object input, ExtensionPipeContextBase pipeContext)
     {
-        return Process(input, pipeContext);
+        Process((TInput)input, (ExtensionPipeContext<TOutput>)pipeContext);
     }
-    
-    public abstract ExtensionPipeContextBase Process(object input, ExtensionPipeContextBase pipeContext);
 }

@@ -1,5 +1,5 @@
 using RadFramework.Libraries.Ioc;
-using RadFramework.Libraries.Patterns.Pipeline;
+using RadFramework.Libraries.Pipelines.Builder;
 
 namespace RadFramework.Libraries.Web;
 

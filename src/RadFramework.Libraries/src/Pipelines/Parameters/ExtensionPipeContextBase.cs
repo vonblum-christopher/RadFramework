@@ -1,6 +1,6 @@
-namespace RadFramework.Libraries.Patterns.Pipeline;
+namespace RadFramework.Libraries.Pipelines.Base;
 
-public class ExtensionPipeContextBase : ICloneable
+public class ExtensionPipeContextBase
 {
     public Dictionary<string, object> ExtensionPipeData { get; set; } = new Dictionary<string, object>();
     public bool ShouldReturn { get; set; }
@@ -17,10 +17,5 @@ public class ExtensionPipeContextBase : ICloneable
         Exception = e;
         Errored = true;
         Return();
-    }
-
-    public object Clone()
-    {
-        throw new NotImplementedException();
     }
 }

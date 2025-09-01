@@ -1,11 +1,11 @@
 namespace RadFramework.Libraries.Pipelines.Base;
 
-
-public interface IExtensionPipe
+public interface IExtensionPipeline
 {
     void Process(object input, ExtensionPipeContextBase pipeContext);
 }
-public interface IExtensionPipe<TInput, TOutput> : IExtensionPipe 
+
+public interface IExtensionPipeline<TInput, TOutput> : IExtensionPipe 
 {
     void Process(TInput input, ExtensionPipeContext<TOutput> pipeContext);
 }
