@@ -1,5 +1,6 @@
 using RadFramework.Libraries.Pipelines;
 using RadFramework.Libraries.Pipelines.Base;
+using RadFramework.Libraries.Pipelines.Parameters;
 using RadFramework.Libraries.Web;
 
 namespace RadDevelopers.Servers.Web.Pipelines.Http;
@@ -21,9 +22,9 @@ public class WebsocketConnectedPipe : ExtensionPipeBase<HttpConnection, HttpConn
             input.UnderlyingSocket.Close();
 
             // async (use thread pool)
-            pipeContext.Manager.Fork<IPipeline>();
-            
-            pipeContext.Manager.Get().Process
+            // pipeContext.Manager.ForkAndProcess<IPipeline>();
+            // pipeContext.Manager.Process<IPipeline>
+            //ipeContext.Manager.Get().Process
                 
             pipeContext.Return();
         }

@@ -1,8 +1,7 @@
-using RadFramework.Libraries.Ioc;
-using RadFramework.Libraries.Pipelines.Base;
+using RadFramework.Libraries.Ioc.Core;
 using RadFramework.Libraries.Pipelines.Builder;
 
-namespace RadFramework.Libraries.Pipelines;
+namespace RadFramework.Libraries.Pipelines.Base;
 
 public class ExtensionPipelineBase
 {

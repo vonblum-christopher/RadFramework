@@ -1,5 +1,6 @@
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Pipelines.Builder;
+using IocContainer = RadFramework.Libraries.Ioc.Core.IocContainer;
 
 namespace RadFramework.Libraries.Web;
 

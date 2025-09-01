@@ -1,3 +1,5 @@
+using RadFramework.Libraries.Pipelines.Parameters;
+
 namespace RadFramework.Libraries.Pipelines.Base;
 
 public abstract class ExtensionPipeBase<TInput, TOutput> : IExtensionPipe<TInput, TOutput>

@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Pipelines.Base;
+namespace RadFramework.Libraries.Pipelines.Parameters;
 
 public class ExtensionPipeContextBase
 {

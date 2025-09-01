@@ -1,7 +1,9 @@
 using System.Collections.Concurrent;
 using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Ioc.Core;
 using RadFramework.Libraries.Pipelines.Base;
 using RadFramework.Libraries.Pipelines.Builder;
+using IocContainer = RadFramework.Libraries.Ioc.Core.IocContainer;
 
 namespace RadFramework.Libraries.Pipelines;
 
@@ -15,7 +17,7 @@ public class PipelineManager
     
     public PipelineManager(IocContainer container)
     {
-        this.container = container;
+        this.container = container.CreateNestedContainer();
     }
     
     public void RegisterPipeline<TPipeline>(PipelineBuilder builder)
@@ -26,6 +28,6 @@ public class PipelineManager
 
     public TPipeline CreateRuntimePipeline<TPipeline>()
     {
-        return container.Activate<TPipeline>();
+        return container.Resolve<TPipeline>();
     }
 }

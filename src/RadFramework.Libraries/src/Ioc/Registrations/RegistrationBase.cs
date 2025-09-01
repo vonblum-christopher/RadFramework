@@ -5,7 +5,6 @@ namespace RadFramework.Libraries.Ioc.Registrations
 {
     public abstract class RegistrationBase
     {
-        public IocKey Key { get; set; }
         public InjectionOptions InjectionOptions { get; set; }
         public CachedType ImplementationType { get; set; }
 

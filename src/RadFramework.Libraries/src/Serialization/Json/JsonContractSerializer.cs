@@ -2,6 +2,7 @@ using System.Collections;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 using RadFramework.Libraries.Serialization.Json.Dom;

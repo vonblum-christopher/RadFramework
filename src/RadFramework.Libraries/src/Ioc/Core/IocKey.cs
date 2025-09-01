@@ -1,11 +1,11 @@
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Ioc;
+namespace RadFramework.Libraries.Ioc.Core;
 
 public class IocKey
 {
-    public string Key { get; set; }
     public CachedType RegistrationKeyType { get; set; }
+    public string Key { get; set; }
     
     protected bool Equals(IocKey other)
     {

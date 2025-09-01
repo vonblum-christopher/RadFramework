@@ -1,6 +1,4 @@
-using RadFramework.Libraries.Pipelines.Base;
-
-namespace RadFramework.Libraries.Pipelines;
+namespace RadFramework.Libraries.Pipelines.Parameters;
 
 public class ExtensionPipeContext<TOutput> : ExtensionPipeContextBase
 {

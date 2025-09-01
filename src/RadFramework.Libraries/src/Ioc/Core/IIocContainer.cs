@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using RadFramework.Libraries.Ioc.Factory;
 
-namespace RadFramework.Libraries.Ioc
+namespace RadFramework.Libraries.Ioc.Core
 {
     public interface IIocContainer : IServiceProvider
     {
@@ -17,7 +17,6 @@ namespace RadFramework.Libraries.Ioc
         object Resolve(IocKey key);
 
         public T Activate<T>(InjectionOptions injectionOptions = null);
-
         public object Activate(Type t, InjectionOptions injectionOptions = null);
     }
 }

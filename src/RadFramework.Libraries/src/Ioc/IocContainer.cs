@@ -4,164 +4,168 @@ using RadFramework.Libraries.Ioc.Factory;
 using RadFramework.Libraries.Ioc.Registrations;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.Ioc
+namespace RadFramework.Libraries.Ioc.Core;
+
+public class IocContainer
 {
-    public partial class IocContainer : IIocContainer
+    private List<IocContainer> fallbackResolvers = new();
+    public InjectionOptions InjectionOptions;
+    protected ConcurrentDictionary<IocKey, RegistrationBase> registrations = new ConcurrentDictionary<IocKey, RegistrationBase>();
+
+    protected ServiceFactoryLambdaGenerator LambdaGenerator { get; } = new ServiceFactoryLambdaGenerator();
+
+    public IEnumerable<IocService> ServiceList
     {
-        public IEnumerable<IocService> ServiceList
+        get
         {
-            get
-            {
-                return Enumerable.Select<KeyValuePair<IocKey, RegistrationBase>, IocService>(registrations, r => 
+            return registrations.Select(r => 
+                new IocService
+                {
+                    Key = r.Key,
+                    RegistrationBase = r.Value
+                });
+        }
+    }
+
+    public IImmutableDictionary<IocKey, IocService> ServiceLookup
+    {
+        get
+        {
+            return registrations.Select(r =>
                     new IocService
                     {
-                        Key = r.Key, 
-                        InstanceResolver = r.Value.ResolveService,
+                        Key = r.Key,
                         RegistrationBase = r.Value
-                    });
+                    })
+                .ToImmutableDictionary(
+                    k => k.Key, 
+                    v => v);
+        }
+            
+    }
+    
+    
+    public IocContainer(InjectionOptions injectionOptions)
+    {
+        this.InjectionOptions = injectionOptions;
+    }
+
+    public IocContainer(
+        IEnumerable<IocContainer> fallbackResolvers,
+        InjectionOptions injectionOptions)
+    {
+        this.fallbackResolvers = fallbackResolvers.ToList();
+        this.InjectionOptions = injectionOptions;
+    }
+
+    public IocContainer()
+    {
+        this.InjectionOptions = new InjectionOptions
+        {
+            ChooseInjectionConstructor = ctors => ctors
+                .OrderByDescending(c => c.Query(MethodBaseQueries.GetParameters).Length)
+                .First(),
+                
+            ConstructorParameterInjection = infos => infos
+        };
+    }
+
+    public IocContainer CreateNestedContainer()
+    {
+        return new IocContainer(new List<IocContainer> { this }, InjectionOptions.Clone());
+    }
+    
+    public bool HasService(Type t)
+    {
+        return HasService(new IocKey() { RegistrationKeyType = t });
+    }
+
+    public bool HasService(string key, Type t)
+    {
+        return HasService(new IocKey() { RegistrationKeyType = t });
+    }
+
+    public bool HasService(IocKey key)
+    {
+        return registrations.ContainsKey(key);
+    }
+    
+    public object Resolve(string key, Type t)
+    {
+        if (!registrations.ContainsKey(new IocKey { RegistrationKeyType = t, Key = key}))
+        {
+            throw new RegistrationNotFoundException(t);
+        }
+            
+        return Resolve(t, key);
+    }
+
+    public T Activate<T>(InjectionOptions injectionOptions = null)
+    {
+        return (T)Activate(typeof(T), injectionOptions);
+    }
+
+    public object Activate(Type t, InjectionOptions injectionOptions = null)
+    {
+        var key = new IocKey { RegistrationKeyType = t };
+            
+        return new TransientRegistration(key, t, LambdaGenerator, this)
+        {
+            InjectionOptions = injectionOptions ?? this.InjectionOptions
+        }.ResolveService();
+    }
+
+    public T Resolve<T>()
+    {
+        return (T)Resolve(typeof(T));
+    }
+
+    public object Resolve(Type t)
+    {
+        if (!registrations.ContainsKey(new IocKey { RegistrationKeyType = t}))
+        {
+            throw new RegistrationNotFoundException(t);
+        }
+            
+        return Resolve(t, null);
+    }
+
+    public object Resolve(Type t, string key)
+    {
+        var iocKey = new IocKey { RegistrationKeyType = t, Key = key };
+        if (!registrations.ContainsKey(iocKey))
+        {
+            throw new RegistrationNotFoundException(t);
+        }
+            
+        return Resolve(iocKey);
+    }
+
+    public object Resolve(IocKey key)
+    {
+        return ResolveDependency(key);
+    }
+
+    public object GetService(Type serviceType)
+    {
+        return Resolve(serviceType);
+    }
+
+    private object ResolveDependency(IocKey key)
+    {
+        if (fallbackResolvers.Count == 0 || this.HasService(key))
+        {
+            return this.Resolve(key);
+        }
+
+        foreach (IocContainer fallbackResolver in fallbackResolvers)
+        {
+            if (fallbackResolver.HasService(key))
+            {
+                return fallbackResolver.Resolve(key);
             }
         }
 
-        public IImmutableDictionary<IocKey, IocService> ServiceLookup
-        {
-            get
-            {
-                return Enumerable.Select<KeyValuePair<IocKey, RegistrationBase>, IocService>(registrations, r =>
-                        new IocService
-                        {
-                            Key = r.Key,
-                            InstanceResolver = r.Value.ResolveService,
-                            RegistrationBase = r.Value
-                        })
-                    .ToImmutableDictionary(
-                        k => k.Key, 
-                        v => v);
-            }
-            
-        }
-        
-        public bool HasService(Type t)
-        {
-            return HasService(new IocKey() { RegistrationKeyType = t });
-        }
-
-        public bool HasService(string key, Type t)
-        {
-            return HasService(new IocKey() { RegistrationKeyType = t });
-        }
-
-        public bool HasService(IocKey key)
-        {
-            return registrations.ContainsKey(key);
-        }
-        
-        public InjectionOptions RegisterTransient(Type tInterface, Type tImplementation)
-        {
-            var key = new IocKey { RegistrationKeyType = tInterface };
-            
-            return (registrations[key] = new TransientRegistration(key, tImplementation, LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-
-        public InjectionOptions RegisterTransient<TInterface, TImplementation>()
-        {
-            var key = new IocKey { RegistrationKeyType = typeof(TInterface) };
-            
-            return (registrations[key] = new TransientRegistration(key, typeof(TImplementation), LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-
-        public InjectionOptions RegisterTransient(Type tImplementation)
-        {
-            var key = new IocKey { RegistrationKeyType = tImplementation };
-            return (registrations[key] = new TransientRegistration(key, tImplementation, LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-        
-        public InjectionOptions RegisterTransient<TImplementation>()
-        {
-            var key = new IocKey { RegistrationKeyType = typeof(TImplementation) };
-            return (registrations[new IocKey { RegistrationKeyType = key.RegistrationKeyType }] = new TransientRegistration(key, key.RegistrationKeyType, LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-
-        public void RegisterSemiAutomaticTransient(Type tImplementation, Func<IocContainer, object> construct)
-        {
-            registrations[new IocKey { RegistrationKeyType = tImplementation }] = new TransientFactoryRegistration(construct, this);
-        }
-        
-        public void RegisterSemiAutomaticTransient<TImplementation>(Func<IocContainer, object> construct)
-        {
-            registrations[new IocKey { RegistrationKeyType = typeof(TImplementation) }] = new TransientFactoryRegistration(construct, this);
-        }
-
-        
-        public InjectionOptions RegisterSingleton(Type tInterface, Type tImplementation)
-        {
-            var key = new IocKey { RegistrationKeyType = tInterface };
-            
-            return (registrations[key] = new SingletonRegistration(key,tImplementation, LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-
-        public InjectionOptions RegisterSingleton<TInterface, TImplementation>()
-        {
-            var key = new IocKey { RegistrationKeyType = typeof(TInterface) };
-            
-            return (registrations[key] = new SingletonRegistration(key, typeof(TImplementation), LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-
-        public InjectionOptions RegisterSingleton(Type tImplementation)
-        {
-            var key = new IocKey { RegistrationKeyType = tImplementation };
-            
-            return (registrations[key] = new SingletonRegistration(key, tImplementation, LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-        
-        public InjectionOptions RegisterSingleton<TImplementation>()
-        {
-            Type tImplementation = typeof(TImplementation);
-            var key = new IocKey { RegistrationKeyType = tImplementation};
-            return (registrations[key] = new SingletonRegistration(key, tImplementation, LambdaGenerator, this)
-            {
-                InjectionOptions = InjectionOptions.Clone()
-            }).InjectionOptions;
-        }
-
-        public void RegisterSemiAutomaticSingleton(Type tImplementation, Func<IocContainer, object> construct)
-        {
-            registrations[new IocKey(){ RegistrationKeyType = tImplementation}] = new SingletonFactoryRegistration(construct, this);
-        }
-        
-        public void RegisterSemiAutomaticSingleton<TImplementation>(Func<IocContainer, object> construct)
-        {
-            registrations[new IocKey(){ RegistrationKeyType = typeof(TImplementation)}] = new SingletonFactoryRegistration(construct, this);
-        }
-
-        public void RegisterSingletonInstance(Type tInterface, object instance)
-        {
-            registrations[new IocKey(){ RegistrationKeyType = tInterface}] = new SingletonInstanceRegistration(instance);
-        }
-        
-        public void RegisterSingletonInstance<TInterface>(object instance)
-        {
-            registrations[new IocKey(){ RegistrationKeyType = typeof(TInterface)}] = new SingletonInstanceRegistration(instance);
-        }
+        throw new RegistrationNotFoundException(key.RegistrationKeyType);
     }
 }

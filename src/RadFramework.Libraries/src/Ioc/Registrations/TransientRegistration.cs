@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using RadFramework.Libraries.Ioc.Core;
 using RadFramework.Libraries.Ioc.Factory;
 using RadFramework.Libraries.Reflection.Caching;
 
@@ -7,25 +8,25 @@ namespace RadFramework.Libraries.Ioc.Registrations
     public class TransientRegistration : RegistrationBase
     {
        
-        private readonly IocContainer iocContainer;
+        private readonly Core.IocContainer iocContainer;
 
-        private readonly Lazy<Func<IocContainer, object>> construct;
+        private readonly DataTypes.Lazy<Func<Core.IocContainer, object>> construct;
         
-        private static ConcurrentDictionary<IocKey, Func<IocContainer, object>> factoryCache = new ConcurrentDictionary<IocKey, Func<IocContainer, object>>();
+        private static ConcurrentDictionary<IocKey, Func<Core.IocContainer, object>> factoryCache = new ConcurrentDictionary<IocKey, Func<Core.IocContainer, object>>();
         
         public TransientRegistration(
             IocKey key,
             Type tImplementation,
             ServiceFactoryLambdaGenerator lambdaGenerator,
-            IocContainer iocContainer)
+            Core.IocContainer iocContainer)
         {
             this.iocContainer = iocContainer;
 
-            this.construct = new Lazy<Func<IocContainer, object>>(
+            this.construct = new DataTypes.Lazy<Func<Core.IocContainer, object>>(
                 () => 
                     factoryCache.GetOrAdd(
                         key,
-                        tuple => lambdaGenerator.CreateInstanceFactory(this,tImplementation, iocContainer, InjectionOptions)));
+                        tuple => lambdaGenerator.CreateInstanceFactoryMethod(this,tImplementation, iocContainer, InjectionOptions)));
         }
 
         public override object ResolveService()

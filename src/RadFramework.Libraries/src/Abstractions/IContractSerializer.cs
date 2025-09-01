@@ -1,6 +1,6 @@
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Serialization;
+namespace RadFramework.Libraries.Abstractions;
 
 public interface IContractSerializer
 {

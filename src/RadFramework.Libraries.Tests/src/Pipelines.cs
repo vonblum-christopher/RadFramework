@@ -1,6 +1,8 @@
 ﻿using RadFramework.Libraries.Abstractions.Console;
 using RadFramework.Libraries.GenericUi.Console.Interaction;
 using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Ioc.Core;
+using IocContainer = RadFramework.Libraries.Ioc.Core.IocContainer;
 
 namespace RadFramework.Libraries.Tests;
 

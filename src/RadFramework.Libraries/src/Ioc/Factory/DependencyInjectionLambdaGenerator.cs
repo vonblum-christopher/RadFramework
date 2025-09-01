@@ -11,20 +11,20 @@ namespace RadFramework.Libraries.Ioc.Factory
         private static CachedMethodInfo dependencyMethodWithKey;
         static DependencyInjectionLambdaGenerator()
         {
-            CachedType argType = typeof (IocContainer);
+            CachedType argType = typeof (Core.IocContainer);
 
             dependencyMethod = argType
-                .Query(t => t.GetMethod(nameof(IocContainer.Resolve), new Type[] {typeof(Type)}));
+                .Query(t => t.GetMethod(nameof(Core.IocContainer.Resolve), new Type[] {typeof(Type)}));
             
             dependencyMethodWithKey = argType
-                .Query(t => t.GetMethod(nameof(IocContainer.Resolve), new Type[] { typeof(string), typeof(Type)}));
+                .Query(t => t.GetMethod(nameof(Core.IocContainer.Resolve), new Type[] { typeof(string), typeof(Type)}));
         }
 
-        public Func<IocContainer, object> CreateConstructorInjectionLambda(CachedConstructorInfo injectionConstructor)
+        public Func<Core.IocContainer, object> CreateConstructorInjectionLambda(CachedConstructorInfo injectionConstructor)
         {
             Type returnType = typeof (object);
 
-            ParameterExpression containerArg = Expression.Parameter(typeof(IocContainer), "container");
+            ParameterExpression containerArg = Expression.Parameter(typeof(Core.IocContainer), "container");
             ParameterExpression constructionResult = Expression.Variable(returnType, "constructionResult");
 
             var returnLabel = Expression.Label(returnType, "returnLabel");
@@ -42,13 +42,13 @@ namespace RadFramework.Libraries.Ioc.Factory
                                           };
 
             return Expression
-                .Lambda<Func<IocContainer, object>>(Expression.Block(new List<ParameterExpression> {constructionResult}, methodBody), containerArg)
+                .Lambda<Func<Core.IocContainer, object>>(Expression.Block(new List<ParameterExpression> {constructionResult}, methodBody), containerArg)
                 .Compile();
         }
 
-        public Action<IocContainer, object> CreateMethodInjectionLambda(Type targetType, CachedMethodInfo injectionMethod)
+        public Action<Core.IocContainer, object> CreateMethodInjectionLambda(Type targetType, CachedMethodInfo injectionMethod)
         {
-            ParameterExpression containerArg = Expression.Parameter(typeof(IocContainer), "container");
+            ParameterExpression containerArg = Expression.Parameter(typeof(Core.IocContainer), "container");
             ParameterExpression injectionTarget = Expression.Parameter(typeof(object), "injectionTarget");
             ParameterExpression typedInjectionTarget = Expression.Variable(targetType, "typedInjectionTarget");
 
@@ -65,13 +65,13 @@ namespace RadFramework.Libraries.Ioc.Factory
 
 
             return Expression
-                .Lambda<Action<IocContainer, object>>(Expression.Block(new [] { typedInjectionTarget }, methodBody), containerArg, injectionTarget)
+                .Lambda<Action<Core.IocContainer, object>>(Expression.Block(new [] { typedInjectionTarget }, methodBody), containerArg, injectionTarget)
                 .Compile();
         }
 
-        public Action<IocContainer, object> CreatePropertyInjectionLambda(Type targetType, CachedPropertyInfo[] injectionProperties)
+        public Action<Core.IocContainer, object> CreatePropertyInjectionLambda(Type targetType, CachedPropertyInfo[] injectionProperties)
         {
-            ParameterExpression containerArg = Expression.Parameter(typeof(IocContainer), "container");
+            ParameterExpression containerArg = Expression.Parameter(typeof(Core.IocContainer), "container");
             ParameterExpression injectionTarget = Expression.Parameter(typeof(object), "injectionTarget");
 
             ParameterExpression typedInjectionTarget = Expression.Parameter(targetType, "typedInjectionTarget");
@@ -91,7 +91,7 @@ namespace RadFramework.Libraries.Ioc.Factory
             }
 
             return Expression
-                    .Lambda<Action<IocContainer, object>>(Expression.Block(new[] { typedInjectionTarget }, injectionExpressions), containerArg, injectionTarget)
+                    .Lambda<Action<Core.IocContainer, object>>(Expression.Block(new[] { typedInjectionTarget }, injectionExpressions), containerArg, injectionTarget)
                     .Compile();
         }
         

@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Ioc.Registrations
+namespace RadFramework.Libraries.DataTypes
 {
     public class Lazy<T>
     {

@@ -1,0 +1,55 @@
+<Project>
+        
+    <UsingTask TaskName="GetIntermediatePathsTask"
+               AssemblyFile="$(SolutionDir)RewritingNetCore\pub\RewritingNetCore.dll" />
+
+    <UsingTask TaskName="ApplyRewritingTask"
+               AssemblyFile="$(SolutionDir)RewritingNetCore\pub\RewritingNetCore.dll" />
+    
+    <Target Name="GetIntermediatePaths"
+            AfterTargets="AfterCompile">
+        <GetIntermediatePathsTask IntermediateOutputPath="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)">
+            <Output TaskParameter="IntermediateAssemblyExtension" PropertyName="IntermediateAssemblyExtension"/>
+            <Output TaskParameter="IntermediateAssemblyName" PropertyName="IntermediateAssemblyName"/>
+            <Output TaskParameter="IntermediateAssemblyPath" PropertyName="IntermediateAssemblyPath"/>
+        </GetIntermediatePathsTask>
+    </Target>
+    
+    <Target Name="ApplyRewriting"
+            BeforeTargets="_CheckForCompileOutputs"
+            AfterTargets="GetIntermediatePaths">
+                <PropertyGroup>
+                    <CoreRewritingMiddleware>[
+                        { 'type' : 'RewritingApi.middleware.MetadataSerializationMiddleware, RewritingApi' }
+                    ]</CoreRewritingMiddleware>
+                    <CoreRewritingDependencies>[
+                        { 'type' : 'RewritingApi.IAssemblyQueryProvider, RewritingApi', 'implementation' : 'RewritingApi.impl.AssemblyQueryProvider, RewritingApi' }
+                     ]</CoreRewritingDependencies>
+                </PropertyGroup>
+        
+                <ApplyRewritingTask
+                        MSBuildProjectDirectory="$(MSBuildProjectDirectory)"
+                        MSBuildProjectFile="$(MSBuildProjectFile)"
+                        IntermediateOutputPath="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)"
+                        IntermediateAssemblyName="$(IntermediateAssemblyName)"
+                        IntermediateAssemblyExtension="$(IntermediateAssemblyExtension)"
+                        IntermediateAssemblyPath="$(IntermediateAssemblyPath)"
+                        CoreRewritingMiddleware="$(CoreRewritingMiddleware)"
+                        CoreRewritingDependencies="$(CoreRewritingDependencies)"
+                        LibFolder="$(SolutionDir)RewritingNetCore\bin\Debug\netcoreapp3.1">
+                    
+                    <Output TaskParameter="GAssemblyPath" PropertyName="GAssemblyPath"/>
+                    
+                </ApplyRewritingTask>
+
+                <ItemGroup>
+                    
+                    <AddModules Include="$(GAssemblyPath)" />
+                    <AddFiles Include="$(GAssemblyPath)" />
+                    <FileWrites Include="$(GAssemblyPath)" />
+                    
+                </ItemGroup>
+        
+    </Target>
+    
+</Project>

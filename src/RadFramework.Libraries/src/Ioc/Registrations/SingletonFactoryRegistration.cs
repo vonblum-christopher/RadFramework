@@ -2,11 +2,11 @@ namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class SingletonFactoryRegistration : TransientFactoryRegistration
     {
-        private Lazy<object> singleton;
+        private DataTypes.Lazy<object> singleton;
 
-        public SingletonFactoryRegistration(Func<IocContainer, object> factoryFunc, IocContainer iocContainer) : base(factoryFunc, iocContainer)
+        public SingletonFactoryRegistration(Func<Core.IocContainer, object> factoryFunc, Core.IocContainer iocContainer) : base(factoryFunc, iocContainer)
         {
-            singleton = new Lazy<object>(() => base.ResolveService());
+            singleton = new DataTypes.Lazy<object>(() => base.ResolveService());
         }
 
         public override object ResolveService()
