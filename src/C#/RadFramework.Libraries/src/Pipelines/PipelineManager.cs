@@ -17,7 +17,7 @@ public class PipelineManager
     
     public PipelineManager(IocContainer container)
     {
-        this.container = container.CreateNestedContainer();
+        this.container = container;
     }
     
     public void RegisterPipeline<TPipeline>(PipelineBuilder builder)
