@@ -1,7 +1,6 @@
 using RadFramework.Libraries.Ioc;
-using RadFramework.Libraries.Ioc.Core;
-using RadFramework.Libraries.Ioc.Factory;
-using IocContainer = RadFramework.Libraries.Ioc.Core.IocContainer;
+using RadFramework.Libraries.Ioc.Builder;
+using IocContainer = RadFramework.Libraries.Ioc.IocContainer;
 
 namespace RadFramework.Libraries.Tests;
 
@@ -15,14 +14,14 @@ public class Ioc_Factory
     [Test]
     public void RegisterAndResolveIocKeyInAnyConstellation()
     {
-        IocContainerBuilder container = new IocContainerBuilder();
+        IocContainerBuilder builder = new IocContainerBuilder();
         
-        container.RegisterTransient<A>();
-        container.RegisterTransient<B>();
-        
-        new IocContainer().
+        builder.RegisterTransient<A>();
+        builder.RegisterTransient<B>();
 
-        var Binstance = container.Resolve(onlyType);
+        var container = new IocContainer(builder);
+
+        B Binstance = container.Resolve<B>();
         
         //serviceFactoryLambdaGenerator.CreateInstanceFactoryMethod()
     }

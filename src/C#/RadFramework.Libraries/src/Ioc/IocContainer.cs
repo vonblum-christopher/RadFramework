@@ -1,25 +1,22 @@
-using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using RadFramework.Libraries.Abstractions;
-using RadFramework.Libraries.Ioc.Factory;
+using RadFramework.Libraries.Ioc.Builder;
+using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
 using RadFramework.Libraries.Ioc.Registrations;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.Ioc.Core;
+namespace RadFramework.Libraries.Ioc;
 
-public class IocContainer : IIocContainer, ICloneable<IocContainer>
+public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServiceProvider
 {
     private List<IocContainer> fallbackResolvers = new();
     public InjectionOptions InjectionOptions;
-    private IocRegistry iocRegistry = new IocRegistry();
-
-    protected ServiceFactoryLambdaGenerator LambdaGenerator { get; } = new ServiceFactoryLambdaGenerator();
-
+    public IocRegistry Registry { get; private set; } = new IocRegistry();
     public IEnumerable<IocServiceRegistration> ServiceList
     {
         get
         {
-            return iocRegistry.Registrations.Values;
+            return Registry.Registrations.Values;
         }
     }
 
@@ -27,7 +24,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
     {
         get
         {
-            return iocRegistry.Registrations.Values
+            return Registry.Registrations.Values
                 .ToImmutableDictionary(
                     k => k.Key, 
                     v => v);
@@ -50,7 +47,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     public IocContainer(IocContainerBuilder builder) : this()
     {
-        iocRegistry = builder.Clone().IocRegistry;
+        Registry = builder.IocRegistry.Clone();
     }
 
     public IocContainer()
@@ -82,12 +79,12 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     public bool HasService(IocKey key)
     {
-        return iocRegistry.Registrations.ContainsKey(key);
+        return Registry.Registrations.ContainsKey(key);
     }
     
     public object Resolve(string key, Type t)
     {
-        if (!iocRegistry.Registrations.ContainsKey(new IocKey { KeyType = t, Key = key}))
+        if (!Registry.Registrations.ContainsKey(new IocKey { KeyType = t, KeyName = key}))
         {
             throw new RegistrationNotFoundException(t);
         }
@@ -132,7 +129,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     public object Resolve(Type t, string key)
     {
-        var iocKey = new IocKey { KeyType = t, Key = key };
+        var iocKey = new IocKey { KeyType = t, KeyName = key };
             
         return ResolveDependency(iocKey);
     }
@@ -149,9 +146,15 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     private object ResolveDependency(IocKey key)
     {
-        if (fallbackResolvers.Count == 0 && this.HasService(key))
+        if (this.HasService(key))
         {
-            return this.Resolve(key);
+            IocServiceRegistration regEntry = this.Registry[key];
+            
+            return (regEntry.FactoryFunc 
+                    ?? ServiceFactoryLambdaGenerator
+                        .DefaultInstance
+                        .CreateInstanceFactoryMethod(regEntry))
+                    (this);
         }
 
         foreach (IocContainer fallbackResolver in fallbackResolvers)
@@ -171,7 +174,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
         {
             fallbackResolvers = fallbackResolvers,
             InjectionOptions = InjectionOptions.Clone(),
-            iocRegistry = iocRegistry.Clone()
+            Registry = Registry.Clone()
         };
     }
 }

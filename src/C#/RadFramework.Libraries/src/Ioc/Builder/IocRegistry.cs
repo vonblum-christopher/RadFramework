@@ -1,8 +1,7 @@
 using System.Collections.Concurrent;
 using RadFramework.Libraries.Abstractions;
-using RadFramework.Libraries.Ioc.Registrations;
 
-namespace RadFramework.Libraries.Ioc.Core;
+namespace RadFramework.Libraries.Ioc.Builder;
 
 public class IocRegistry : ICloneable<IocRegistry>
 {

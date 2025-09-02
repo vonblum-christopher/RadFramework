@@ -1,5 +1,5 @@
-using RadFramework.Libraries.Ioc.Core;
-using RadFramework.Libraries.Ioc.Factory;
+using RadFramework.Libraries.Ioc.Builder;
+using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations

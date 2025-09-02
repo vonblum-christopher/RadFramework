@@ -1,10 +1,9 @@
 using System.Linq.Expressions;
-using RadFramework.Libraries.Ioc.Core;
-using RadFramework.Libraries.Ioc.Registrations;
+using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.Ioc.Factory
+namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
 {
     public class ServiceFactoryLambdaGenerator
     {
@@ -12,7 +11,7 @@ namespace RadFramework.Libraries.Ioc.Factory
         
         private DependencyInjectionLambdaGenerator lambdaGenerator = new DependencyInjectionLambdaGenerator();
 
-        public Func<Core.IocContainer, object> CreateInstanceFactoryMethod(
+        public Func<IocContainer, object> CreateInstanceFactoryMethod(
             IocServiceRegistration serviceRegistration)
         {
             // chose the best constructor
@@ -24,7 +23,7 @@ namespace RadFramework.Libraries.Ioc.Factory
 
             var constructLamda = constructor.Query(info => lambdaGenerator.CreateConstructorInjectionLambda(info));
             
-            List<Action<Core.IocContainer, object>> injectionLambdas = new List<Action<Core.IocContainer, object>>();
+            List<Action<IocContainer, object>> injectionLambdas = new List<Action<IocContainer, object>>();
 
             var chooseInjectionMethods = serviceRegistration.InjectionOptions.ChooseInjectionMethods;
             
@@ -56,7 +55,9 @@ namespace RadFramework.Libraries.Ioc.Factory
 
             return CombineConstructorInjectionAndMemberInjectionLambdas(constructLamda, injectionLambdas.ToArray());
         }
-        public Func<Core.IocContainer, object> CombineConstructorInjectionAndMemberInjectionLambdas(Func<Core.IocContainer, object> constructorInjectionLambda, Action<Core.IocContainer, object>[] memberInjectionLambdas)
+        public Func<IocContainer, object> CombineConstructorInjectionAndMemberInjectionLambdas(
+            Func<IocContainer, object> constructorInjectionLambda,
+            Action<IocContainer, object>[] memberInjectionLambdas)
         {
             if (!memberInjectionLambdas.Any())
             {
@@ -65,7 +66,7 @@ namespace RadFramework.Libraries.Ioc.Factory
 
             Type returnType = typeof(object);
 
-            ParameterExpression containerInstance = Expression.Variable(typeof(Core.IocContainer), "containerArg");
+            ParameterExpression containerInstance = Expression.Variable(typeof(IocContainer), "containerArg");
             ParameterExpression constructionResult = Expression.Variable(returnType, "constructionResult");
 
             var returnLabel = Expression.Label(returnType, "returnLabel");
@@ -75,7 +76,7 @@ namespace RadFramework.Libraries.Ioc.Factory
                 Expression.Assign(constructionResult, Expression.Invoke(Expression.Constant(constructorInjectionLambda), containerInstance))
             };
 
-            foreach (Action<Core.IocContainer, object> injectionLambda in memberInjectionLambdas)
+            foreach (Action<IocContainer, object> injectionLambda in memberInjectionLambdas)
             {
                 methodBody.Add(Expression.Invoke(Expression.Constant(injectionLambda), containerInstance, constructionResult));
             }
@@ -84,7 +85,7 @@ namespace RadFramework.Libraries.Ioc.Factory
             methodBody.Add(Expression.Label(returnLabel, constructionResult));
 
             return Expression
-                .Lambda<Func<Core.IocContainer, object>>(Expression.Block(new List<ParameterExpression> { constructionResult }, methodBody), containerInstance)
+                .Lambda<Func<IocContainer, object>>(Expression.Block(new List<ParameterExpression> { constructionResult }, methodBody), containerInstance)
                 .Compile();
         }
     }

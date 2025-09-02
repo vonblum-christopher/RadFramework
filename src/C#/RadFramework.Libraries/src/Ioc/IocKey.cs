@@ -1,28 +1,28 @@
 using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Ioc.Core;
+namespace RadFramework.Libraries.Ioc.Builder;
 
 public class IocKey : ICloneable<IocKey>
 {
     public CachedType KeyType { get; set; }
-    public string Key { get; set; }
+    public string KeyName { get; set; }
     
     protected bool Equals(IocKey other)
     {
-        return Key == other.Key && other.KeyType == KeyType;
+        return KeyName == other.KeyName && other.KeyType == KeyType;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Key, KeyType);
+        return HashCode.Combine(KeyName, KeyType);
     }
 
     public IocKey Clone()
     {
         return new IocKey()
         {
-            Key = Key,
+            KeyName = KeyName,
             KeyType = KeyType
         };
     }

@@ -1,7 +1,7 @@
 using System.Reflection;
 using RadFramework.Libraries.Abstractions.Console;
 using RadFramework.Libraries.Ioc;
-using RadFramework.Libraries.Ioc.Core;
+using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 using RadFramework.Libraries.Serialization.Json;

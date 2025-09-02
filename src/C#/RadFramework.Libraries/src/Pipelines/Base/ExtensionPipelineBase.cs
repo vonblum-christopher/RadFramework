@@ -1,4 +1,4 @@
-using RadFramework.Libraries.Ioc.Core;
+using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Pipelines.Builder;
 
 namespace RadFramework.Libraries.Pipelines.Base;

@@ -1,8 +1,7 @@
-using System.Reflection;
-using RadFramework.Libraries.Ioc.Core;
+using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Ioc.Factory
+namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
 {
     public class InjectionOptions
     {

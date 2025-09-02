@@ -1,4 +1,6 @@
-namespace RadFramework.Libraries.Ioc.Core;
+using RadFramework.Libraries.Ioc.Builder;
+
+namespace RadFramework.Libraries.Ioc;
 
 public class IocNamedDependencyAttribute : Attribute
 {

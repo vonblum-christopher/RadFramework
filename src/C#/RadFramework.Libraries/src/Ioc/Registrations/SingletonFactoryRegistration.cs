@@ -1,12 +1,12 @@
-using RadFramework.Libraries.Ioc.Core;
-using RadFramework.Libraries.Ioc.Factory;
+using RadFramework.Libraries.Ioc.Builder;
+using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class SingletonFactoryRegistration : RegistrationBase
     {
         private DataTypes.Lazy<object> singleton;
-        private Func<Core.IocContainer, object> factoryFunc;
+        private Func<IocContainer, object> factoryFunc;
         
         public override void Initialize(IocServiceRegistration serviceRegistration)
         {

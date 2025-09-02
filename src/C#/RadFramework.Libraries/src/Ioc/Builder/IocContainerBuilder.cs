@@ -1,10 +1,8 @@
-using System.Collections.Concurrent;
 using RadFramework.Libraries.Abstractions;
-using RadFramework.Libraries.Ioc.Factory;
-using RadFramework.Libraries.Ioc.Registrations;
+using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.Ioc.Core;
+namespace RadFramework.Libraries.Ioc.Builder;
 
 public class IocContainerBuilder : ICloneable<IocContainerBuilder>
 {
@@ -89,7 +87,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterSemiAutomaticTransient(Type tImplementation, Func<Core.IocContainer, object> construct)
+    public IocContainerBuilder RegisterSemiAutomaticTransient(Type tImplementation, Func<IocContainer, object> construct)
     {
         var key = new IocKey { KeyType = tImplementation};
         
@@ -105,7 +103,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
     
-    public IocContainerBuilder RegisterSemiAutomaticTransient<TImplementation>(Func<Core.IocContainer, object> construct)
+    public IocContainerBuilder RegisterSemiAutomaticTransient<TImplementation>(Func<IocContainer, object> construct)
     {
         Type tImplementation = typeof(TImplementation);
         
@@ -187,7 +185,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterSemiAutomaticSingleton(Type tImplementation, Func<Core.IocContainer, object> construct)
+    public IocContainerBuilder RegisterSemiAutomaticSingleton(Type tImplementation, Func<IocContainer, object> construct)
     {
         var key = new IocKey { KeyType = tImplementation};
         
@@ -204,7 +202,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
     
-    public IocContainerBuilder RegisterSemiAutomaticSingleton<TImplementation>(Func<Core.IocContainer, object> construct)
+    public IocContainerBuilder RegisterSemiAutomaticSingleton<TImplementation>(Func<IocContainer, object> construct)
     {
         var key = new IocKey { KeyType = typeof(TImplementation)  };
         
