@@ -11,33 +11,23 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 {
     private List<IocContainer> fallbackResolvers = new();
     public InjectionOptions InjectionOptions;
-    private IocRegistry registrations = new IocRegistry();
+    private IocRegistry iocRegistry = new IocRegistry();
 
     protected ServiceFactoryLambdaGenerator LambdaGenerator { get; } = new ServiceFactoryLambdaGenerator();
 
-    public IEnumerable<IocService> ServiceList
+    public IEnumerable<IocServiceRegistration> ServiceList
     {
         get
         {
-            return registrations.Registrations.Select(r => 
-                new IocService
-                {
-                    Key = r.Key,
-                    RegistrationBase = r.Value
-                });
+            return iocRegistry.Registrations.Values;
         }
     }
 
-    public IImmutableDictionary<IocKey, IocService> ServiceLookup
+    public IImmutableDictionary<IocKey, IocServiceRegistration> ServiceLookup
     {
         get
         {
-            return registrations.Select(r =>
-                    new IocService
-                    {
-                        Key = r.Key,
-                        RegistrationBase = r.Value
-                    })
+            return iocRegistry.Registrations.Values
                 .ToImmutableDictionary(
                     k => k.Key, 
                     v => v);
@@ -56,6 +46,11 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
     {
         this.fallbackResolvers = fallbackResolvers.ToList();
         this.InjectionOptions = injectionOptions;
+    }
+
+    public IocContainer(IocContainerBuilder builder) : this()
+    {
+        iocRegistry = builder.Clone().IocRegistry;
     }
 
     public IocContainer()
@@ -87,12 +82,12 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     public bool HasService(IocKey key)
     {
-        return registrations.ContainsKey(key);
+        return iocRegistry.Registrations.ContainsKey(key);
     }
     
     public object Resolve(string key, Type t)
     {
-        if (!registrations.ContainsKey(new IocKey { KeyType = t, KeyString = key}))
+        if (!iocRegistry.Registrations.ContainsKey(new IocKey { KeyType = t, Key = key}))
         {
             throw new RegistrationNotFoundException(t);
         }
@@ -108,11 +103,21 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
     public object Activate(Type t, InjectionOptions injectionOptions = null)
     {
         var key = new IocKey { KeyType = t };
-            
-        return new TransientRegistration(key, t, LambdaGenerator, this)
+
+        IocServiceRegistration reg = new IocServiceRegistration()
         {
-            InjectionOptions = injectionOptions ?? this.InjectionOptions
-        }.ResolveService();
+            ImplementationType = t,
+            InjectionOptions = InjectionOptions,
+            Key = key,
+            IocLifecycle = IocLifecycles.Transient
+        };
+
+        TransientRegistration registration = new TransientRegistration()
+        {
+            IocServiceRegistration = reg
+        };
+        
+        return registration.ResolveService(this, reg);
     }
 
     public T Resolve<T>()
@@ -127,7 +132,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     public object Resolve(Type t, string key)
     {
-        var iocKey = new IocKey { KeyType = t, KeyString = key };
+        var iocKey = new IocKey { KeyType = t, Key = key };
             
         return ResolveDependency(iocKey);
     }
@@ -165,13 +170,8 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
         return new IocContainer(InjectionOptions)
         {
             fallbackResolvers = fallbackResolvers,
-            InjectionOptions = (InjectionOptions)InjectionOptions.Clone(),
-            registrations = new ConcurrentDictionary<IocKey, RegistrationBase>(
-                (IEnumerable<KeyValuePair<IocKey, RegistrationBase>>)
-                registrations
-                    .ToDictionary(
-                        k => k.Key.Clone(),
-                        v => v.Value.Clone()))
+            InjectionOptions = InjectionOptions.Clone(),
+            iocRegistry = iocRegistry.Clone()
         };
     }
 }

@@ -9,6 +9,7 @@ namespace RadFramework.Libraries.Ioc.Factory
     {
         private static CachedMethodInfo dependencyMethod;
         private static CachedMethodInfo dependencyMethodWithKey;
+        
         static DependencyInjectionLambdaGenerator()
         {
             CachedType argType = typeof (Core.IocContainer);

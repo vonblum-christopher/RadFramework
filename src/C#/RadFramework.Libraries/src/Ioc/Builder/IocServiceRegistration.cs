@@ -5,21 +5,23 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Core;
 
-public class IocService : ICloneable<IocService>
+public class IocServiceRegistration : ICloneable<IocServiceRegistration>
 {
     public IocKey Key { get; set; }
     public InjectionOptions InjectionOptions { get; set; }
     public CachedType ImplementationType { get; set; }
-    public string IocLifecycles { get; set; }
+    public string IocLifecycle { get; set; }
+    public Func<Core.IocContainer, object> FactoryFunc { get; set; }
     
-    public IocService Clone()
+    
+    public IocServiceRegistration Clone()
     {
-        return new IocService()
+        return new IocServiceRegistration()
         {
             Key = Key,
             ImplementationType = ImplementationType,
             InjectionOptions = InjectionOptions.Clone(),
-            IocLifecycles = IocLifecycles
+            IocLifecycle = IocLifecycle
         };
     }
 }

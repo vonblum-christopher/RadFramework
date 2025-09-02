@@ -4,10 +4,10 @@ using RadFramework.Libraries.Ioc.Factory;
 
 namespace RadFramework.Libraries.Ioc.Core
 {
-    public interface IIocContainer : IServiceProvider, ICloneable<IIocContainer>
+    public interface IIocContainer : IServiceProvider, ICloneable<IocContainer>
     {
-        IEnumerable<IocService> ServiceList { get; }
-        IImmutableDictionary<IocKey, IocService> ServiceLookup { get; }
+        IEnumerable<IocServiceRegistration> ServiceList { get; }
+        IImmutableDictionary<IocKey, IocServiceRegistration> ServiceLookup { get; }
 
         bool HasService(Type t);
         bool HasService(string key, Type t);

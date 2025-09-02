@@ -6,23 +6,23 @@ namespace RadFramework.Libraries.Ioc.Core;
 public class IocKey : ICloneable<IocKey>
 {
     public CachedType KeyType { get; set; }
-    public string KeyString { get; set; }
+    public string Key { get; set; }
     
     protected bool Equals(IocKey other)
     {
-        return KeyString == other.KeyString && other.KeyType == KeyType;
+        return Key == other.Key && other.KeyType == KeyType;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(KeyString, KeyType);
+        return HashCode.Combine(Key, KeyType);
     }
 
     public IocKey Clone()
     {
         return new IocKey()
         {
-            KeyString = KeyString,
+            Key = Key,
             KeyType = KeyType
         };
     }

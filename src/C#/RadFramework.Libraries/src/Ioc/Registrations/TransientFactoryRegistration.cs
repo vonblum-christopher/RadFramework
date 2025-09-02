@@ -1,24 +1,28 @@
 ﻿using RadFramework.Libraries.Ioc.Core;
+using RadFramework.Libraries.Ioc.Factory;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class TransientFactoryRegistration : RegistrationBase
     {
-        private readonly Func<Core.IocContainer, object> factoryFunc;
-
-        public TransientFactoryRegistration(Func<Core.IocContainer, object> factoryFunc)
-        {
-            this.factoryFunc = factoryFunc;
-        }
+        private Func<Core.IocContainer, object> factoryFunc;
         
-        public override object ResolveService(IocContainer container)
+        public override void Initialize(IocServiceRegistration serviceRegistration)
+        {
+            factoryFunc = serviceRegistration.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateInstanceFactoryMethod(serviceRegistration);
+        }
+
+        public override object ResolveService(IocContainer container, IocServiceRegistration serviceRegistration)
         {
             return factoryFunc(container);
         }
 
-        public override object Clone()
+        public override RegistrationBase Clone()
         {
-            return new TransientFactoryRegistration(factoryFunc);
+            return new TransientRegistration()
+            {
+                IocServiceRegistration = IocServiceRegistration.Clone(),
+            };
         }
     }
 }

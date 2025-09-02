@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using RadFramework.Libraries.Ioc.Core;
 using RadFramework.Libraries.Ioc.Registrations;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
@@ -7,18 +8,17 @@ namespace RadFramework.Libraries.Ioc.Factory
 {
     public class ServiceFactoryLambdaGenerator
     {
+        public static ServiceFactoryLambdaGenerator DefaultInstance = new ServiceFactoryLambdaGenerator();
+        
         private DependencyInjectionLambdaGenerator lambdaGenerator = new DependencyInjectionLambdaGenerator();
 
         public Func<Core.IocContainer, object> CreateInstanceFactoryMethod(
-            RegistrationBase registration,
-            CachedType type,
-            Core.IocContainer container,
-            InjectionOptions injectionOptions)
+            IocServiceRegistration serviceRegistration)
         {
             // chose the best constructor
             CachedConstructorInfo constructor =
-                (injectionOptions.ChooseInjectionConstructor ?? container.InjectionOptions.ChooseInjectionConstructor)(
-                    type
+                (serviceRegistration.InjectionOptions.ChooseInjectionConstructor ?? serviceRegistration.InjectionOptions.ChooseInjectionConstructor)(
+                    serviceRegistration.ImplementationType
                         .Query(ClassQueries.GetPublicConstructors)
                         .Select(c => (CachedConstructorInfo) c));
 
@@ -26,33 +26,31 @@ namespace RadFramework.Libraries.Ioc.Factory
             
             List<Action<Core.IocContainer, object>> injectionLambdas = new List<Action<Core.IocContainer, object>>();
 
-            var chooseInjectionMethods = injectionOptions.ChooseInjectionMethods ??
-                                         container.InjectionOptions.ChooseInjectionMethods;
+            var chooseInjectionMethods = serviceRegistration.InjectionOptions.ChooseInjectionMethods;
             
             if (chooseInjectionMethods != null)
             {
-                var injectionMethods = chooseInjectionMethods(type
+                var injectionMethods = chooseInjectionMethods(serviceRegistration.ImplementationType
                     .Query(ClassQueries.GetPublicImplementedMethods).Select(m => (CachedMethodInfo) m));
 
                 foreach (var cachedMethodInfo in injectionMethods)
                 {
                     var methodInjectionLambda = cachedMethodInfo.Query(m =>
-                        lambdaGenerator.CreateMethodInjectionLambda(type, cachedMethodInfo));
+                        lambdaGenerator.CreateMethodInjectionLambda(serviceRegistration.ImplementationType, cachedMethodInfo));
                     
                     injectionLambdas.Add(methodInjectionLambda);
                 }
             }
 
-            var chooseInjectionProperties = injectionOptions.ChooseInjectionProperties ??
-                                            container.InjectionOptions.ChooseInjectionProperties;
+            var chooseInjectionProperties = serviceRegistration.InjectionOptions.ChooseInjectionProperties;
             
             if (chooseInjectionProperties != null)
             {
-                var injectionProperties = chooseInjectionProperties(type.Query(ClassQueries.GetPublicImplementedProperties).Select(p =>(CachedPropertyInfo)p)).ToArray();
+                var injectionProperties = chooseInjectionProperties(serviceRegistration.ImplementationType.Query(ClassQueries.GetPublicImplementedProperties).Select(p =>(CachedPropertyInfo)p)).ToArray();
 
                 if (injectionProperties.Length > 0)
                 {
-                    injectionLambdas.Add(lambdaGenerator.CreatePropertyInjectionLambda(type, injectionProperties));
+                    injectionLambdas.Add(lambdaGenerator.CreatePropertyInjectionLambda(serviceRegistration.ImplementationType, injectionProperties));
                 }
             }
 

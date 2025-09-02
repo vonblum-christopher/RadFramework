@@ -15,18 +15,12 @@ public class Ioc_Factory
     [Test]
     public void RegisterAndResolveIocKeyInAnyConstellation()
     {
-        IocContainer container = new IocContainer();
+        IocContainerBuilder container = new IocContainerBuilder();
         
         container.RegisterTransient<A>();
         container.RegisterTransient<B>();
         
-        ServiceFactoryLambdaGenerator serviceFactoryLambdaGenerator = new ServiceFactoryLambdaGenerator();
-        
-        IocKey onlyType = new IocKey()
-        {
-            KeyType = typeof(B),
-            KeyString = null
-        };
+        new IocContainer().
 
         var Binstance = container.Resolve(onlyType);
         

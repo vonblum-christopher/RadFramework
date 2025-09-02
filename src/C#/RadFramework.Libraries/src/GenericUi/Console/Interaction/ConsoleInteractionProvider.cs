@@ -43,9 +43,9 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                 
                 int i = 1;
                 
-                Dictionary<int, IocService> choices = new();
+                Dictionary<int, IocServiceRegistration> choices = new();
 
-                foreach (IocService service in iocContainer.ServiceList)
+                foreach (IocServiceRegistration service in iocContainer.ServiceList)
                 {
                     _console.WriteLine($"{i}) {service.Key.KeyType.InnerMetaData.FullName}");
                     choices[i] = service;
@@ -76,12 +76,12 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                     continue;
                 }
                 
-                IocService selectedService = choices[choice];
+                IocServiceRegistration selectedServiceRegistration = choices[choice];
 
                 RenderService(
-                    selectedService.RegistrationBase.ImplementationType, 
+                    selectedServiceRegistration.ImplementationType, 
                     iocContainer
-                        .Resolve(selectedService.RegistrationBase.ImplementationType));
+                        .Resolve(selectedServiceRegistration.ImplementationType));
             }
         }
 

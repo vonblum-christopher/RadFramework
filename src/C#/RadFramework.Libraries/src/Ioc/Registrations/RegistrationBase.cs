@@ -7,11 +7,15 @@ namespace RadFramework.Libraries.Ioc.Registrations
 {
     public abstract class RegistrationBase : ICloneable<RegistrationBase>
     {
-        public IocContainerBuilder ContainerBuilder { get; set; }
-        public InjectionOptions InjectionOptions { get; set; }
-        public CachedType ImplementationType { get; set; }
+        public IocServiceRegistration IocServiceRegistration { get; set; }
 
-        public abstract object ResolveService(IocContainer container);
-        public abstract object Clone();
+        public virtual void Initialize(IocServiceRegistration serviceRegistration)
+        {
+            IocServiceRegistration = serviceRegistration;
+        }
+        
+        public abstract object ResolveService(IocContainer container, IocServiceRegistration serviceRegistration);
+        
+        public abstract RegistrationBase Clone();
     }
 }
