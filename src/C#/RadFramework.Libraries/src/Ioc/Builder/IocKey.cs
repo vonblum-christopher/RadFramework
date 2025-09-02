@@ -2,7 +2,7 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Core;
 
-public class IocKey
+public class IocKey : ICloneable
 {
     public CachedType RegistrationKeyType { get; set; }
     public string Key { get; set; }
@@ -15,6 +15,15 @@ public class IocKey
     public override int GetHashCode()
     {
         return HashCode.Combine(Key, RegistrationKeyType);
+    }
+
+    public object Clone()
+    {
+        return new IocKey()
+        {
+            Key = Key,
+            RegistrationKeyType = RegistrationKeyType
+        };
     }
 
     public override bool Equals(object obj)

@@ -4,22 +4,20 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class SingletonRegistration : TransientRegistration
+    public class SingletonRegistration
     {
         private DataTypes.Lazy<object> singleton;
         public SingletonRegistration(IocKey key,
             CachedType tImplementation,
-            ServiceFactoryLambdaGenerator lambdaGenerator,
-            Core.IocContainer iocContainer) : 
+            ServiceFactoryLambdaGenerator lambdaGenerator) : 
                 base(key,
                     tImplementation,
-                    lambdaGenerator,
-                    iocContainer)
+                    lambdaGenerator)
         {
             singleton = new DataTypes.Lazy<object>(() => base.ResolveService());
         }
         
-        public override object ResolveService()
+        public override object ResolveService(IocContainer container)
         {
             return singleton.Value;
         }

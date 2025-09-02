@@ -6,7 +6,7 @@ using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc.Core;
 
-public class IocContainer
+public class IocContainer : ICloneable
 {
     private List<IocContainer> fallbackResolvers = new();
     public InjectionOptions InjectionOptions;
@@ -44,7 +44,6 @@ public class IocContainer
             
     }
     
-    
     public IocContainer(InjectionOptions injectionOptions)
     {
         this.InjectionOptions = injectionOptions;
@@ -69,11 +68,12 @@ public class IocContainer
             ConstructorParameterInjection = infos => infos
         };
     }
-
-    public IocContainer CreateNestedContainer()
+    
+    // not yet
+    /*public IocContainer CreateNestedContainer()
     {
         return new IocContainer(new List<IocContainer> { this }, InjectionOptions.Clone());
-    }
+    }*/
     
     public bool HasService(Type t)
     {
@@ -122,23 +122,14 @@ public class IocContainer
 
     public object Resolve(Type t)
     {
-        if (!registrations.ContainsKey(new IocKey { RegistrationKeyType = t}))
-        {
-            throw new RegistrationNotFoundException(t);
-        }
-            
         return Resolve(t, null);
     }
 
     public object Resolve(Type t, string key)
     {
         var iocKey = new IocKey { RegistrationKeyType = t, Key = key };
-        if (!registrations.ContainsKey(iocKey))
-        {
-            throw new RegistrationNotFoundException(t);
-        }
             
-        return Resolve(iocKey);
+        return ResolveDependency(iocKey);
     }
 
     public object Resolve(IocKey key)
@@ -167,5 +158,13 @@ public class IocContainer
         }
 
         throw new RegistrationNotFoundException(key.RegistrationKeyType);
+    }
+
+    public object Clone()
+    {
+        return new IocContainer(InjectionOptions)
+        {
+            registrations = 
+        };
     }
 }

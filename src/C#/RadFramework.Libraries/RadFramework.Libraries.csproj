@@ -30,7 +30,6 @@
       <Folder Include="src\DictionaryObjectMapper\" />
       <Folder Include="src\Serialization\Binary\" />
       <Folder Include="src\Serialization\Xml\" />
-      <Folder Include="src\SharpShell\" />
       <Folder Include="src\Versioning\File\" />
       <Folder Include="src\GenericUi\Console\" />
       <Folder Include="src\GenericUi\Gtk\" />

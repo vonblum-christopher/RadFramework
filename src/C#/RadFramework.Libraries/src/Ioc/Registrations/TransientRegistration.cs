@@ -7,9 +7,6 @@ namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class TransientRegistration : RegistrationBase
     {
-       
-        private readonly Core.IocContainer iocContainer;
-
         private readonly DataTypes.Lazy<Func<Core.IocContainer, object>> construct;
         
         private static ConcurrentDictionary<IocKey, Func<Core.IocContainer, object>> factoryCache = new ConcurrentDictionary<IocKey, Func<Core.IocContainer, object>>();
@@ -17,21 +14,24 @@ namespace RadFramework.Libraries.Ioc.Registrations
         public TransientRegistration(
             IocKey key,
             Type tImplementation,
-            ServiceFactoryLambdaGenerator lambdaGenerator,
-            Core.IocContainer iocContainer)
+            ServiceFactoryLambdaGenerator lambdaGenerator)
         {
-            this.iocContainer = iocContainer;
 
             this.construct = new DataTypes.Lazy<Func<Core.IocContainer, object>>(
                 () => 
                     factoryCache.GetOrAdd(
                         key,
-                        tuple => lambdaGenerator.CreateInstanceFactoryMethod(this,tImplementation, iocContainer, InjectionOptions)));
+                        tuple => lambdaGenerator.CreateInstanceFactoryMethod(tuple.,tImplementation, InjectionOptions)));
         }
 
-        public override object ResolveService()
+        public override object ResolveService(IocContainer container)
         {
-            return construct.Value(iocContainer);
+            return construct.Value(container);
+        }
+
+        public override object Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }
