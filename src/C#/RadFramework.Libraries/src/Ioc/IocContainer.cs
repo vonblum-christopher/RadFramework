@@ -11,7 +11,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 {
     private List<IocContainer> fallbackResolvers = new();
     public InjectionOptions InjectionOptions;
-    protected ConcurrentDictionary<IocKey, RegistrationBase> registrations = new ConcurrentDictionary<IocKey, RegistrationBase>();
+    private IocRegistry registrations = new IocRegistry();
 
     protected ServiceFactoryLambdaGenerator LambdaGenerator { get; } = new ServiceFactoryLambdaGenerator();
 
@@ -19,7 +19,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
     {
         get
         {
-            return registrations.Select(r => 
+            return registrations.Registrations.Select(r => 
                 new IocService
                 {
                     Key = r.Key,
@@ -77,12 +77,12 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
     
     public bool HasService(Type t)
     {
-        return HasService(new IocKey() { RegistrationKeyType = t });
+        return HasService(new IocKey() { KeyType = t });
     }
 
     public bool HasService(string key, Type t)
     {
-        return HasService(new IocKey() { RegistrationKeyType = t });
+        return HasService(new IocKey() { KeyType = t });
     }
 
     public bool HasService(IocKey key)
@@ -92,7 +92,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
     
     public object Resolve(string key, Type t)
     {
-        if (!registrations.ContainsKey(new IocKey { RegistrationKeyType = t, Key = key}))
+        if (!registrations.ContainsKey(new IocKey { KeyType = t, KeyString = key}))
         {
             throw new RegistrationNotFoundException(t);
         }
@@ -107,7 +107,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     public object Activate(Type t, InjectionOptions injectionOptions = null)
     {
-        var key = new IocKey { RegistrationKeyType = t };
+        var key = new IocKey { KeyType = t };
             
         return new TransientRegistration(key, t, LambdaGenerator, this)
         {
@@ -127,7 +127,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
 
     public object Resolve(Type t, string key)
     {
-        var iocKey = new IocKey { RegistrationKeyType = t, Key = key };
+        var iocKey = new IocKey { KeyType = t, KeyString = key };
             
         return ResolveDependency(iocKey);
     }
@@ -157,7 +157,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>
             }
         }
 
-        throw new RegistrationNotFoundException(key.RegistrationKeyType);
+        throw new RegistrationNotFoundException(key.KeyType);
     }
 
     public IocContainer Clone()

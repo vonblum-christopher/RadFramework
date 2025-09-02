@@ -10,7 +10,7 @@ public class IocService : ICloneable<IocService>
     public IocKey Key { get; set; }
     public InjectionOptions InjectionOptions { get; set; }
     public CachedType ImplementationType { get; set; }
-    public string IocMode { get; set; }
+    public string IocLifecycles { get; set; }
     
     public IocService Clone()
     {
@@ -19,7 +19,7 @@ public class IocService : ICloneable<IocService>
             Key = Key,
             ImplementationType = ImplementationType,
             InjectionOptions = InjectionOptions.Clone(),
-            IocMode = IocMode
+            IocLifecycles = IocLifecycles
         };
     }
 }

@@ -23,14 +23,14 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
     
     public IocContainerBuilder RegisterTransient(Type tInterface, Type tImplementation)
     {
-        var key = new IocKey { RegistrationKeyType = tInterface };
-
-        registrations.Registrations[key] = new IocService()
+        var key = new IocKey { KeyType = tInterface };
+        
+        registrations[key] = new IocService()
         {
             Key = key,
-            InjectionOptions = InjectionOptions.Clone(),
             ImplementationType = tImplementation,
-              
+            InjectionOptions = InjectionOptions,
+            IocLifecycles = IocLifecycles.Transient
         };
 
         return this;
@@ -38,100 +38,174 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
 
     public IocContainerBuilder RegisterTransient<TInterface, TImplementation>()
     {
-        var key = new IocKey { RegistrationKeyType = typeof(TInterface) };
+        var key = new IocKey { KeyType = typeof(TInterface)};
         
-        return registrations[key] = new TransientRegistration(key, typeof(TImplementation), lambdaGenerator, this)
+        registrations[key] = new IocService()
         {
-            InjectionOptions = InjectionOptions.Clone()
+            Key = key,
+            ImplementationType = typeof(TImplementation),
+            InjectionOptions = InjectionOptions,
+            IocLifecycles = IocLifecycles.Transient
         };
+        
         return this;
     }
 
     public IocContainerBuilder RegisterTransient(Type tImplementation)
     {
-        var key = new IocKey { RegistrationKeyType = tImplementation };
-        return registrations[key] = new TransientRegistration(key, tImplementation, lambdaGenerator, this)
+        var key = new IocKey { KeyType = tImplementation};
+        
+        registrations[key] = new IocService()
         {
-            InjectionOptions = InjectionOptions.Clone()
+            Key = key,
+            ImplementationType = tImplementation,
+            InjectionOptions = InjectionOptions,
+            IocLifecycles = IocLifecycles.Transient
         };
+        
         return this;
     }
     
     public IocContainerBuilder RegisterTransient<TImplementation>()
     {
-        var key = new IocKey { RegistrationKeyType = typeof(TImplementation) };
-        registrations[new IocKey { RegistrationKeyType = key.RegistrationKeyType }] = new TransientRegistration(key, key.RegistrationKeyType, lambdaGenerator, this)
+        var key = new IocKey { KeyType = typeof(TImplementation)};
+        
+        registrations[key] = new IocService()
         {
-            InjectionOptions = InjectionOptions.Clone()
+            Key = key,
+            ImplementationType = key.KeyType,
+            InjectionOptions = InjectionOptions,
+            IocLifecycles = IocLifecycles.Transient
         };
+        
         return this;
     }
 
     public IocContainerBuilder RegisterSemiAutomaticTransient(Type tImplementation, Func<Core.IocContainer, object> construct)
     {
-        registrations[new IocKey { RegistrationKeyType = tImplementation }] = new TransientFactoryRegistration(construct, this);
+        var key = new IocKey { KeyType = tImplementation};
+        
+        registrations[key] = new IocService()
+        {
+            Key = key,
+            ImplementationType = tImplementation,
+            InjectionOptions = InjectionOptions,
+            IocLifecycles = IocLifecycles.Transient
+        };
+        
         return this;
     }
     
     public IocContainerBuilder RegisterSemiAutomaticTransient<TImplementation>(Func<Core.IocContainer, object> construct)
     {
-        registrations[new IocKey { RegistrationKeyType = typeof(TImplementation) }] = new TransientFactoryRegistration(construct, this);
+        Type tImplementation = typeof(TImplementation);
+        
+        var key = new IocKey { KeyType = tImplementation};
+        
+        registrations[key] = new IocService()
+        {
+            Key = key,
+            ImplementationType = tImplementation,
+            InjectionOptions = InjectionOptions,
+            IocLifecycles = IocLifecycles.Transient
+        };
+        
         return this;
     }
     
     public IocContainerBuilder RegisterSingleton(Type tInterface, Type tImplementation)
     {
-        var key = new IocKey { RegistrationKeyType = tInterface };
+        var key = new IocKey { KeyType = tInterface};
         
-        registrations[key] = new SingletonRegistration(key,tImplementation, lambdaGenerator, this)
+        registrations[key] = new IocService()
         {
-            InjectionOptions = InjectionOptions.Clone()
+            Key = key,
+            ImplementationType = tImplementation,
+            InjectionOptions = InjectionOptions,
+            IocLifecycles = IocLifecycles.Singleton
         };
+        
         return this;
     }
 
     public IocContainerBuilder RegisterSingleton<TInterface, TImplementation>()
     {
-        var key = new IocKey { RegistrationKeyType = typeof(TInterface) };
+        var key = new IocKey { KeyType = typeof(TInterface)};
         
-        registrations[key] = new SingletonRegistration(key, typeof(TImplementation), lambdaGenerator, this)
-        {
-            InjectionOptions = InjectionOptions.Clone()
-        };
+        registrations[key] =
+            new IocService()
+            {
+                Key = key,
+                ImplementationType = typeof(TImplementation),
+                InjectionOptions = InjectionOptions,
+                IocLifecycles = IocLifecycles.Singleton
+            };
+        
         return this;
     }
 
     public IocContainerBuilder RegisterSingleton(Type tImplementation)
     {
-        var key = new IocKey { RegistrationKeyType = tImplementation };
+        var key = new IocKey { KeyType = tImplementation};
         
-        registrations[key] = new SingletonRegistration(key, tImplementation, lambdaGenerator, this)
-        {
-            InjectionOptions = InjectionOptions.Clone()
-        };
+        registrations[key] =
+            new IocService()
+            {
+                Key = key,
+                ImplementationType = key.KeyType,
+                InjectionOptions = InjectionOptions,
+                IocLifecycles = IocLifecycles.Singleton
+            };
+        
         return this;
     }
     
     public IocContainerBuilder RegisterSingleton<TImplementation>()
     {
         Type tImplementation = typeof(TImplementation);
-        var key = new IocKey { RegistrationKeyType = tImplementation};
-        registrations[key] = new SingletonRegistration(key, tImplementation, lambdaGenerator, this)
-        {
-            InjectionOptions = InjectionOptions.Clone()
-        };
+        
+        var key = new IocKey { KeyType = tImplementation};
+        
+        registrations[key] = new IocService()
+            {
+                Key = key,
+                ImplementationType = tImplementation,
+                InjectionOptions = InjectionOptions,
+                IocLifecycles = IocLifecycles.Singleton
+            };
+        
         return this;
     }
 
     public IocContainerBuilder RegisterSemiAutomaticSingleton(Type tImplementation, Func<Core.IocContainer, object> construct)
     {
-        registrations[new IocKey(){ RegistrationKeyType = tImplementation}] = new SingletonFactoryRegistration(construct, this);
+        var key = new IocKey { KeyType = tImplementation};
+        
+        registrations[key] =
+            new IocService()
+            {
+                Key = key,
+                ImplementationType = key.KeyType,
+                InjectionOptions = InjectionOptions,
+                IocLifecycles = IocLifecycles.Singleton
+            };
+        
         return this;
     }
     
     public IocContainerBuilder RegisterSemiAutomaticSingleton<TImplementation>(Func<Core.IocContainer, object> construct)
     {
-        registrations[new IocKey(){ RegistrationKeyType = typeof(TImplementation)}] = new SingletonFactoryRegistration(construct, this);
+        var key = new IocKey { KeyType = typeof(TImplementation)  };
+        
+        registrations[key] =
+            new IocService()
+            {
+                Key = key,
+                ImplementationType = key.KeyType,
+                InjectionOptions = InjectionOptions,
+                IocLifecycles = IocLifecycles.Singleton
+            };
+        
         return this;
     }
 

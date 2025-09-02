@@ -47,7 +47,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
 
                 foreach (IocService service in iocContainer.ServiceList)
                 {
-                    _console.WriteLine($"{i}) {service.Key.RegistrationKeyType.InnerMetaData.FullName}");
+                    _console.WriteLine($"{i}) {service.Key.KeyType.InnerMetaData.FullName}");
                     choices[i] = service;
                     i++;
                 }

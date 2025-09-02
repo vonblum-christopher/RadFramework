@@ -24,8 +24,8 @@ public class Ioc_Factory
         
         IocKey onlyType = new IocKey()
         {
-            RegistrationKeyType = typeof(B),
-            Key = null
+            KeyType = typeof(B),
+            KeyString = null
         };
 
         var Binstance = container.Resolve(onlyType);
