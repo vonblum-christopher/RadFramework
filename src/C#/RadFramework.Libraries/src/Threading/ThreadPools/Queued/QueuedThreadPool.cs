@@ -20,7 +20,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// <summary>
         /// The queue that feeds the thread pool.
         /// </summary>
-        public ConcurrentQueue<TQueueTask> Queue { get; } = new ConcurrentQueue<TQueueTask>();
+        public ConcurrentQueue<TQueueTask> Queue { get; } = new();
 
         /// <summary>
         /// The delegate that gets called for each workload from the queue

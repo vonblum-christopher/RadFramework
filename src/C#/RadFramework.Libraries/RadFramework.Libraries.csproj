@@ -27,7 +27,6 @@
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\GenericUi\Web\" />
-      <Folder Include="src\Injection\" />
       <Folder Include="src\ObjectMapper\" />
       <Folder Include="src\Serialization\Binary\" />
       <Folder Include="src\Serialization\Xml\" />

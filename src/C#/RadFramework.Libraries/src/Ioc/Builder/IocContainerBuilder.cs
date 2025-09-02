@@ -1,5 +1,5 @@
 using RadFramework.Libraries.Abstractions;
-using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
+using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc.Builder;
@@ -7,10 +7,8 @@ namespace RadFramework.Libraries.Ioc.Builder;
 public class IocContainerBuilder : ICloneable<IocContainerBuilder>
 {
     private IocRegistry registrations = new();
-
-    private ServiceFactoryLambdaGenerator lambdaGenerator = new ServiceFactoryLambdaGenerator();
     
-    public InjectionOptions InjectionOptions { get; set; }  = new InjectionOptions
+    public InjectionOptions InjectionOptions { get; set; } = new()
     {
         ChooseInjectionConstructor = ctors => ctors
             .OrderByDescending(c => c.Query(MethodBaseQueries.GetParameters).Length)
@@ -31,7 +29,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
     {
         var key = new IocKey { KeyType = tInterface };
         
-        registrations[key] = new IocServiceRegistration()
+        registrations[key] = new IocDependency
         {
             Key = key,
             ImplementationType = tImplementation,
@@ -46,7 +44,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
     {
         var key = new IocKey { KeyType = typeof(TInterface)};
         
-        registrations[key] = new IocServiceRegistration()
+        registrations[key] = new IocDependency
         {
             Key = key,
             ImplementationType = typeof(TImplementation),
@@ -61,7 +59,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
     {
         var key = new IocKey { KeyType = tImplementation};
         
-        registrations[key] = new IocServiceRegistration()
+        registrations[key] = new IocDependency
         {
             Key = key,
             ImplementationType = tImplementation,
@@ -76,7 +74,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
     {
         var key = new IocKey { KeyType = typeof(TImplementation)};
         
-        registrations[key] = new IocServiceRegistration()
+        registrations[key] = new IocDependency
         {
             Key = key,
             ImplementationType = key.KeyType,
@@ -91,7 +89,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
     {
         var key = new IocKey { KeyType = tImplementation};
         
-        registrations[key] = new IocServiceRegistration()
+        registrations[key] = new IocDependency
         {
             Key = key,
             ImplementationType = tImplementation,
@@ -109,7 +107,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         
         var key = new IocKey { KeyType = tImplementation};
         
-        registrations[key] = new IocServiceRegistration()
+        registrations[key] = new IocDependency
         {
             Key = key,
             ImplementationType = tImplementation,
@@ -125,7 +123,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
     {
         var key = new IocKey { KeyType = tInterface};
         
-        registrations[key] = new IocServiceRegistration()
+        registrations[key] = new IocDependency
         {
             Key = key,
             ImplementationType = tImplementation,
@@ -141,7 +139,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         var key = new IocKey { KeyType = typeof(TInterface)};
         
         registrations[key] =
-            new IocServiceRegistration()
+            new IocDependency
             {
                 Key = key,
                 ImplementationType = typeof(TImplementation),
@@ -157,7 +155,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         var key = new IocKey { KeyType = tImplementation};
         
         registrations[key] =
-            new IocServiceRegistration()
+            new IocDependency
             {
                 Key = key,
                 ImplementationType = key.KeyType,
@@ -174,8 +172,8 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         
         var key = new IocKey { KeyType = tImplementation};
         
-        registrations[key] = new IocServiceRegistration()
-            {
+        registrations[key] = new IocDependency
+        {
                 Key = key,
                 ImplementationType = tImplementation,
                 InjectionOptions = InjectionOptions,
@@ -190,7 +188,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         var key = new IocKey { KeyType = tImplementation};
         
         registrations[key] =
-            new IocServiceRegistration()
+            new IocDependency
             {
                 Key = key,
                 ImplementationType = key.KeyType,
@@ -207,7 +205,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         var key = new IocKey { KeyType = typeof(TImplementation)  };
         
         registrations[key] =
-            new IocServiceRegistration()
+            new IocDependency
             {
                 Key = key,
                 ImplementationType = key.KeyType,
@@ -219,12 +217,16 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
+    public IocContainer CreateContainer()
+    {
+        return new IocContainer(this);
+    }
+
     public IocContainerBuilder Clone()
     {
-        return new IocContainerBuilder()
+        return new IocContainerBuilder
         {
             InjectionOptions = InjectionOptions.Clone(),
-            lambdaGenerator = lambdaGenerator,
             registrations = registrations.Clone()
         };
     }

@@ -44,9 +44,9 @@ namespace RadFramework.Libraries.Serialization.Json.Dom
         {
             int nesting = 0;
 
-            Dictionary<string, object> objectProperties = new Dictionary<string, object>();
+            Dictionary<string, object> objectProperties = new();
             
-            JsonParserCursor cursor = new JsonParserCursor(json, 0);
+            JsonParserCursor cursor = new(json, 0);
 
             do
             {

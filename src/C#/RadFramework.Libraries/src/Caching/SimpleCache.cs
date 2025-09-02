@@ -5,7 +5,7 @@ namespace RadFramework.Libraries.Caching
     public class SimpleCache : ISimpleCache
     {
         private readonly SimpleCache _parentCache;
-        private ConcurrentDictionary<string, object> cache = new ConcurrentDictionary<string, object>();
+        private ConcurrentDictionary<string, object> cache = new();
         
         [ThreadStatic]
         private Stack<Dictionary<string, object>> contextualCaches;

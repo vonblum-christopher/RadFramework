@@ -14,7 +14,7 @@ namespace RadFramework.Libraries.Serialization.Json;
 
 public class JsonContractSerializer : IContractSerializer
 {
-    public static JsonContractSerializer Instance { get; } = new JsonContractSerializer();
+    public static JsonContractSerializer Instance { get; } = new();
     
     public byte[] Serialize(CachedType type, object model)
     {
@@ -59,7 +59,7 @@ public class JsonContractSerializer : IContractSerializer
         PropertyInfo keyInfo = kvType.GetProperty("Key");
         PropertyInfo valueInfo = kvType.GetProperty("Value");
 
-        Dictionary<string, object> properties = new Dictionary<string, object>();
+        Dictionary<string, object> properties = new();
         
         foreach (object kv in dict)
         {
@@ -82,7 +82,7 @@ public class JsonContractSerializer : IContractSerializer
 
         var properties = t.Query(TypeQueries.GetProperties);
         
-        Dictionary<string, object> propertiesDictionary = new Dictionary<string, object>();
+        Dictionary<string, object> propertiesDictionary = new();
 
         foreach (var property in properties)
         {
@@ -94,7 +94,7 @@ public class JsonContractSerializer : IContractSerializer
 
     private object CreateJsonArrayFromEnumerable(IEnumerable enumerable)
     {
-        List<object> arrayData = new List<object>();
+        List<object> arrayData = new();
         foreach (object o in enumerable)
         {
             arrayData.Add(CreateJsonObjectForSerialization(o.GetType(), o));

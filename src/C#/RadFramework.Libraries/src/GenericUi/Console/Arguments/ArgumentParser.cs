@@ -7,7 +7,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Arguments
     {
         public static T ParseArgs<T>(string[] args) where T : new()
         {
-            Dictionary<string, string> namedArgs = new Dictionary<string, string>();
+            Dictionary<string, string> namedArgs = new();
             
             for (int i = 0; i < args.Length; i++)
             {
@@ -20,7 +20,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Arguments
 
             CachedType t = typeof(T);
             
-            T instance = new T();
+            T instance = new();
             
             foreach (var propertyInfo in t.Query(ClassQueries.GetPublicImplementedProperties))
             {

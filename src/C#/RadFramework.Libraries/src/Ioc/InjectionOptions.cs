@@ -1,7 +1,6 @@
-using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
+namespace RadFramework.Libraries.Ioc
 {
     public class InjectionOptions
     {
@@ -19,7 +18,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
         
         public InjectionOptions Clone()
         {
-            return new InjectionOptions()
+            return new InjectionOptions
             {
                 ChooseInjectionConstructor = ChooseInjectionConstructor,
                 ConstructorParameterInjection = ConstructorParameterInjection,

@@ -17,7 +17,7 @@ namespace RadFramework.Libraries.TextTranslation.Loaders
         
         public IEnumerable<TranslationDictionary> LoadDictionaries()
         {
-            using (StreamReader sr = new StreamReader(_assembly.GetManifestResourceStream(_resourceName)))
+            using (StreamReader sr = new(_assembly.GetManifestResourceStream(_resourceName)))
             {
                 return (IEnumerable<TranslationDictionary>)
                     JsonContractSerializer

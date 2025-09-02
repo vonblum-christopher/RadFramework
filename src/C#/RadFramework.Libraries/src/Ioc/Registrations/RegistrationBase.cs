@@ -6,14 +6,14 @@ namespace RadFramework.Libraries.Ioc.Registrations
 {
     public abstract class RegistrationBase : ICloneable<RegistrationBase>
     {
-        public IocServiceRegistration IocServiceRegistration { get; set; }
+        public IocDependency IocDependency { get; set; }
 
-        public virtual void Initialize(IocServiceRegistration serviceRegistration)
+        public virtual void Initialize(IocDependency dependency)
         {
-            IocServiceRegistration = serviceRegistration;
+            IocDependency = dependency;
         }
         
-        public abstract object ResolveService(IocContainer container, IocServiceRegistration serviceRegistration);
+        public abstract object ResolveService(IocContainer container, IocDependency dependency);
         
         public abstract RegistrationBase Clone();
     }

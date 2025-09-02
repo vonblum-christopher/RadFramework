@@ -16,8 +16,7 @@ namespace RadFramework.Libraries.Threading.Semaphores
         /// <summary>
         /// Maps thread id to wait event
         /// </summary>
-        private ConcurrentDictionary<AutoResetEvent, AutoResetEvent> eventsInTrapCollection
-            = new ConcurrentDictionary<AutoResetEvent, AutoResetEvent>();
+        private ConcurrentDictionary<AutoResetEvent, AutoResetEvent> eventsInTrapCollection = new();
 
         /// <summary>
         /// Constructor.

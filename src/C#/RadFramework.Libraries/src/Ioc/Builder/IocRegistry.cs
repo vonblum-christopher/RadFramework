@@ -5,15 +5,14 @@ namespace RadFramework.Libraries.Ioc.Builder;
 
 public class IocRegistry : ICloneable<IocRegistry>
 {
-    public ConcurrentDictionary<IocKey, IocServiceRegistration> Registrations =
-        new ConcurrentDictionary<IocKey, IocServiceRegistration>();
+    public ConcurrentDictionary<IocKey, IocDependency> Registrations = new();
 
     public IocRegistry Clone()
     {
-        return new IocRegistry()
+        return new IocRegistry
         {
-            Registrations = new ConcurrentDictionary<IocKey, IocServiceRegistration>(
-                (IEnumerable<KeyValuePair<IocKey, IocServiceRegistration>>)
+            Registrations = new ConcurrentDictionary<IocKey, IocDependency>(
+                (IEnumerable<KeyValuePair<IocKey, IocDependency>>)
                 Registrations
                     .ToDictionary(
                         k => k.Key.Clone(),
@@ -21,7 +20,7 @@ public class IocRegistry : ICloneable<IocRegistry>
         };
     }
 
-    public IocServiceRegistration this[IocKey iocKey]
+    public IocDependency this[IocKey iocKey]
     {
         get => Registrations[iocKey];
         set => Registrations[iocKey] = value;

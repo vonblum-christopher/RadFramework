@@ -1,5 +1,5 @@
 using RadFramework.Libraries.Ioc.Builder;
-using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
+using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
@@ -8,12 +8,12 @@ namespace RadFramework.Libraries.Ioc.Registrations
         private DataTypes.Lazy<object> singleton;
         private Func<IocContainer, object> factoryFunc;
         
-        public override void Initialize(IocServiceRegistration serviceRegistration)
+        public override void Initialize(IocDependency dependency)
         {
-            factoryFunc = serviceRegistration.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(serviceRegistration);
+            factoryFunc = dependency.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency);
         }
 
-        public override object ResolveService(IocContainer container, IocServiceRegistration serviceRegistration)
+        public override object ResolveService(IocContainer container, IocDependency dependency)
         {
             if (singleton == null)
             {
@@ -27,7 +27,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
         {
             return new TransientRegistration()
             {
-                IocServiceRegistration = IocServiceRegistration.Clone(),
+                IocDependency = IocDependency.Clone(),
             };
         }
     }

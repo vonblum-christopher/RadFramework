@@ -12,7 +12,7 @@ namespace RadFramework.Libraries.Collections
         /// The dictionary that holds the references.
         /// Value is sbyte so we dont waste resources.
         /// </summary>
-        private readonly Dictionary<TReferenceType, sbyte> registry = new Dictionary<TReferenceType, sbyte>();
+        private readonly Dictionary<TReferenceType, sbyte> registry = new();
 
         /// <summary>
         /// The count of registered objects.

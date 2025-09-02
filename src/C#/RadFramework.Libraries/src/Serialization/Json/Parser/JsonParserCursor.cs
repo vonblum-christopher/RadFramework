@@ -88,7 +88,7 @@ namespace RadFramework.Libraries.Serialization.Json.Parser
             
             Index++;
 
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             
             while(true)
             {

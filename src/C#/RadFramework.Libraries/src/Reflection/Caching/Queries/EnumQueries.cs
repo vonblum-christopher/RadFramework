@@ -4,7 +4,7 @@ namespace RadFramework.Libraries.Reflection.Caching.Queries
     {
         public static string[] GetEnumValues(Type @enum)
         {
-            List<string> stringVals = new List<string>();
+            List<string> stringVals = new();
 
             foreach (object value in @enum.GetEnumValues())
             {

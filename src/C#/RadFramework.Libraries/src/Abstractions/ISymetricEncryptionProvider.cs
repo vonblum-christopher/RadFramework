@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Encryption.Abtractions;
+namespace RadFramework.Libraries.Abstractions;
 
 public interface ISymetricEncryptionProvider
 {

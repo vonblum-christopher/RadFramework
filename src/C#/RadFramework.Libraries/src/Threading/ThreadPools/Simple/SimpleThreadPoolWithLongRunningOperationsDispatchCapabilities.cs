@@ -19,7 +19,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Simple
         /// Threads that are long running get stored here.
         /// </summary>
         public ObjectReferenceRegistry<PoolThread> LongRunningOperationsRegistry { get; } =
-            new ObjectReferenceRegistry<PoolThread>();
+            new();
 
         /// <summary>
         /// The priority that gets assigned to a thread when leaving the pool as a long running operation.

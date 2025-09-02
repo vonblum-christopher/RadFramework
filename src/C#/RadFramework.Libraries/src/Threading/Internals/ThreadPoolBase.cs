@@ -28,7 +28,7 @@ namespace RadFramework.Libraries.Threading.Internals
         /// <summary>
         /// Holds the references to the looping threads.
         /// </summary>
-        public ObjectReferenceRegistry<PoolThread> ProcessingThreadRegistry { get; } = new ObjectReferenceRegistry<PoolThread>();
+        public ObjectReferenceRegistry<PoolThread> ProcessingThreadRegistry { get; } = new();
         
         /// <summary>
         /// Is true when the processor gets teared down.

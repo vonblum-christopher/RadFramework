@@ -26,12 +26,12 @@ namespace RadFramework.Libraries.Collections
         /// <summary>
         /// A dictionary that holds reference to pooled objects.
         /// </summary>
-        private readonly ObjectReferenceRegistry<TObject> objectPoolRegistry = new ObjectReferenceRegistry<TObject>();
+        private readonly ObjectReferenceRegistry<TObject> objectPoolRegistry = new();
         
         /// <summary>
         /// A dictionary that holds reference to reserved objects that return to the pool later.
         /// </summary>
-        private readonly ObjectReferenceRegistry<TObject> reservedPoolRegistry = new ObjectReferenceRegistry<TObject>();
+        private readonly ObjectReferenceRegistry<TObject> reservedPoolRegistry = new();
 
         /// <summary>
         /// A timer that triggers PerformCleanup() in order to reach the optimal pool size.

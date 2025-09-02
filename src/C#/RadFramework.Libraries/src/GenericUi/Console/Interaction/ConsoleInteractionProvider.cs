@@ -17,7 +17,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
         private readonly IConsole _console;
         private readonly ITranslationProvider _translationProvider;
 
-        public readonly List<object> clipboard = new List<object>();
+        public readonly List<object> clipboard = new();
 
         public ConsoleInteractionProvider(IConsole console, ITranslationProvider translationProvider)
         {
@@ -43,9 +43,9 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                 
                 int i = 1;
                 
-                Dictionary<int, IocServiceRegistration> choices = new();
+                Dictionary<int, IocDependency> choices = new();
 
-                foreach (IocServiceRegistration service in iocContainer.ServiceList)
+                foreach (IocDependency service in iocContainer.ServiceList)
                 {
                     _console.WriteLine($"{i}) {service.Key.KeyType.InnerMetaData.FullName}");
                     choices[i] = service;
@@ -76,18 +76,18 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                     continue;
                 }
                 
-                IocServiceRegistration selectedServiceRegistration = choices[choice];
+                IocDependency selectedDependency = choices[choice];
 
                 RenderService(
-                    selectedServiceRegistration.ImplementationType, 
+                    selectedDependency.ImplementationType, 
                     iocContainer
-                        .Resolve(selectedServiceRegistration.ImplementationType));
+                        .Resolve(selectedDependency.ImplementationType));
             }
         }
 
         public void RenderService(CachedType tService, object serviceObject)
         {
-            Dictionary<int, CachedMethodInfo> choose = new Dictionary<int, CachedMethodInfo>();
+            Dictionary<int, CachedMethodInfo> choose = new();
             
             int i = 1;
             
@@ -154,7 +154,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
         {
             T cloned = (T)JsonContractSerializer.Instance.Clone(t, obj);
             
-            Dictionary<int, object> choose = new Dictionary<int, object>();
+            Dictionary<int, object> choose = new();
             
             int i = 1;
 
@@ -364,7 +364,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
         {
             var parameters = cachedMethodInfo.Query(MethodBaseQueries.GetParameters);
             
-            Dictionary<ParameterInfo, object> arguments = new Dictionary<ParameterInfo, object>();
+            Dictionary<ParameterInfo, object> arguments = new();
 
             foreach (var parameterInfo in parameters)
             {

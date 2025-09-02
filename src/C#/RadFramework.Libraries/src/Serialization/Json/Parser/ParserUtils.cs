@@ -33,7 +33,7 @@ namespace RadFramework.Libraries.Serialization.Json.Parser
 
         public static string ReadUntilChars(JsonParserCursor cursor, char[] stopChars)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             
             while (!CharArrayContains(cursor.CurrentChar, stopChars))
             {

@@ -1,5 +1,5 @@
 using RadFramework.Libraries.Ioc.Builder;
-using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
+using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
@@ -10,15 +10,15 @@ namespace RadFramework.Libraries.Ioc.Registrations
 
         private Func<IocContainer, object> factoryFunc;
 
-        private IocServiceRegistration serviceRegistration;
+        private IocDependency dependency;
         
-        public override void Initialize(IocServiceRegistration serviceRegistration)
+        public override void Initialize(IocDependency dependency)
         {
-            serviceRegistration = this.serviceRegistration;
-            factoryFunc = serviceRegistration.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(serviceRegistration);
+            dependency = this.dependency;
+            factoryFunc = dependency.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency);
         }
 
-        public override object ResolveService(IocContainer container, IocServiceRegistration serviceRegistration)
+        public override object ResolveService(IocContainer container, IocDependency dependency)
         {
             if (singleton == null)
             {
@@ -32,7 +32,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
         {
             return new SingletonRegistration()
                 {
-                    IocServiceRegistration = serviceRegistration.Clone()
+                    IocDependency = dependency.Clone()
                 };
         }
     }

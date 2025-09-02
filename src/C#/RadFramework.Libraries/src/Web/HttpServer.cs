@@ -41,13 +41,13 @@ public class HttpServer : IDisposable
 
     private void ProcessHttpSocketConnection(System.Net.Sockets.Socket socketConnection)
     {
-        NetworkStream networkStream = new NetworkStream(socketConnection);
+        NetworkStream networkStream = new(socketConnection);
         
-        StreamReader requestReader = new StreamReader(networkStream);
+        StreamReader requestReader = new(networkStream);
         
         string firstRequestLine = requestReader.ReadLine();
         
-        HttpRequest requestModel = new HttpRequest();
+        HttpRequest requestModel = new();
         
         requestModel.Method = HttpRequestParser.ExtractHttpMethod(firstRequestLine);
         requestModel.Url = HttpRequestParser.ExtractUrl(firstRequestLine);
@@ -64,7 +64,7 @@ public class HttpServer : IDisposable
         }
             
         HttpConnection connection =
-            new HttpConnection
+            new()
             {
                 Request = requestModel,
                 RequestReader = requestReader,

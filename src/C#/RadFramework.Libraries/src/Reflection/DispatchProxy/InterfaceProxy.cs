@@ -4,7 +4,7 @@ namespace RadFramework.Libraries.Reflection.DispatchProxy
 {
     public class InterfaceProxy : System.Reflection.DispatchProxy
     {
-        Dictionary<string, object> properties = new Dictionary<string, object>();
+        Dictionary<string, object> properties = new();
         
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {

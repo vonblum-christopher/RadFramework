@@ -15,7 +15,7 @@ namespace RadFramework.Libraries.Threading.Timers
 
         protected override void OnIntervalPassedInternal()
         {
-            Thread handlerThread = new Thread(o => base.OnIntervalPassedInternal());
+            Thread handlerThread = new(o => base.OnIntervalPassedInternal());
             handlerThread.Priority = HandlerThreadPriority;
             handlerThread.Start();
         }

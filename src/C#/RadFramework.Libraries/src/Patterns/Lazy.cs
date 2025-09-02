@@ -2,7 +2,7 @@
 {
     internal class Lazy<TValue> where TValue : class
     {
-        private object threadLock = new object();
+        private object threadLock = new();
         private TValue defaultValue = default(TValue);
         private Func<TValue> factory;
         private TValue value;

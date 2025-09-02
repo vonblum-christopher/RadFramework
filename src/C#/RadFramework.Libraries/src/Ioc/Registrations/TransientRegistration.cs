@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using RadFramework.Libraries.Ioc.Builder;
-using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
+using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
@@ -9,14 +9,15 @@ namespace RadFramework.Libraries.Ioc.Registrations
     {
         private DataTypes.Lazy<Func<IocContainer, object>> construct;
         
-        public override void Initialize(IocServiceRegistration serviceRegistration)
+        public override void Initialize(IocDependency dependency)
         {
             this.construct = new DataTypes.Lazy<Func<IocContainer, object>>(
                 () => 
-                    serviceRegistration.FactoryFunc ?? new ResolveFuncManager().GetOrCreateFunc(serviceRegistration.Key, serviceRegistration));
+                    dependency.FactoryFunc 
+                    ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency));
         }
 
-        public override object ResolveService(IocContainer container, IocServiceRegistration serviceRegistration)
+        public override object ResolveService(IocContainer container, IocDependency dependency)
         {
             return construct.Value(container);
         }
@@ -25,7 +26,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
         {
             return new TransientRegistration()
             {
-                IocServiceRegistration = IocServiceRegistration.Clone()
+                IocDependency = IocDependency.Clone()
             };
         }
     }

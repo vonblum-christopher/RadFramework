@@ -40,12 +40,12 @@ namespace RadFramework.Libraries.Reflection.Caching
         private static Stack<ReflectionCache> contextualCache;
         */
         
-        private static ReflectionCache DefaultInstance = new ReflectionCache();
+        private static ReflectionCache DefaultInstance = new();
 
         public ISimpleCache Cache { get; } = new SimpleCache();
 
-        private ConcurrentDictionary<object, string> keyCache = new ConcurrentDictionary<object, string>();
-        private ConcurrentDictionary<string, object> cache = new ConcurrentDictionary<string, object>();
+        private ConcurrentDictionary<object, string> keyCache = new();
+        private ConcurrentDictionary<string, object> cache = new();
         
         public string BuildTypeKey(Type t)
         {

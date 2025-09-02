@@ -12,7 +12,7 @@ namespace RadFramework.Libraries.Collections
         /// <summary>
         /// The dictionary that holds the references.
         /// </summary>
-        private readonly Dictionary<IntPtr, (GCHandle, TReferenceType)> registry = new Dictionary<IntPtr, (GCHandle, TReferenceType)>();
+        private readonly Dictionary<IntPtr, (GCHandle, TReferenceType)> registry = new();
 
         /// <summary>
         /// The count of registered objects.

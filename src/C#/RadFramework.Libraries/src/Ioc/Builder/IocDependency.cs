@@ -1,10 +1,9 @@
 using RadFramework.Libraries.Abstractions;
-using RadFramework.Libraries.Ioc.ConstructionMethodBuilders;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Builder;
 
-public class IocServiceRegistration : ICloneable<IocServiceRegistration>
+public class IocDependency : ICloneable<IocDependency>
 {
     public IocKey Key { get; set; }
     public CachedType ImplementationType { get; set; }
@@ -12,9 +11,9 @@ public class IocServiceRegistration : ICloneable<IocServiceRegistration>
     public string IocLifecycle { get; set; }
     public Func<IocContainer, object> FactoryFunc { get; set; }
     
-    public IocServiceRegistration Clone()
+    public IocDependency Clone()
     {
-        return new IocServiceRegistration()
+        return new IocDependency
         {
             Key = Key,
             ImplementationType = ImplementationType,

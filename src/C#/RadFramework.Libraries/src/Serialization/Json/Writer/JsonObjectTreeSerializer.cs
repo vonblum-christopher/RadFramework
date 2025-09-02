@@ -6,7 +6,7 @@ namespace RadFramework.Libraries.Serialization.Json.Writer;
 
 public class JsonObjectTreeSerializer
 {
-    private static JsonWriter writer = new JsonWriter();
+    private static JsonWriter writer = new();
     
     public string Serialize(object obj)
     {

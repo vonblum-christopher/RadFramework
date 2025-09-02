@@ -24,4 +24,8 @@
       <ProjectReference Include="..\RadFramework.Libraries\RadFramework.Libraries.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="src\Ioc\Models\" />
+    </ItemGroup>
+
 </Project>

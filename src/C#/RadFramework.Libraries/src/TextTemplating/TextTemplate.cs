@@ -4,7 +4,7 @@ public class TextTemplate
 {
     internal string Tag { get; set; }
     
-    private List<(string part, bool isPlaceholder)> stringParts = new List<(string part, bool isPlaceholder)>();
+    private List<(string part, bool isPlaceholder)> stringParts = new();
 
     internal void AddPart(string part, bool isPlaceholder)
     {

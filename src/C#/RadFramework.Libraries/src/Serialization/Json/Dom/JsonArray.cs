@@ -40,11 +40,11 @@ namespace RadFramework.Libraries.Serialization.Json.Dom
         
         public static List<object> ParseArray(string jsonArray)
         {
-            List<object> entries = new List<object>();
+            List<object> entries = new();
 
             int nesting = 0;
             
-            JsonParserCursor cursor = new JsonParserCursor(jsonArray, 0);
+            JsonParserCursor cursor = new(jsonArray, 0);
             
             do
             {

@@ -4,7 +4,7 @@ using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
+namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
 {
     public class DependencyInjectionLambdaGenerator
     {
@@ -26,7 +26,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
         {
         }
         
-        public Func<IocContainer, object> CreateConstructorInjectionLambda(IocServiceRegistration serviceRegistration, CachedConstructorInfo injectionConstructor)
+        public Func<IocContainer, object> CreateConstructorInjectionLambda(IocDependency dependency, CachedConstructorInfo injectionConstructor)
         {
             Type returnType = typeof (object);
             
@@ -35,8 +35,8 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
 
             var returnLabel = Expression.Label(returnType, "returnLabel");
 
-            List<Expression> methodBody = new List<Expression>
-                                          {
+            List<Expression> methodBody = new()
+            {
                                               Expression.Assign(constructionResult,
                                                   Expression.New(injectionConstructor,
                                                       BuildInjectionLambdaArguments(
@@ -64,8 +64,8 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
             ParameterExpression typedInjectionTarget = Expression.Variable(targetType, "typedInjectionTarget");
 
 
-            List<Expression> methodBody = new List<Expression>
-                                          {
+            List<Expression> methodBody = new()
+            {
                                                 Expression.Assign(typedInjectionTarget, Expression.Convert(injectionTarget, targetType)),
                                                 Expression.Call(typedInjectionTarget, 
                                                     injectionMethod,
@@ -87,8 +87,8 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
 
             ParameterExpression typedInjectionTarget = Expression.Parameter(targetType, "typedInjectionTarget");
 
-            List<Expression> injectionExpressions = new List<Expression>
-                                                    {
+            List<Expression> injectionExpressions = new()
+            {
                                                         Expression.Assign(typedInjectionTarget, Expression.Convert(injectionTarget, targetType))
                                                     };
 
@@ -113,14 +113,14 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
         
         private static Expression[] BuildInjectionLambdaArguments(Expression containerInstance, CachedParameterInfo[] parameterInfos)
         {
-            List<Expression> arguments = new List<Expression>();
+            List<Expression> arguments = new();
 
             foreach (CachedParameterInfo parameter in parameterInfos)
             {
                 IocDependencyAttribute attribute = parameter.Query(param =>
                     param.GetCustomAttributes().OfType<IocDependencyAttribute>().FirstOrDefault());
 
-                if (attribute.Key?.KeyName != null)
+                if (attribute != null && attribute.Key != null && attribute.Key.KeyName != null)
                 {
                     arguments.Add(NamedDependencPlaceholder(containerInstance, parameter.InnerMetaData.ParameterType, attribute.Key.KeyName));
                     continue;

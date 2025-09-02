@@ -6,7 +6,7 @@ namespace RadFramework.Libraries.Reflection.Caching
     {
         public TMetadata InnerMetaData { get; internal set; }
     
-        private ConcurrentDictionary<string, object> queryCache = new ConcurrentDictionary<string, object>();
+        private ConcurrentDictionary<string, object> queryCache = new();
 
         public TResult Query<TResult>(Func<TMetadata, TResult> query)
         {

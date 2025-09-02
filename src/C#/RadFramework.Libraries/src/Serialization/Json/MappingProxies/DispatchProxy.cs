@@ -6,8 +6,7 @@ namespace RadFramework.Libraries.Serialization.Json.MappingProxies
 {
     public class DispatchProxy
     {
-        private static ConcurrentDictionary<CachedType, CachedMethodInfo> createProxyMethodsCache =
-            new ConcurrentDictionary<CachedType, CachedMethodInfo>();
+        private static ConcurrentDictionary<CachedType, CachedMethodInfo> createProxyMethodsCache = new();
 
         private static MethodInfo createMethod =
             typeof(System.Reflection.DispatchProxy).GetMethod("Create", BindingFlags.Static | BindingFlags.Public);

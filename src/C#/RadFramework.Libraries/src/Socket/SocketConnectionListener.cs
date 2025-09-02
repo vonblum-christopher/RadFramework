@@ -15,7 +15,7 @@ public class SocketConnectionListener : IDisposable
     public SocketConnectionListener(SocketType socketType, ProtocolType protocolType, int port, Action<System.Net.Sockets.Socket> onSocketAccepted)
     {
         this.onSocketAccepted = onSocketAccepted;
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
+        IPEndPoint endPoint = new(IPAddress.Any, port);
         
         listenerSocket = new System.Net.Sockets.Socket(IPAddress.Any.AddressFamily, socketType, protocolType);
         

@@ -4,9 +4,9 @@ namespace RadFramework.Libraries.TextTemplating;
 
 public class TextTemplateManager
 {
-    private TextTemplatingEngine engine = new TextTemplatingEngine();
+    private TextTemplatingEngine engine = new();
     
-    private ConcurrentDictionary<string, TextTemplate> templates = new ConcurrentDictionary<string, TextTemplate>();
+    private ConcurrentDictionary<string, TextTemplate> templates = new();
     
     public TextTemplate MakeTemplateFromFile(string templateFile)
     {

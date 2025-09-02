@@ -4,7 +4,7 @@ namespace RadFramework.Libraries.Threading.Internals;
 
 public class PoolThread : IDisposable
 {
-    private static List<PoolThread> GlobalPoolThreadRegistry = new List<PoolThread>();
+    private static List<PoolThread> GlobalPoolThreadRegistry = new();
 
     internal static PoolThread GetPoolThread(Thread thread)
     {
@@ -13,7 +13,7 @@ public class PoolThread : IDisposable
     
     public Action ThreadBody { get; private set; }
     
-    private ManualResetEventSlim onThreadStart = new ManualResetEventSlim(false);
+    private ManualResetEventSlim onThreadStart = new(false);
     
     public Thread ThreadingThread { get; }
     

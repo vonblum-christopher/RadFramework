@@ -1,7 +1,7 @@
 using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Ioc.Builder;
+namespace RadFramework.Libraries.Ioc;
 
 public class IocKey : ICloneable<IocKey>
 {
@@ -20,7 +20,7 @@ public class IocKey : ICloneable<IocKey>
 
     public IocKey Clone()
     {
-        return new IocKey()
+        return new IocKey
         {
             KeyName = KeyName,
             KeyType = KeyType
@@ -33,5 +33,15 @@ public class IocKey : ICloneable<IocKey>
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
         return Equals((IocKey)obj);
+    }
+    
+    public static bool operator ==(IocKey a, IocKey b)
+    {
+        return b.Equals(a);
+    }
+
+    public static bool operator !=(IocKey a, IocKey b)
+    {
+        return !b.Equals(a);
     }
 }
