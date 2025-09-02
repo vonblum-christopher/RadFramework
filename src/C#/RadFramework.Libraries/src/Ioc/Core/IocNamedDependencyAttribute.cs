@@ -1,19 +1,19 @@
 namespace RadFramework.Libraries.Ioc.Core;
 
-public class IocNamedDependency : Attribute
+public class IocNamedDependencyAttribute : Attribute
 {
     public IocKey Key { get; set; }
     
-    public IocNamedDependency()
+    public IocNamedDependencyAttribute()
     {
     }
     
-    public IocNamedDependency(string key)
+    public IocNamedDependencyAttribute(string key)
     {
         
     }
     
-    public IocNamedDependency(Type keyType, string key)
+    public IocNamedDependencyAttribute(Type keyType, string key)
     {
         // resolve by key overridable
         

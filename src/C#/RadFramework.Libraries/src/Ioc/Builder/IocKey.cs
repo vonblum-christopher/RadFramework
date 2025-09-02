@@ -1,8 +1,9 @@
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Core;
 
-public class IocKey : ICloneable
+public class IocKey : ICloneable<IocKey>
 {
     public CachedType RegistrationKeyType { get; set; }
     public string Key { get; set; }
@@ -17,7 +18,7 @@ public class IocKey : ICloneable
         return HashCode.Combine(Key, RegistrationKeyType);
     }
 
-    public object Clone()
+    public IocKey Clone()
     {
         return new IocKey()
         {

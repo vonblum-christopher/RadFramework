@@ -21,7 +21,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
                 () => 
                     factoryCache.GetOrAdd(
                         key,
-                        tuple => lambdaGenerator.CreateInstanceFactoryMethod(tuple.,tImplementation, InjectionOptions)));
+                        tuple => lambdaGenerator.CreateInstanceFactoryMethod(this,tImplementation, InjectionOptions)));
         }
 
         public override object ResolveService(IocContainer container)

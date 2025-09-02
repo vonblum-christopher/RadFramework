@@ -1,9 +1,10 @@
 using System.Collections.Immutable;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Ioc.Factory;
 
 namespace RadFramework.Libraries.Ioc.Core
 {
-    public interface IIocContainer : IServiceProvider
+    public interface IIocContainer : IServiceProvider, ICloneable<IIocContainer>
     {
         IEnumerable<IocService> ServiceList { get; }
         IImmutableDictionary<IocKey, IocService> ServiceLookup { get; }

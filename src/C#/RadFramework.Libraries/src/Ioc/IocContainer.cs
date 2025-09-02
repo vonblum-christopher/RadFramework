@@ -1,12 +1,13 @@
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Ioc.Factory;
 using RadFramework.Libraries.Ioc.Registrations;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc.Core;
 
-public class IocContainer : ICloneable
+public class IocContainer : IIocContainer, ICloneable<IocContainer>
 {
     private List<IocContainer> fallbackResolvers = new();
     public InjectionOptions InjectionOptions;
@@ -69,11 +70,10 @@ public class IocContainer : ICloneable
         };
     }
     
-    // not yet
-    /*public IocContainer CreateNestedContainer()
+    public IocContainer CreateNestedContainer()
     {
         return new IocContainer(new List<IocContainer> { this }, InjectionOptions.Clone());
-    }*/
+    }
     
     public bool HasService(Type t)
     {
@@ -144,7 +144,7 @@ public class IocContainer : ICloneable
 
     private object ResolveDependency(IocKey key)
     {
-        if (fallbackResolvers.Count == 0 || this.HasService(key))
+        if (fallbackResolvers.Count == 0 && this.HasService(key))
         {
             return this.Resolve(key);
         }
@@ -160,11 +160,18 @@ public class IocContainer : ICloneable
         throw new RegistrationNotFoundException(key.RegistrationKeyType);
     }
 
-    public object Clone()
+    public IocContainer Clone()
     {
         return new IocContainer(InjectionOptions)
         {
-            registrations = 
+            fallbackResolvers = fallbackResolvers,
+            InjectionOptions = (InjectionOptions)InjectionOptions.Clone(),
+            registrations = new ConcurrentDictionary<IocKey, RegistrationBase>(
+                (IEnumerable<KeyValuePair<IocKey, RegistrationBase>>)
+                registrations
+                    .ToDictionary(
+                        k => k.Key.Clone(),
+                        v => v.Value.Clone()))
         };
     }
 }

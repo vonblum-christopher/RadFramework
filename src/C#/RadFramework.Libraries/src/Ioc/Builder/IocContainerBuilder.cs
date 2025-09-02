@@ -1,24 +1,37 @@
 using System.Collections.Concurrent;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Ioc.Factory;
 using RadFramework.Libraries.Ioc.Registrations;
+using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc.Core;
 
-public class IocContainerBuilder : ICloneable
+public class IocContainerBuilder : ICloneable<IocContainerBuilder>
 {
-    public InjectionOptions InjectionOptions { get; set; }
-    private ConcurrentDictionary<IocKey, RegistrationBase> registrations = new();
+    private IocRegistry registrations = new();
 
-    private ServiceFactoryLambdaGenerator lambdaGenerator;
+    private ServiceFactoryLambdaGenerator lambdaGenerator = new ServiceFactoryLambdaGenerator();
+    
+    public InjectionOptions InjectionOptions { get; set; }  = new InjectionOptions
+    {
+        ChooseInjectionConstructor = ctors => ctors
+            .OrderByDescending(c => c.Query(MethodBaseQueries.GetParameters).Length)
+            .First(),
+                
+        ConstructorParameterInjection = infos => infos
+    };
     
     public IocContainerBuilder RegisterTransient(Type tInterface, Type tImplementation)
     {
         var key = new IocKey { RegistrationKeyType = tInterface };
-        
-        registrations[key] = new TransientRegistration(key, tImplementation, lambdaGenerator, this)
+
+        registrations.Registrations[key] = new IocService()
         {
-            InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+            Key = key,
+            InjectionOptions = InjectionOptions.Clone(),
+            ImplementationType = tImplementation,
+              
+        };
 
         return this;
     }
@@ -30,7 +43,7 @@ public class IocContainerBuilder : ICloneable
         return registrations[key] = new TransientRegistration(key, typeof(TImplementation), lambdaGenerator, this)
         {
             InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+        };
         return this;
     }
 
@@ -40,7 +53,7 @@ public class IocContainerBuilder : ICloneable
         return registrations[key] = new TransientRegistration(key, tImplementation, lambdaGenerator, this)
         {
             InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+        };
         return this;
     }
     
@@ -50,7 +63,7 @@ public class IocContainerBuilder : ICloneable
         registrations[new IocKey { RegistrationKeyType = key.RegistrationKeyType }] = new TransientRegistration(key, key.RegistrationKeyType, lambdaGenerator, this)
         {
             InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+        };
         return this;
     }
 
@@ -73,7 +86,7 @@ public class IocContainerBuilder : ICloneable
         registrations[key] = new SingletonRegistration(key,tImplementation, lambdaGenerator, this)
         {
             InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+        };
         return this;
     }
 
@@ -84,7 +97,7 @@ public class IocContainerBuilder : ICloneable
         registrations[key] = new SingletonRegistration(key, typeof(TImplementation), lambdaGenerator, this)
         {
             InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+        };
         return this;
     }
 
@@ -95,7 +108,7 @@ public class IocContainerBuilder : ICloneable
         registrations[key] = new SingletonRegistration(key, tImplementation, lambdaGenerator, this)
         {
             InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+        };
         return this;
     }
     
@@ -106,7 +119,7 @@ public class IocContainerBuilder : ICloneable
         registrations[key] = new SingletonRegistration(key, tImplementation, lambdaGenerator, this)
         {
             InjectionOptions = InjectionOptions.Clone()
-        }.InjectionOptions;
+        };
         return this;
     }
 
@@ -122,18 +135,13 @@ public class IocContainerBuilder : ICloneable
         return this;
     }
 
-    public object Clone()
+    public IocContainerBuilder Clone()
     {
         return new IocContainerBuilder()
         {
             InjectionOptions = InjectionOptions.Clone(),
             lambdaGenerator = lambdaGenerator,
-            registrations = new ConcurrentDictionary<IocKey, RegistrationBase>(
-                (IEnumerable<KeyValuePair<IocKey, RegistrationBase>>)
-                registrations
-                    .ToDictionary(
-                        k => k.Key.Clone(),
-                        v => v.Value.Clone()))
+            registrations = registrations.Clone()
         };
     }
 }
