@@ -1,4 +1,4 @@
-﻿using RadFramework.Libraries.Abstractions.Console;
+﻿using RadFramework.Libraries.Console;
 using RadFramework.Libraries.GenericUi.Console.Interaction;
 using RadFramework.Libraries.Ioc;
 using IocContainer = RadFramework.Libraries.Ioc.IocContainer;

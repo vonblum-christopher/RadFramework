@@ -10,31 +10,24 @@ namespace RadFramework.Libraries.Ioc;
 public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServiceProvider
 {
     public IEnumerable<IocContainer> ParentContainers { get; private set; }
-    public InjectionOptions InjectionOptions { get; private set; }
+    public InjectionOptions InjectionOptions { get; private set; } = new InjectionOptions();
     public IocRegistry Registry { get; private set; } = new();
-    public IEnumerable<IocDependency> ServiceList
-    {
-        get
-        {
-            return Registry.Registrations.Values;
-        }
-    }
+    public ImmutableList<IocDependency> ServiceList 
+        => Registry.Registrations.Values.ToImmutableList();
 
     public IImmutableDictionary<IocKey, IocDependency> ServiceLookup
     {
-        get
-        {
-            return Registry.Registrations.Values
+        get =>
+            Registry.Registrations.Values
                 .ToImmutableDictionary(
                     k => k.Key, 
                     v => v);
-        }
-            
     }
-
+    
     public IocContainer(IocRegistry iocRegistry)
     {
         Registry = iocRegistry.Clone();
+        InjectionOptions = InjectionOptions.Clone();
     }
     
     public IocContainer(IocContainerBuilder builder)
@@ -50,7 +43,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
     public bool HasService(string key, Type t)
     {
-        return HasService(new IocKey() { KeyType = t });
+        return HasService(new IocKey() { KeyType = t, KeyName = key});
     }
     
     public bool HasService(IocKey key)
@@ -128,11 +121,11 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
     {
         if (this.HasService(key))
         {
-            IocDependency regEntry = this.Registry[key];
+            IocDependency dependency = this.Registry[key];
             
-            return (regEntry.FactoryFunc 
-                    ?? InjectionLambdaManager.GetOrCreateConstructionFunc(key, regEntry))
-                    (this);
+            return (dependency.FactoryFunc 
+                    ?? InjectionLambdaManager.GetOrCreateConstructionFunc(key, dependency))
+                        (this);
         }
 
         foreach (IocContainer fallbackResolver in ParentContainers)
@@ -148,7 +141,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
     public IocContainer Clone()
     {
-        return new IocContainer(Registry.Clone())
+        return new IocContainer(Registry)
         {
             ParentContainers = ParentContainers,
             InjectionOptions = InjectionOptions.Clone()

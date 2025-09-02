@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Caching
+namespace RadFramework.Libraries.Abstractions
 {
     public interface ISimpleCache
     {

@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Logging;
+namespace RadFramework.Libraries.Abstractions;
 
 public interface ILogger
 {

@@ -78,7 +78,7 @@ public class HttpServer : IDisposable
         }
         catch (Exception e)
         {
-            connection.ServerContext.Logger.LogError("Error while processing request: \r\n" + JsonContractSerializer.Instance.SerializeToJsonString(typeof(HttpRequest), requestModel) + "\n" + e.ToString());
+            connection.ServerContext.Logger.LogError("[fatal] even the error handler crashed.");
         }
         
         networkStream.Flush();

@@ -1,9 +1,7 @@
-using NUnit.Framework.Internal;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
-using RadFramework.Libraries.Reflection.Caching.Queries;
 
-namespace RadFramework.Libraries.Tests;
+namespace RadFramework.Libraries.Tests.Ioc;
 
 public class Ioc_Builder
 {

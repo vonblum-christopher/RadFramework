@@ -1,16 +1,17 @@
 using System.Reflection;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Logging;
 
 namespace RadFramework.Libraries.Web;
 
-public class HttpServerContext
+public class HttpGlobalServerContext
 {
     public string WWWRootPath { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/wwwroot";
     private readonly ISimpleCache cache;
     private readonly ILogger logger;
 
-    public HttpServerContext(ISimpleCache cache, ILogger logger)
+    public HttpGlobalServerContext(ISimpleCache cache, ILogger logger)
     {
         this.cache = cache;
         this.logger = logger;

@@ -1,3 +1,5 @@
+using RadFramework.Libraries.Abstractions;
+
 namespace RadFramework.Libraries.Logging;
 
 public class StandardLogger : ILogger

@@ -17,13 +17,7 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         ConstructorParameterInjection = infos => infos
     };
 
-    public IocRegistry IocRegistry
-    {
-        get
-        {
-            return registrations;
-        }
-    }
+    public IocRegistry IocRegistry => registrations;
 
     public IocContainerBuilder RegisterTransient(Type tInterface, Type tImplementation)
     {

@@ -1,12 +1,12 @@
 using System.Collections.Immutable;
-using RadFramework.Libraries.Abstractions;
+using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
 
-namespace RadFramework.Libraries.Ioc
+namespace RadFramework.Libraries.Abstractions
 {
     public interface IIocContainer
     {
-        IEnumerable<IocDependency> ServiceList { get; }
+        ImmutableList<IocDependency> ServiceList { get; }
         IImmutableDictionary<IocKey, IocDependency> ServiceLookup { get; }
 
         bool HasService(Type t);

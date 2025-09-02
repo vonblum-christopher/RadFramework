@@ -1,5 +1,5 @@
 using System.Reflection;
-using RadFramework.Libraries.Abstractions.Console;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Reflection.Caching;

@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Tests;
+namespace RadFramework.Libraries.Tests.Ioc;
 
 public class Ioc_Container
 {

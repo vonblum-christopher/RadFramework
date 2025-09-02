@@ -1,8 +1,7 @@
-using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
 using IocContainer = RadFramework.Libraries.Ioc.IocContainer;
 
-namespace RadFramework.Libraries.Tests;
+namespace RadFramework.Libraries.Tests.Ioc;
 
 public class Ioc_Factory
 {

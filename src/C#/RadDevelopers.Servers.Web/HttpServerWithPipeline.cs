@@ -1,53 +1,52 @@
+using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Pipelines.Builder;
-using IocContainer = RadFramework.Libraries.Ioc.IocContainer;
+using RadFramework.Libraries.Web;
 
-namespace RadFramework.Libraries.Web;
+namespace RadDevelopers.Servers.Web;
 
 public class HttpServerWithPipeline : IDisposable
 {
-    private readonly ExtensionPipeline<HttpConnection> httpPipeline;
+    private readonly HttpServerEvents events;
     private HttpServer server;
-    private HttpServerContext ServerContext;
-    private readonly ExtensionPipeline<HttpError> httpErrorPipeline;
-
-    public HttpServerWithPipeline(
-        int port,
-        PipelineBuilder httpPipelineBuilder,
-        PipelineBuilder httpErrorPipelineBuilder,
-        IocContainer iocContainer,
-        Action<HttpRequest, System.Net.Sockets.Socket> webSocketConnected = null)
+    private HttpGlobalServerContext serverContext;
+    
+    public HttpServerWithPipeline(int port, HttpServerEvents events)
     {
-        iocContainer.RegisterSingleton<HttpServerContext>();
-        ServerContext = iocContainer.Resolve<HttpServerContext>();
-
-        server = new HttpServer(port, ProcessRequestUsingPipeline, null);
+        this.events = events;
+        server = new HttpServer(port, ProcessRequest, null);
     }
-
-    private void ProcessRequestUsingPipeline(HttpConnection connection)
+        
+    private void ProcessRequest(HttpConnection connection)
     {
-        connection.ServerContext = ServerContext;
+        connection.ServerContext = serverContext;
 
         try
         {
-            if (!httpPipeline.Process(connection))
-            {
-                httpErrorPipeline.Process(new HttpError { Connection = connection, Exception = null });
-            }
+            events.OnRequest(connection);
         }
-        catch (Exception e)
+        catch (Exception initialError)
         {
             try
             {
-                httpErrorPipeline.Process(new HttpError { Connection = connection, Exception = null });
+                events.OnError(new HttpError
+                {
+                    Connection = connection,
+                    Exception = initialError,
+                });
             }
-            catch (Exception ee)
+            catch (Exception errorWhileErrorHandling)
             {
-                ServerContext.Logger.LogError("HttpPipeline crashed while processing request. When the error should have been dealt with an exception occured too. Review your pipeline implementations.");
+                events.OnFatalError(new HttpError
+                {
+                    Connection = connection,
+                    Exception = errorWhileErrorHandling,
+                });
             }
         }
     }
-    
+
     public void Dispose()
     {
         server.Dispose();

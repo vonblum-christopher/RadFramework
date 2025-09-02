@@ -2,31 +2,13 @@ namespace RadFramework.Libraries.Web;
 
 public class HttpError
 {
-    public HttpConnection Connection { get; internal set; }
+    public HttpConnection Connection { get; set; }
 
-    public System.Net.Sockets.Socket Socket
-    {
-        get
-        {
-            return Connection.UnderlyingSocket;
-        }
-    }
+    public System.Net.Sockets.Socket Socket => Connection.UnderlyingSocket;
 
-    public HttpRequest Request
-    {
-        get
-        {
-            return Connection.Request;
-        }
-    }
-    
-    public HttpResponse Response
-    {
-        get
-        {
-            return Connection.Response;
-        }
-    }
+    public HttpRequest Request => Connection.Request;
 
-    public Exception Exception { get; internal set; }
+    public HttpResponse Response => Connection.Response;
+
+    public Exception Exception { get; set; }
 }

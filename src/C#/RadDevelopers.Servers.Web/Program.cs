@@ -1,4 +1,5 @@
 ﻿using RadDevelopers.Servers.Web.Config;
+using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Ioc.Builder;
@@ -19,21 +20,14 @@ namespace RadDevelopers.Servers.Web
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            // the ioc container that wires everything up.
             IocContainerBuilder iocBuilder = new();
             
             SetupIocContainer(iocBuilder);
             
-            // build and register HttPPipeline
-            PipelineBuilder httpPipelineBuilder = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
-            
-            iocBuilder.RegisterSemiAutomaticSingleton<ExtensionPipeline<IHttpPipe>>(c => new ExtensionPipeline<IHttpPipe>(httpPipelineBuilder, iocBuilder));
-            
-            PipelineBuilder httpErrorPipelineBuilder = LoadHttpPipelineConfig("Config/HttpErrorPipelineConfig.json");            
-
-            iocBuilder.RegisterSingletonInstance <IHttpErrorPipeline>(new ExtensionPipeline<HttpConnection>(httpPipelineBuilder, iocBuilder));
-            
             iocBuilder.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
+            
+            ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline;
+            ExtensionPipeline<HttpError, HttpError> httpErrorPipeline;
             
             // when a web socket connection gets established this class takes care of the socket connection
             /*iocContainer.RegisterSingleton<TelemetrySocketManager>();
@@ -43,8 +37,6 @@ namespace RadDevelopers.Servers.Web
             // the server that passes the requests to the pipelines
             HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
                 80,
-                httpPipelineBuilder,
-                httpErrorPipelineBuilder,
                 iocBuilder.CreateContainer());
                 //(request, socket) => socketManager.RegisterNewClientSocket(socket));
             
@@ -52,7 +44,6 @@ namespace RadDevelopers.Servers.Web
             
             AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
             {
-                //socketManager.Dispose();
                 pipelineDrivenHttpServer.Dispose();
                 shutdownEvent.Set();
             };
