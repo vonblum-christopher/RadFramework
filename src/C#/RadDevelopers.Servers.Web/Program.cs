@@ -1,11 +1,10 @@
 ﻿using RadDevelopers.Servers.Web.Config;
-using RadDevelopers.Servers.Web.Pipelines.HttpError;
 using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Caching;
-using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Logging;
+using RadFramework.Libraries.Pipelines;
 using RadFramework.Libraries.Pipelines.Builder;
-using RadFramework.Libraries.Serialization;
 using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.Web;
 using IocContainer = RadFramework.Libraries.Ioc.IocContainer;
@@ -21,23 +20,20 @@ namespace RadDevelopers.Servers.Web
         public static void Main(string[] args)
         {
             // the ioc container that wires everything up.
-            IocContainer iocContainer = new IocContainer();
+            IocContainerBuilder iocBuilder = new();
             
-            SetupIocContainer(iocContainer);
-
-            SetupPipelines(iocContainer);
+            SetupIocContainer(iocBuilder);
             
             // build and register HttPPipeline
             PipelineBuilder httpPipelineBuilder = LoadHttpPipelineConfig("Config/HttpPipelineConfig.json");
             
-            iocContainer.RegisterSingletonInstance<IHttpPipe>(new ExtensionPipeline<IHttpPipe>(httpPipelineBuilder, iocContainer));
-            
+            iocBuilder.RegisterSemiAutomaticSingleton<ExtensionPipeline<IHttpPipe>>(c => new ExtensionPipeline<IHttpPipe>(httpPipelineBuilder, iocBuilder));
             
             PipelineBuilder httpErrorPipelineBuilder = LoadHttpPipelineConfig("Config/HttpErrorPipelineConfig.json");            
 
-            iocContainer.RegisterSingletonInstance<IHttpErrorPipeline>(new ExtensionPipeline<HttpConnection>(httpPipelineBuilder, iocContainer));
+            iocBuilder.RegisterSingletonInstance <IHttpErrorPipeline>(new ExtensionPipeline<HttpConnection>(httpPipelineBuilder, iocBuilder));
             
-            iocContainer.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
+            iocBuilder.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
             
             // when a web socket connection gets established this class takes care of the socket connection
             /*iocContainer.RegisterSingleton<TelemetrySocketManager>();
@@ -49,7 +45,7 @@ namespace RadDevelopers.Servers.Web
                 80,
                 httpPipelineBuilder,
                 httpErrorPipelineBuilder,
-                iocContainer);
+                iocBuilder.CreateContainer());
                 //(request, socket) => socketManager.RegisterNewClientSocket(socket));
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
@@ -64,16 +60,12 @@ namespace RadDevelopers.Servers.Web
             shutdownEvent.WaitOne();
         }
 
-        private static void SetupPipelines(IocContainer iocContainer)
-        {
-            iocContainer.
-        }
 
         /// <summary>
         /// Registers all dependencies from the IocContainer config
         /// </summary>
         /// <param name="iocContainer"></param>
-        private static void SetupIocContainer(IocContainer iocContainer)
+        private static void SetupIocContainer(IocContainerBuilder iocContainer)
         {
             IocContainerConfig config = (IocContainerConfig)JsonContractSerializer.Instance.Deserialize(
                 typeof(IocContainerConfig),
@@ -94,9 +86,9 @@ namespace RadDevelopers.Servers.Web
                     Type.GetType(iocRegistration.TImplementation));
             }
             
+            iocContainer.RegisterSingleton<ISimpleCache, SimpleCache>();
             
-            iocContainer.RegisterSingletonInstance<ISimpleCache>(new SimpleCache());
-            iocContainer.RegisterSingletonInstance<ILogger>(
+            iocContainer.RegisterSemiAutomaticSingleton<ILogger>(container =>
                 new StandardLogger(
                     new ILoggerSink[]
                     {

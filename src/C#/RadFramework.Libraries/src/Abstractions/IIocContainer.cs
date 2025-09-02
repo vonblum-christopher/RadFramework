@@ -13,7 +13,7 @@ namespace RadFramework.Libraries.Ioc
         bool HasService(string key, Type t);
         bool HasService(IocKey key);
         
-        object Resolve(Type t);
+        object Resolve(Type tInterface);
         object Resolve(string key, Type t);
         object Resolve(IocKey key);
 

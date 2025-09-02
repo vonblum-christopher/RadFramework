@@ -22,11 +22,10 @@
       <Folder Include="src\AopCompiler\" />
       <Folder Include="src\Aspects\" />
       <Folder Include="src\DataTypes\Large\" />
-      <Folder Include="src\Encryption\4D\" />
-      <Folder Include="src\Encryption\Abtractions\" />
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\GenericUi\Web\" />
+      <Folder Include="src\Hashing\" />
       <Folder Include="src\ObjectMapper\" />
       <Folder Include="src\Serialization\Binary\" />
       <Folder Include="src\Serialization\Xml\" />

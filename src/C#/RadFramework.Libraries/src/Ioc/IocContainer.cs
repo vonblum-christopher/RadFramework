@@ -52,7 +52,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
     {
         return HasService(new IocKey() { KeyType = t });
     }
-
+    
     public bool HasService(IocKey key)
     {
         return Registry.Registrations.ContainsKey(key);
@@ -60,12 +60,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
     
     public object Resolve(string key, Type t)
     {
-        if (!Registry.Registrations.ContainsKey(new IocKey { KeyType = t, KeyName = key}))
-        {
-            throw new RegistrationNotFoundException(t);
-        }
-            
-        return Resolve(t, key);
+        return ResolveDependency(new IocKey { KeyType = t, KeyName = key});
     }
 
     public T Activate<T>()
@@ -77,7 +72,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
     {
         var key = new IocKey { KeyType = t };
 
-        IocDependency reg = new()
+        IocDependency iocDependency = new()
         {
             ImplementationType = t,
             InjectionOptions = InjectionOptions,
@@ -87,25 +82,31 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
         TransientRegistration registration = new()
         {
-            IocDependency = reg
+            IocDependency = iocDependency
         };
         
-        return registration.ResolveService(this, reg);
+        return registration.ResolveService(this, iocDependency);
     }
 
     public T Resolve<T>()
     {
-        return (T)Resolve(typeof(T));
+        return (T)ResolveDependency(new IocKey()
+        {
+            KeyType = typeof(T)
+        });
     }
 
-    public object Resolve(Type t)
+    public object Resolve(Type tInterface)
     {
-        return Resolve(t, null);
+        return ResolveDependency(new IocKey()
+        {
+            KeyType = tInterface
+        });
     }
 
-    public object Resolve(Type t, string key)
+    public object Resolve(Type tInterface, string key)
     {
-        var iocKey = new IocKey { KeyType = t, KeyName = key };
+        var iocKey = new IocKey { KeyType = tInterface, KeyName = key };
             
         return ResolveDependency(iocKey);
     }
@@ -117,7 +118,10 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
     public object GetService(Type serviceType)
     {
-        return Resolve(serviceType);
+        return ResolveDependency(new IocKey()
+        {
+            KeyType = serviceType
+        });
     }
 
     private object ResolveDependency(IocKey key)
