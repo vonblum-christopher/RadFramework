@@ -10,7 +10,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
         
         public override void Initialize(IocServiceRegistration serviceRegistration)
         {
-            factoryFunc = serviceRegistration.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateInstanceFactoryMethod(serviceRegistration);
+            factoryFunc = serviceRegistration.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(serviceRegistration);
         }
 
         public override object ResolveService(IocContainer container, IocServiceRegistration serviceRegistration)

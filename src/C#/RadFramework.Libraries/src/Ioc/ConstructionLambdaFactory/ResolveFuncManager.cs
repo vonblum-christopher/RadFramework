@@ -11,6 +11,6 @@ public class ResolveFuncManager
     {
         return factoryCache.GetOrAdd(
             key,
-            tuple => ServiceFactoryLambdaGenerator.DefaultInstance.CreateInstanceFactoryMethod(registration));
+            tuple => ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(registration));
     }
 }

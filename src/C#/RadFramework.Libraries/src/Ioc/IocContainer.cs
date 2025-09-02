@@ -9,7 +9,7 @@ namespace RadFramework.Libraries.Ioc;
 
 public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServiceProvider
 {
-    private List<IocContainer> fallbackResolvers = new();
+    public List<IocContainer> ParentContainers { get; set; } = new();
     public InjectionOptions InjectionOptions;
     public IocRegistry Registry { get; private set; } = new IocRegistry();
     public IEnumerable<IocServiceRegistration> ServiceList
@@ -41,7 +41,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
         IEnumerable<IocContainer> fallbackResolvers,
         InjectionOptions injectionOptions)
     {
-        this.fallbackResolvers = fallbackResolvers.ToList();
+        this.ParentContainers = fallbackResolvers.ToList();
         this.InjectionOptions = injectionOptions;
     }
 
@@ -153,11 +153,11 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
             return (regEntry.FactoryFunc 
                     ?? ServiceFactoryLambdaGenerator
                         .DefaultInstance
-                        .CreateInstanceFactoryMethod(regEntry))
+                        .CreateTypeFactoryLambda(regEntry))
                     (this);
         }
 
-        foreach (IocContainer fallbackResolver in fallbackResolvers)
+        foreach (IocContainer fallbackResolver in ParentContainers)
         {
             if (fallbackResolver.HasService(key))
             {
@@ -172,7 +172,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
     {
         return new IocContainer(InjectionOptions)
         {
-            fallbackResolvers = fallbackResolvers,
+            ParentContainers = ParentContainers,
             InjectionOptions = InjectionOptions.Clone(),
             Registry = Registry.Clone()
         };

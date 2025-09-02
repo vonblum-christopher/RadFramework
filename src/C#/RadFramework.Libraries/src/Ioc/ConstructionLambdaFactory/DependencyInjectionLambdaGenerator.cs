@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Reflection.Caching;
 using RadFramework.Libraries.Reflection.Caching.Queries;
 
@@ -21,10 +22,14 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
                 .Query(t => t.GetMethod(nameof(IocContainer.Resolve), new Type[] { typeof(Type), typeof(string) }));
         }
 
-        public Func<IocContainer, object> CreateConstructorInjectionLambda(CachedConstructorInfo injectionConstructor)
+        public DependencyInjectionLambdaGenerator()
+        {
+        }
+        
+        public Func<IocContainer, object> CreateConstructorInjectionLambda(IocServiceRegistration serviceRegistration, CachedConstructorInfo injectionConstructor)
         {
             Type returnType = typeof (object);
-
+            
             ParameterExpression containerArg = Expression.Parameter(typeof(IocContainer), "container");
             ParameterExpression constructionResult = Expression.Variable(returnType, "constructionResult");
 
@@ -43,7 +48,12 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
                                           };
 
             return Expression
-                .Lambda<Func<IocContainer, object>>(Expression.Block(new List<ParameterExpression> {constructionResult}, methodBody), containerArg)
+                .Lambda<Func<IocContainer, object>>(
+                    Expression
+                        .Block(
+                            new List<ParameterExpression> { constructionResult },
+                            methodBody), 
+                    containerArg)
                 .Compile();
         }
 
@@ -86,13 +96,18 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
             {
                 MemberExpression propertyExpression = Expression.Property(typedInjectionTarget, propertyInfo);
 
-                Expression argInjectionPlaceholder = ResolveDependency(containerArg, propertyInfo.PropertyType);
+                Expression argInjectionPlaceholder = DependencyPlacehlder(containerArg, propertyInfo.PropertyType);
 
                 injectionExpressions.Add(Expression.Assign(propertyExpression, argInjectionPlaceholder));
             }
 
             return Expression
-                    .Lambda<Action<IocContainer, object>>(Expression.Block(new[] { typedInjectionTarget }, injectionExpressions), containerArg, injectionTarget)
+                    .Lambda<Action<IocContainer, object>>(
+                        Expression.Block(
+                            new[] { typedInjectionTarget }, 
+                            injectionExpressions), 
+                        containerArg, 
+                        injectionTarget)
                     .Compile();
         }
         
@@ -100,17 +115,42 @@ namespace RadFramework.Libraries.Ioc.ConstructionMethodBuilders
         {
             List<Expression> arguments = new List<Expression>();
 
-            foreach (CachedParameterInfo parmeterInfo in parameterInfos)
+            foreach (CachedParameterInfo parameter in parameterInfos)
             {
-                arguments.Add(ResolveDependency(containerInstance, parmeterInfo.InnerMetaData.ParameterType));
+                IocDependencyAttribute attribute = parameter.Query(param =>
+                    param.GetCustomAttributes().OfType<IocDependencyAttribute>().FirstOrDefault());
+
+                if (attribute.Key?.KeyName != null)
+                {
+                    arguments.Add(NamedDependencPlaceholder(containerInstance, parameter.InnerMetaData.ParameterType, attribute.Key.KeyName));
+                    continue;
+                }
+                
+                arguments.Add(DependencyPlacehlder(containerInstance, parameter.InnerMetaData.ParameterType));
             }
 
             return arguments.ToArray();
         }
 
-        private static Expression ResolveDependency(Expression instance, Type placeholderType)
+        private static Expression NamedDependencPlaceholder(Expression instance, Type placeholderType, string iocKeyString)
         {
-            return Expression.Convert(Expression.Call(instance, dependencyMethod, Expression.Constant(placeholderType)), placeholderType);
+            return Expression
+                .Convert(Expression
+                    .Call(instance, 
+                        dependencyMethodWithKey, 
+                        Expression.Constant(placeholderType),
+                        Expression.Constant(iocKeyString)), 
+                    placeholderType);
+        }
+        
+        private static Expression DependencyPlacehlder(Expression instance, Type placeholderType)
+        {
+            return Expression
+                .Convert(Expression
+                    .Call(instance,
+                        dependencyMethod, 
+                        Expression.Constant(placeholderType)), 
+                    placeholderType);
         }
     }
 }

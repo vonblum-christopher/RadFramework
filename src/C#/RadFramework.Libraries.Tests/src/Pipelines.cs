@@ -26,7 +26,7 @@ public class Tests
 
     public class TypeA
     {
-        [IocNamedDependency]
+        [IocDependency]
         public TypeB b { get; set; }
     }
     public class TypeB
