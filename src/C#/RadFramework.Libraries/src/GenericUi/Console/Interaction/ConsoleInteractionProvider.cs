@@ -29,8 +29,9 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
             : this(
                 console, 
                 new TranslationProvider(
-                    new TranslationDictionaryFileLoader(
-                        "res/ConsoleInteractionProviderTranslations.json")))
+                    new TranslationDictionaryEmbeddedResourceLoader(
+                        Assembly.GetExecutingAssembly(), 
+                        "RadFramework.Libraries.res.ConsoleInteractionProviderTranslations.json")))
         {
         }
         
