@@ -1,5 +1,6 @@
 ﻿using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
+using RadFramework.Libraries.Web;
 
 namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
 {
@@ -9,7 +10,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
             int processingThreadAmount, 
             ThreadPriority processingThreadPriority,
             int dispatchLongRunningThreadTimeout,
-            Action<Action, PoolThread, Exception> processingYieldedError,
+            OnProcessingError<Action> processingYieldedError,
             ThreadPriority longRunningOperationThreadsPriority,
             string threadDescription = null, 
             Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
@@ -18,7 +19,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
             : base(
                 processingThreadAmount,
                 processingThreadPriority,
-                delegate(Action action) { action();  },
+                //delegate(Action action) { action();  },
                 processingYieldedError,
                 dispatchLongRunningThreadTimeout,
                 longRunningOperationThreadsPriority,

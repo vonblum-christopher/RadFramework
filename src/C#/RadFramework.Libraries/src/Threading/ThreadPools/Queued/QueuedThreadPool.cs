@@ -38,7 +38,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             int threadAmountPerCore,
             ThreadPriority priority,
             OnWorkArrivedDelegate<TQueueTask> onWorkArrivedDelegate,
-            OnProcessingError onProcessingError,
+            OnProcessingError<TQueueTask> onProcessingError,
             string threadDescription = null)
             : base(threadAmountPerCore, priority, null, threadDescription)
         {

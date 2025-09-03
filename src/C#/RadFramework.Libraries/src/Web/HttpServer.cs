@@ -10,16 +10,14 @@ namespace RadFramework.Libraries.Web;
 public class HttpServer : IDisposable
 {
     private readonly OnRequestDelegate processRequest;
-    private readonly OnProcessingError onProcessingError;
     private SocketConnectionListener listener;
     private QueuedThreadPool<System.Net.Sockets.Socket> httpRequestProcessingPool;
     public HttpServer(
         int port,
         OnRequestDelegate processRequest, 
-        OnProcessingError onProcessingError)
+        OnProcessingError<System.Net.Sockets.Socket> onProcessingError)
     {
         this.processRequest = processRequest;
-        this.onProcessingError = onProcessingError;
 
         httpRequestProcessingPool = 
             new QueuedThreadPool<System.Net.Sockets.Socket>(

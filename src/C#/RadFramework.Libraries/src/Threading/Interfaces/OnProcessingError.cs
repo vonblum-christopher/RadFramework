@@ -2,4 +2,4 @@ using RadFramework.Libraries.Threading.Internals;
 
 namespace RadFramework.Libraries.Web;
 
-public delegate void OnProcessingError(System.Net.Sockets.Socket socket, PoolThread poolThread, Exception exception);
+public delegate (TQueueTask task, PoolThread poolThread, Exception exception) OnProcessingError<TQueueTask>();

@@ -1,5 +1,6 @@
 ﻿using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
+using RadFramework.Libraries.Web;
 
 namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
 {
@@ -17,7 +18,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
         public QueuedDelegateSheduler(
             int threadAmountPerCore,
             ThreadPriority priority,
-            Action<Action, PoolThread, Exception> onProcessingError,
+            OnProcessingError<Action> onProcessingError,
             string threadDescription = null)
             : base(
                 threadAmountPerCore,
