@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using RadFramework.Libraries.Socket.Interface;
+using RadFramework.Libraries.Threading.ThreadPools.Simple;
 
 namespace RadFramework.Libraries.Socket;
 
@@ -9,7 +10,9 @@ public class SocketConnectionListener : IDisposable
     private readonly OnSocketConnected onSocketConnected;
     private System.Net.Sockets.Socket listenerSocket;
 
-    private Thread acceptThread;
+    //private Thread acceptThread;
+
+    private SimpleThreadPool acceptThreadPool;
     
     private bool disposed = false;
     
@@ -28,9 +31,11 @@ public class SocketConnectionListener : IDisposable
         
         listenerSocket.Listen();
         
-        acceptThread = new Thread(AcceptSockets);
+        /*acceptThread = new Thread(AcceptSockets);
         acceptThread.Priority = ThreadPriority.Highest;
-        acceptThread.Start();
+        acceptThread.Start();*/
+
+        acceptThreadPool = new SimpleThreadPool(Environment.ProcessorCount * 2, ThreadPriority.Highest, AcceptSockets);
     }
 
     private void AcceptSockets()
@@ -50,6 +55,9 @@ public class SocketConnectionListener : IDisposable
     public void Dispose()
     {
         disposed = true;
+        acceptThreadPool.Dispose();
+        acceptThreadPool = null;
         listenerSocket.Dispose();
+        listenerSocket = null;
     }
 }
