@@ -5,7 +5,7 @@ namespace RadFramework.Libraries.VCS;
 public class RadVcs
 {
     private readonly string repositoryPath;
-    private ChecksumProvider checksumProvider = new ();
+    private ChecksumProvider checksumProvider = new();
 
     public RadVcs(string repositoryPath)
     {
@@ -19,6 +19,7 @@ public class RadVcs
     
     public void StoreVersions(params string[] files)
     {
+        //Dictionary<string, byte[]> versions = files.ToDictionary(f => f, v => v);
         
     }
     

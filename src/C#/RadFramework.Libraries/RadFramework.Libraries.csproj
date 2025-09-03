@@ -22,8 +22,10 @@
       <Folder Include="src\Configuration\" />
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
+      <Folder Include="src\FileSystem\" />
       <Folder Include="src\GenericUi\Web\" />
       <Folder Include="src\Mapper\" />
+      <Folder Include="src\Net\Interface\" />
       <Folder Include="src\Serialization\Binary\" />
       <Folder Include="src\Serialization\Xml\" />
       <Folder Include="src\GenericUi\Console\" />

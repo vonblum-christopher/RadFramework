@@ -9,8 +9,9 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
     /// </summary>
     public class QueuedDelegateSheduler : QueuedThreadPool<Action>, IDelegateSheduler
     {
-        public QueuedDelegateSheduler(Action<Action, PoolThread> processingWorkloadYieldedError,
-            Action<Action> processWorkloadDelegate,
+        public QueuedDelegateSheduler(
+            processWorkloadDelegate,
+            OnProcessingError<Action>,
             int processingThreadAmount,
             ThreadPriority processingThreadPriority,
             Action processingDelegate,

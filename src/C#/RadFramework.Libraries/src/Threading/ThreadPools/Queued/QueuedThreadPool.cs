@@ -10,7 +10,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
     /// A MultiThreadProcessor that processes queue tasks on a pool of threads.
     /// </summary>
     /// <typeparam name="TQueueTask">Type of the queue task.</typeparam>
-    public class QueuedThreadPool<TQueueTask> : ThreadPoolBase, IQueuedThreadPoolMixinsConsumer<TQueueTask>
+    public class QueuedThreadPool<TQueueTask> : IQueuedThreadPoolMixinsConsumer<TQueueTask>
     {
         private readonly Action<TQueueTask, PoolThread> processingWorkloadYieldedError;
 
@@ -20,7 +20,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         protected bool isDisposed;
 
         public QueuedThreadPool(
-            Action<TQueueTask, PoolThread> processingWorkloadYieldedError,
+            OnProcessingError<TQueueTask> processingWorkloadYieldedError,
             Action<TQueueTask> processWorkloadDelegate,
             int processingThreadAmount,
             ThreadPriority processingThreadPriority,
@@ -50,19 +50,25 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// </summary>
         public CounterSemaphore ProcessIncomingWorkSemaphore { get; }
         
-
-        
-        {
-            ProcessWorkloadDelegate = task =>
+        public QueuedThreadPool(
+            int threadAmountPerCore,
+            ThreadPriority priority,
+            Action<TQueueTask> processWorkloadDelegate,
+            Action<TQueueTask, PoolThread, Exception> processingWorkloadYieldedError,
+            OnWorkArrivedDelegate<TQueueTask> onWorkArrivedDelegate,
+            OnProcessingError<TQueueTask> onProcessingError,
+            string threadDescription = null)
             {
-                try
+                ProcessWorkloadDelegate = task =>
                 {
-                    onWorkArrivedDelegate(task);
-                }
-                catch(Exception e)
-                {
-                    onProcessingError(); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
-                }
+                    try
+                    {
+                        onWorkArrivedDelegate(task);
+                    }
+                    catch(Exception e)
+                    {
+                        onProcessingError(); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
+                    }
             };
             
             ProcessIncomingWorkSemaphore = new CounterSemaphore(Environment.ProcessorCount * threadAmountPerCore);

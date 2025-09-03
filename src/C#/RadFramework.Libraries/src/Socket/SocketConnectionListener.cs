@@ -1,27 +1,32 @@
 using System.Net;
 using System.Net.Sockets;
+using RadFramework.Libraries.Socket.Interface;
 
 namespace RadFramework.Libraries.Socket;
 
 public class SocketConnectionListener : IDisposable
 {
-    private readonly Action<System.Net.Sockets.Socket> onSocketAccepted;
+    private readonly OnSocketConnected onSocketConnected;
     private System.Net.Sockets.Socket listenerSocket;
 
     private Thread acceptThread;
     
     private bool disposed = false;
     
-    public SocketConnectionListener(SocketType socketType, ProtocolType protocolType, int port, Action<System.Net.Sockets.Socket> onSocketAccepted)
+    public SocketConnectionListener(
+        SocketType socketType,
+        ProtocolType protocolType,
+        OnSocketConnected onSocketConnected,
+        int port)
     {
-        this.onSocketAccepted = onSocketAccepted;
+        this.onSocketConnected = onSocketConnected;
         IPEndPoint endPoint = new(IPAddress.Any, port);
         
         listenerSocket = new System.Net.Sockets.Socket(IPAddress.Any.AddressFamily, socketType, protocolType);
         
         listenerSocket.Bind(endPoint);
         
-        listenerSocket.Listen(1000);
+        listenerSocket.Listen();
         
         acceptThread = new Thread(AcceptSockets);
         acceptThread.Priority = ThreadPriority.Highest;
@@ -34,7 +39,7 @@ public class SocketConnectionListener : IDisposable
         {
             try
             {
-                onSocketAccepted(listenerSocket.Accept());
+                onSocketConnected(listenerSocket.Accept());
             }
             catch
             {
