@@ -19,12 +19,11 @@
 
     <ItemGroup>
       <Folder Include="dep\" />
-      <Folder Include="src\Aspects\" />
-      <Folder Include="src\CodeGeneration\" />
+      <Folder Include="src\DynamicProxies\" />
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\GenericUi\Web\" />
-      <Folder Include="src\ObjectMapper\" />
+      <Folder Include="src\Mapper\" />
       <Folder Include="src\Serialization\Binary\" />
       <Folder Include="src\Serialization\Xml\" />
       <Folder Include="src\GenericUi\Console\" />

@@ -18,4 +18,6 @@ public class ChecksumProvider : IChecksumProvider
             return checksum;
         }
     }
+    // is it more powerful than a stream
+    //IEnumerable<byte[]> ;
 }

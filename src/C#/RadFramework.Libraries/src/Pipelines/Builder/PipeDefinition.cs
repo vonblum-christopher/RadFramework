@@ -2,7 +2,6 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Pipelines.Builder
 {
-    [Serializable]
     public class PipeDefinition
     {
         public string Key { get; }

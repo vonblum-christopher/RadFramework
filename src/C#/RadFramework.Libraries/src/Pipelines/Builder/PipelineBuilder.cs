@@ -1,14 +1,15 @@
+using RadFramework.Libraries.Abstractions;
+
 namespace RadFramework.Libraries.Pipelines.Builder
 {
-    [Serializable]
-    public class PipelineBuilder
+    public class PipelineBuilder : ICloneable<PipelineBuilder>
     {
         public IEnumerable<PipeDefinition> Definitions => definitions;
         private List<PipeDefinition> definitions = new();
 
         public PipelineBuilder(IEnumerable<PipeDefinition> definitions)
         {
-            this.definitions = new List<PipeDefinition>(definitions);
+            this.definitions = definitions.ToList();
         }
 
         public PipelineBuilder()
@@ -58,6 +59,14 @@ namespace RadFramework.Libraries.Pipelines.Builder
         public void Append(Type tPipe, string key = null)
         {
             definitions.Add(new PipeDefinition(tPipe, key));
+        }
+
+        public PipelineBuilder Clone()
+        {
+            return new PipelineBuilder()
+            {
+                definitions = Definitions.ToList()
+            };
         }
     }
 }

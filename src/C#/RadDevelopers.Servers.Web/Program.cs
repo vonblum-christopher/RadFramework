@@ -26,7 +26,10 @@ namespace RadDevelopers.Servers.Web
             
             iocBuilder.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
             
-            ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline;
+            ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline =
+                LoadHttpPipelineConfig().;
+            
+            
             ExtensionPipeline<HttpError, HttpError> httpErrorPipeline;
             
             // when a web socket connection gets established this class takes care of the socket connection
@@ -37,7 +40,10 @@ namespace RadDevelopers.Servers.Web
             // the server that passes the requests to the pipelines
             HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
                 80,
-                iocBuilder.CreateContainer());
+                new HttpServerEvents()
+                {
+                    OnRequest = connection => httpPipeline.Process(connection)
+                });
                 //(request, socket) => socketManager.RegisterNewClientSocket(socket));
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
