@@ -4,7 +4,7 @@ namespace RadFramework.Libraries.Checksum;
 
 public class ChecksumProvider : IChecksumProvider
 {
-    public ulong Hash(byte[] data)
+    public ulong CalculateChecksum(byte[] data)
     {
         unchecked
         {

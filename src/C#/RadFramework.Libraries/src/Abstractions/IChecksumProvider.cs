@@ -2,5 +2,5 @@ namespace RadFramework.Libraries.Abstractions;
 
 public interface IChecksumProvider
 {
-    ulong Hash(byte[] data);
+    ulong CalculateChecksum(byte[] data);
 }

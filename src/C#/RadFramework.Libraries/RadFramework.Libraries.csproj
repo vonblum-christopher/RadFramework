@@ -19,7 +19,7 @@
 
     <ItemGroup>
       <Folder Include="dep\" />
-      <Folder Include="src\DynamicProxies\" />
+      <Folder Include="src\Configuration\" />
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\GenericUi\Web\" />

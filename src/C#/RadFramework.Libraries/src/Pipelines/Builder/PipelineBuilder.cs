@@ -1,71 +1,85 @@
+using System.Collections.Concurrent;
 using RadFramework.Libraries.Abstractions;
+using RadFramework.Libraries.Ioc;
+using RadFramework.Libraries.Ioc.Builder;
 
 namespace RadFramework.Libraries.Pipelines.Builder
 {
     public class PipelineBuilder : ICloneable<PipelineBuilder>
     {
-        public IEnumerable<PipeDefinition> Definitions => definitions;
-        private List<PipeDefinition> definitions = new();
+        public IEnumerable<PipeDefinition> PipeDefinitions => pipeRegistry.PipeDefinitions;
 
-        public PipelineBuilder(IEnumerable<PipeDefinition> definitions)
+        private PipeRegistry pipeRegistry = new PipeRegistry();
+
+        private List<PipeDefinition> definitions => pipeRegistry.PipeDefinitions;
+        
+        public PipelineBuilder(PipeRegistry pipeRegistry)
         {
-            this.definitions = definitions.ToList();
+            this.pipeRegistry = pipeRegistry.Clone();
         }
 
         public PipelineBuilder()
         {
         }
         
-        public void InsertAfter<TPipe>(string afterKey, string key = null)
+        public PipelineBuilder InsertAfter<TPipe>(string afterKey, string key = null)
         {
             int afterIndex = definitions.FindIndex(definition => definition.Key == afterKey);
             definitions.Insert(afterIndex + 1, new PipeDefinition(typeof(TPipe), key));
+            return this;
         }
         
-        public void InsertAfter<TAfter, TPipe>(string key = null)
+        public PipelineBuilder InsertAfter<TAfter, TPipe>(string key = null)
         {
             int afterIndex = definitions.FindIndex(definition => definition.Type == typeof(TAfter));
             definitions.Insert(afterIndex + 1, new PipeDefinition(typeof(TPipe), key));
+            return this;
         }
 
-        public void InsertBefore<TPipe>(string beforeKey, string key = null)
+        public PipelineBuilder InsertBefore<TPipe>(string beforeKey, string key = null)
         {
             int afterIndex = definitions.FindIndex(definition => definition.Key == beforeKey);
             definitions.Insert(afterIndex - 1, new PipeDefinition(typeof(TPipe), key));
+            return this;
         }
         
-        public void InsertBefore<TBefore, TPipe>(string key = null)
+        public PipelineBuilder InsertBefore<TBefore, TPipe>(string key = null)
         {
             int afterIndex = definitions.FindIndex(definition => definition.Type == typeof(TBefore));
             definitions.Insert(afterIndex - 1, new PipeDefinition(typeof(TPipe), key));
+            return this;
         }
 
-        public void Replace<TReplace, TPipe>(string key = null)
+        public PipelineBuilder Replace<TReplace, TPipe>(string key = null)
         {
             int replaceIndex = definitions.FindIndex(definition => definition.Type == typeof(TReplace));
             definitions.RemoveAt(replaceIndex);
             definitions.Insert(replaceIndex, new PipeDefinition(typeof(TPipe), key));
+            return this;
         }
         
-        public void Prepend<TPipe>(string key = null)
+        public PipelineBuilder Prepend<TPipe>(string key = null)
         {
             definitions.Insert(0, new PipeDefinition(typeof(TPipe), key));
+            return this;
         }
         
-        public void Append<TPipe>(string key = null)
+        public PipelineBuilder Append<TPipe>(string key = null)
         {
             definitions.Add(new PipeDefinition(typeof(TPipe), key));
+            return this;
         }
-        public void Append(Type tPipe, string key = null)
+        public PipelineBuilder Append(Type tPipe, string key = null)
         {
             definitions.Add(new PipeDefinition(tPipe, key));
+            return this;
         }
 
         public PipelineBuilder Clone()
         {
             return new PipelineBuilder()
             {
-                definitions = Definitions.ToList()
+                pipeRegistry = pipeRegistry.Clone()
             };
         }
     }

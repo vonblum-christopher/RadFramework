@@ -25,12 +25,16 @@ namespace RadDevelopers.Servers.Web
             SetupIocContainer(iocBuilder);
             
             iocBuilder.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
+
+            PipelineBuilder httpPipeineBuilder = new PipelineBuilder();
             
             ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline =
-                LoadHttpPipelineConfig().;
+                    new ExtensionPipeline<HttpConnection, HttpConnection>(httpPipeineBuilder, );
             
+            PipelineBuilder httpErrorPipeineBuilder = new PipelineBuilder();
             
-            ExtensionPipeline<HttpError, HttpError> httpErrorPipeline;
+            ExtensionPipeline<HttpError, HttpError> httpErrorPipeline =
+                    new ExtensionPipeline<HttpError, HttpError>(httpErrorPipeineBuilder, );
             
             // when a web socket connection gets established this class takes care of the socket connection
             /*iocContainer.RegisterSingleton<TelemetrySocketManager>();
@@ -42,9 +46,11 @@ namespace RadDevelopers.Servers.Web
                 80,
                 new HttpServerEvents()
                 {
-                    OnRequest = connection => httpPipeline.Process(connection)
+                    OnRequest = connection => httpPipeline.Process(connection),
+                    OnError = error => httpErrorPipeline.Process(error),
+                    OnFatalError = error => httpErrorPipeline.Process(error),
+                    OnWebsocketConnected = con => socketManager.RegisterNewClientSocket(socket))
                 });
-                //(request, socket) => socketManager.RegisterNewClientSocket(socket));
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
             
