@@ -5,22 +5,21 @@ using RadFramework.Libraries.Web;
 namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
 {
     public class QueuedDelegateShedulerWithLongRunningOperationsDispatchCapabilities : QueuedThreadPoolWithLongRunningOperationsDispatchCapabilities<Action>, IDelegateSheduler
-    {        
-        public QueuedDelegateShedulerWithLongRunningOperationsDispatchCapabilities(
-            int processingThreadAmount, 
+    {
+        public QueuedDelegateShedulerWithLongRunningOperationsDispatchCapabilities(int processingThreadAmount,
             ThreadPriority processingThreadPriority,
+            OnProcessingError<Action> processingMethod,
+            OnProcessingError<Action> onProcessingError,
             int dispatchLongRunningThreadTimeout,
-            OnProcessingError<Action> processingYieldedError,
             ThreadPriority longRunningOperationThreadsPriority,
-            string threadDescription = null, 
-            Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
-            int longRunningOperationLimit = 0, 
-            int longRunningOperationCancellationTimeout = 0) 
-            : base(
-                processingThreadAmount,
+            string threadDescription = null,
+            Action<PoolThread> onShiftedToLongRunningOperationsPool = null,
+            int longRunningOperationLimit = 0,
+            int longRunningOperationCancellationTimeout = 0) : 
+                base(processingThreadAmount,
                 processingThreadPriority,
-                //delegate(Action action) { action();  },
-                processingYieldedError,
+                processingMethod,
+                onProcessingError,
                 dispatchLongRunningThreadTimeout,
                 longRunningOperationThreadsPriority,
                 threadDescription,
@@ -29,7 +28,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
                 longRunningOperationCancellationTimeout)
         {
         }
-        
+
         public void Enqueue(Action task)
         {
             QueuedThreadPoolMixins.Enqueue(this, task);

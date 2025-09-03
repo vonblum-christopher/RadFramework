@@ -9,22 +9,17 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
     /// </summary>
     public class QueuedDelegateSheduler : QueuedThreadPool<Action>, IDelegateSheduler
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="threadAmountPerCore"></param>
-        /// <param name="priority"></param>
-        /// <param name="threadDescription"></param>
-        public QueuedDelegateSheduler(
-            int threadAmountPerCore,
-            ThreadPriority priority,
-            OnProcessingError<Action> onProcessingError,
-            string threadDescription = null)
-            : base(
-                threadAmountPerCore,
-                priority,
-                (a) => a(),
-                onProcessingError,
+        public QueuedDelegateSheduler(Action<Action, PoolThread> processingWorkloadYieldedError,
+            Action<Action> processWorkloadDelegate,
+            int processingThreadAmount,
+            ThreadPriority processingThreadPriority,
+            Action processingDelegate,
+            string threadDescription = null) 
+            : base(processingWorkloadYieldedError,
+                processWorkloadDelegate,
+                processingThreadAmount,
+                processingThreadPriority,
+                processingDelegate,
                 threadDescription)
         {
         }

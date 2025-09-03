@@ -18,7 +18,23 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// If true the queue processing will stop.
         /// </summary>
         protected bool isDisposed;
-        
+
+        public QueuedThreadPool(
+            Action<TQueueTask, PoolThread> processingWorkloadYieldedError,
+            Action<TQueueTask> processWorkloadDelegate,
+            int processingThreadAmount,
+            ThreadPriority processingThreadPriority,
+            Action processingDelegate,
+            string threadDescription = null) : 
+                base(processingThreadAmount,
+                processingThreadPriority,
+                processingDelegate,
+                threadDescription)
+        {
+            this.processingWorkloadYieldedError = processingWorkloadYieldedError;
+            ProcessWorkloadDelegate = processWorkloadDelegate;
+        }
+
         /// <summary>
         /// The queue that feeds the thread pool.
         /// </summary>
@@ -34,13 +50,8 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// </summary>
         public CounterSemaphore ProcessIncomingWorkSemaphore { get; }
         
-        public QueuedThreadPool(
-            int threadAmountPerCore,
-            ThreadPriority priority,
-            OnWorkArrivedDelegate<TQueueTask> onWorkArrivedDelegate,
-            OnProcessingError<TQueueTask> onProcessingError,
-            string threadDescription = null)
-            : base(threadAmountPerCore, priority, null, threadDescription)
+
+        
         {
             ProcessWorkloadDelegate = task =>
             {
@@ -50,10 +61,12 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
                 }
                 catch(Exception e)
                 {
-                    onProcessingError(task, PoolThread.GetPoolThread(Thread.CurrentThread), e);
+                    onProcessingError(); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
                 }
             };
+            
             ProcessIncomingWorkSemaphore = new CounterSemaphore(Environment.ProcessorCount * threadAmountPerCore);
+            
             this.StartThreads();
         }
         

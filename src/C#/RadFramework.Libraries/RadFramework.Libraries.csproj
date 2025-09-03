@@ -30,7 +30,6 @@
       <Folder Include="src\GenericUi\Gtk\" />
       <Folder Include="src\TextTemplating\" />
       <Folder Include="src\TextTranslation\" />
-      <Folder Include="src\VersionControlSystem\" />
     </ItemGroup>
 
     <ItemGroup>
