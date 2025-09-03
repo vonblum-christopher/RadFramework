@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
+using RadFramework.Libraries.Threading.Interfaces;
 using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.Semaphores;
+using RadFramework.Libraries.Web;
 
 namespace RadFramework.Libraries.Threading.ThreadPools.Queued
 {
@@ -35,8 +37,8 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         public QueuedThreadPool(
             int threadAmountPerCore,
             ThreadPriority priority,
-            Action<TQueueTask> processWorkloadDelegate,
-            Action<TQueueTask, PoolThread, Exception> processingWorkloadYieldedError,
+            OnWorkArrivedDelegate<TQueueTask> onWorkArrivedDelegate,
+            OnProcessingError onProcessingError,
             string threadDescription = null)
             : base(threadAmountPerCore, priority, null, threadDescription)
         {
@@ -44,11 +46,11 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             {
                 try
                 {
-                    processWorkloadDelegate(task);
+                    onWorkArrivedDelegate(task);
                 }
                 catch(Exception e)
                 {
-                    processingWorkloadYieldedError(task, PoolThread.GetPoolThread(Thread.CurrentThread), e);
+                    onProcessingError(task, PoolThread.GetPoolThread(Thread.CurrentThread), e);
                 }
             };
             ProcessIncomingWorkSemaphore = new CounterSemaphore(Environment.ProcessorCount * threadAmountPerCore);

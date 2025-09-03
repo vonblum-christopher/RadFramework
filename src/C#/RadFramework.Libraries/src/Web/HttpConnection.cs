@@ -20,12 +20,15 @@ public class HttpConnection : IDisposable
     public void DisposeReaderAndStream()
     {
         RequestReader?.Dispose();
+        RequestReader = null;
         UnderlyingStream?.Dispose();
+        UnderlyingStream = null;
     }
     
     public void Dispose()
     {
         DisposeReaderAndStream();
         UnderlyingSocket?.Dispose();
+        UnderlyingSocket = null;
     }
 }

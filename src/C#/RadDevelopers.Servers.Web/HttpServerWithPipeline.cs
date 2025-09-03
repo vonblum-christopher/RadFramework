@@ -15,7 +15,14 @@ public class HttpServerWithPipeline : IDisposable
     public HttpServerWithPipeline(int port, HttpServerEvents events)
     {
         this.events = events;
-        server = new HttpServer(port, ProcessRequest, null);
+        server = new HttpServer(port,
+            ProcessRequest,
+            (socket,
+                thread,
+                exception) => events.OnError(new HttpError()
+            {
+                Connection = 
+            }));
     }
         
     private void ProcessRequest(HttpConnection connection)

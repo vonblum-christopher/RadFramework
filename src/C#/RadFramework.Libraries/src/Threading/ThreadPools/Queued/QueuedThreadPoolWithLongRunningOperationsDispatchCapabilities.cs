@@ -1,5 +1,7 @@
 ﻿using RadFramework.Libraries.Collections;
+using RadFramework.Libraries.Threading.Interfaces;
 using RadFramework.Libraries.Threading.Internals;
+using RadFramework.Libraries.Web;
 
 namespace RadFramework.Libraries.Threading.ThreadPools.Queued
 {
@@ -58,15 +60,15 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         public QueuedThreadPoolWithLongRunningOperationsDispatchCapabilities(
             int processingThreadAmount,
             ThreadPriority processingThreadPriority,
-            Action<TQueueTask> processingMethod,
-            Action<TQueueTask, PoolThread, Exception> onWorkloadProcessingFailed,
+            OnWorkArrivedDelegate<TQueueTask> processingMethod,
+            OnProcessingError onProcessingError,
             int dispatchLongRunningThreadTimeout,
             ThreadPriority longRunningOperationThreadsPriority,
             string threadDescription = null,
             Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
             int longRunningOperationLimit = 0,
             int longRunningOperationCancellationTimeout = 0) 
-            : base(processingThreadAmount, processingThreadPriority, processingMethod, onWorkloadProcessingFailed, threadDescription)
+            : base(processingThreadAmount, processingThreadPriority, processingMethod, onProcessingError, threadDescription)
         {
             LongRunningThreadDispatchTimeout = dispatchLongRunningThreadTimeout;
             LongRunningOperationThreadsPriority = longRunningOperationThreadsPriority;

@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using RadDevelopers.Servers.Web;
 using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.Socket;
 using RadFramework.Libraries.Threading.Internals;
@@ -8,30 +9,31 @@ namespace RadFramework.Libraries.Web;
 
 public class HttpServer : IDisposable
 {
-    private readonly HttpRequestHandler processRequest;
+    private readonly OnRequestDelegate processRequest;
+    private readonly OnProcessingError onProcessingError;
     private SocketConnectionListener listener;
     private QueuedThreadPool<System.Net.Sockets.Socket> httpRequestProcessingPool;
-    
     public HttpServer(
         int port,
-        HttpRequestHandler processRequest, 
-        Action<System.Net.Sockets.Socket, PoolThread, Exception> onException)
+        OnRequestDelegate processRequest, 
+        OnProcessingError onProcessingError)
     {
         this.processRequest = processRequest;
+        this.onProcessingError = onProcessingError;
 
         httpRequestProcessingPool = 
             new QueuedThreadPool<System.Net.Sockets.Socket>(
                 2,
                 ThreadPriority.Highest,
                 ProcessHttpSocketConnection,
-                onException,
-                "RadFramework.Libraries.Net.Http.HttpServer-processing-pool");
+                onProcessingError,
+                "RadFramework.Libraries.Web.HttpServer-RequestProcessingPool");
         
         listener = new SocketConnectionListener(
             SocketType.Stream,
             ProtocolType.Tcp,
             port,
-            OnSocketAccepted);
+            OnSocketAccepted);//start the next thread when the listener accepted a socket
     }
 
     private void OnSocketAccepted(System.Net.Sockets.Socket connectionSocket)

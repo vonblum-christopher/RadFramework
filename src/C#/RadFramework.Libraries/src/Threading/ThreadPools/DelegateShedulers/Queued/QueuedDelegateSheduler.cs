@@ -17,13 +17,13 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
         public QueuedDelegateSheduler(
             int threadAmountPerCore,
             ThreadPriority priority,
-            Action<Action, PoolThread, Exception> processingWorkloadYieldedError,
+            Action<Action, PoolThread, Exception> onProcessingError,
             string threadDescription = null)
             : base(
                 threadAmountPerCore,
                 priority,
                 (a) => a(),
-                processingWorkloadYieldedError,
+                onProcessingError,
                 threadDescription)
         {
         }

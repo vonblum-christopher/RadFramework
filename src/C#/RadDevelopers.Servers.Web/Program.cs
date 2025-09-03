@@ -49,7 +49,7 @@ namespace RadDevelopers.Servers.Web
                     OnRequest = connection => httpPipeline.Process(connection),
                     OnError = error => httpErrorPipeline.Process(error),
                     OnFatalError = error => httpErrorPipeline.Process(error),
-                    OnWebsocketConnected = con => socketManager.RegisterNewClientSocket(socket))
+                    //OnWebsocketConnected = con => socketManager.RegisterNewClientSocket(socket))
                 });
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);

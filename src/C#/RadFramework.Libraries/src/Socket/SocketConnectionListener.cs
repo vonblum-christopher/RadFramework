@@ -20,7 +20,9 @@ public class SocketConnectionListener : IDisposable
         listenerSocket = new System.Net.Sockets.Socket(IPAddress.Any.AddressFamily, socketType, protocolType);
         
         listenerSocket.Bind(endPoint);
-        listenerSocket.Listen();
+        
+        listenerSocket.Listen(1000);
+        
         acceptThread = new Thread(AcceptSockets);
         acceptThread.Priority = ThreadPriority.Highest;
         acceptThread.Start();
