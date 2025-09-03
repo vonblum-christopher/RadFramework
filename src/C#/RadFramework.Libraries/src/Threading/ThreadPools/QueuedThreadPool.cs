@@ -12,7 +12,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
     /// <typeparam name="TQueueTask">Type of the queue task.</typeparam>
     public class QueuedThreadPool<TQueueTask> : IQueuedThreadPoolMixinsConsumer<TQueueTask>
     {
-        private readonly Action<TQueueTask, PoolThread> processingWorkloadYieldedError;
+        private readonly OnProcessingError<TQueueTask> onProcessingError;
 
         /// <summary>
         /// If true the queue processing will stop.
@@ -20,18 +20,14 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         protected bool isDisposed;
 
         public QueuedThreadPool(
-            OnProcessingError<TQueueTask> processingWorkloadYieldedError,
-            Action<TQueueTask> processWorkloadDelegate,
+            OnProcessingError<TQueueTask> onProcessingError,
             int processingThreadAmount,
             ThreadPriority processingThreadPriority,
-            Action processingDelegate,
-            string threadDescription = null) : 
-                base(processingThreadAmount,
-                processingThreadPriority,
-                processingDelegate,
-                threadDescription)
+            Action<TQueueTask> processingDelegate,
+            Action<TQueueTask> processingDelegate,
+            string threadDescription = null)
         {
-            this.processingWorkloadYieldedError = processingWorkloadYieldedError;
+            this.onProcessingError = onProcessingError;
             ProcessWorkloadDelegate = processWorkloadDelegate;
         }
 
@@ -54,22 +50,22 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             int threadAmountPerCore,
             ThreadPriority priority,
             Action<TQueueTask> processWorkloadDelegate,
-            Action<TQueueTask, PoolThread, Exception> processingWorkloadYieldedError,
-            OnWorkArrivedDelegate<TQueueTask> onWorkArrivedDelegate,
+            OnProcessingError<TQueueTask> processingWorkloadYieldedError,
+            OnWorkloadArrivedDelegate<TQueueTask> onWorkloadArrivedDelegate,
             OnProcessingError<TQueueTask> onProcessingError,
             string threadDescription = null)
-            {
+        {
                 ProcessWorkloadDelegate = task =>
                 {
                     try
                     {
-                        onWorkArrivedDelegate(task);
+                        onWorkloadArrivedDelegate(task);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         onProcessingError(); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
                     }
-            };
+                };
             
             ProcessIncomingWorkSemaphore = new CounterSemaphore(Environment.ProcessorCount * threadAmountPerCore);
             

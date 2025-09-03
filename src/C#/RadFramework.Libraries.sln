@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadDevelopers.Programs.Wind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Libraries.Tests", "RadFramework.Libraries.Tests\RadFramework.Libraries.Tests.csproj", "{EE40289D-CE4A-40EB-8BE2-ADC5584C49F4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{EE68723E-6D4E-4016-8C9C-461EB01EC90B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

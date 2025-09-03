@@ -67,7 +67,6 @@ namespace RadFramework.Libraries.Threading.Tasks
         {
             Awaiter.WaitOne();
             return Result;
-
         }
         
         void ProcessInternal(object o)
@@ -78,7 +77,6 @@ namespace RadFramework.Libraries.Threading.Tasks
     }
 
     public class ThreadedTask
-
     {
         private readonly Action task;
         private ManualResetEvent Awaiter { get; set; }

@@ -21,17 +21,18 @@ public class HttpServer : IDisposable
 
         httpRequestProcessingPool = 
             new QueuedThreadPool<System.Net.Sockets.Socket>(
+                onProcessingError,
                 2,
                 ThreadPriority.Highest,
+                processRequest,
                 ProcessHttpSocketConnection,
-                onProcessingError,
                 "RadFramework.Libraries.Web.HttpServer-RequestProcessingPool");
         
         listener = new SocketConnectionListener(
             SocketType.Stream,
             ProtocolType.Tcp,
-            port,
-            OnSocketAccepted);//start the next thread when the listener accepted a socket
+            OnSocketAccepted,
+            port);//start the next thread when the listener accepted a socket
     }
 
     private void OnSocketAccepted(System.Net.Sockets.Socket connectionSocket)

@@ -2,7 +2,7 @@ using RadFramework.Libraries.Ioc;
 
 namespace RadFramework.Libraries.Injection;
 
-public class InjectionProvider
+public class InjectionLambdaFactory
 {
     public void Inject<T>(object o, InjectionOptions injectionOptions)
     {

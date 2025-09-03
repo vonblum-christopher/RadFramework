@@ -1,4 +1,5 @@
-﻿using RadFramework.Libraries.Threading.Internals;
+﻿using RadFramework.Libraries.Threading.Interfaces;
+using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 using RadFramework.Libraries.Web;
 
@@ -10,17 +11,16 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
     public class QueuedDelegateSheduler : QueuedThreadPool<Action>, IDelegateSheduler
     {
         public QueuedDelegateSheduler(
-            processWorkloadDelegate,
-            OnProcessingError<Action>,
+            OnWorkloadArrivedDelegate<Action> onWorkloadArrived,
+            OnProcessingError<Action> onProcessingError,
             int processingThreadAmount,
             ThreadPriority processingThreadPriority,
-            Action processingDelegate,
             string threadDescription = null) 
-            : base(processingWorkloadYieldedError,
-                processWorkloadDelegate,
+            : base(
+                onWorkloadArrived,
+                onProcessingError,
                 processingThreadAmount,
                 processingThreadPriority,
-                processingDelegate,
                 threadDescription)
         {
         }

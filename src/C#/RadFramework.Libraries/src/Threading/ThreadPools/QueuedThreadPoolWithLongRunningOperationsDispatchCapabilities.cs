@@ -60,7 +60,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         public QueuedThreadPoolWithLongRunningOperationsDispatchCapabilities(
             int processingThreadAmount,
             ThreadPriority processingThreadPriority,
-            OnWorkArrivedDelegate<TQueueTask> processingMethod,
+            OnWorkloadArrivedDelegate<TQueueTask> processingMethod,
             OnProcessingError<TQueueTask> onProcessingError,
             int dispatchLongRunningThreadTimeout,
             ThreadPriority longRunningOperationThreadsPriority,
