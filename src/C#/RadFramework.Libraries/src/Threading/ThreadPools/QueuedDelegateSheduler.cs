@@ -11,17 +11,16 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
     public class QueuedDelegateSheduler : QueuedThreadPool<Action>, IDelegateSheduler
     {
         public QueuedDelegateSheduler(
-            OnWorkloadArrivedDelegate<Action> onWorkloadArrived,
-            OnProcessingError<Action> onProcessingError,
-            int processingThreadAmount,
-            ThreadPriority processingThreadPriority,
-            string threadDescription = null) 
-            : base(
-                onWorkloadArrived,
-                onProcessingError,
-                processingThreadAmount,
-                processingThreadPriority,
-                threadDescription)
+                int threadAmountPerCore,
+                ThreadPriority priority,
+                OnWorkloadArrivedDelegate<Action> onWorkloadArrivedDelegate,
+                OnProcessingError<Action> onProcessingError,
+                string threadDescription = null) : 
+                    base(threadAmountPerCore,
+                            priority,
+                            onWorkloadArrivedDelegate,
+                            onProcessingError,
+                            threadDescription)
         {
         }
 

@@ -10,7 +10,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
     /// A MultiThreadProcessor that processes queue tasks on a pool of threads.
     /// </summary>
     /// <typeparam name="TQueueTask">Type of the queue task.</typeparam>
-    public class QueuedThreadPool<TQueueTask> : IQueuedThreadPoolMixinsConsumer<TQueueTask>
+    public class QueuedThreadPool<TQueueTask> : ThreadPoolBase, IQueuedThreadPoolMixinsConsumer<TQueueTask>
     {
         private readonly OnProcessingError<TQueueTask> onProcessingError;
 
@@ -18,18 +18,6 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         /// If true the queue processing will stop.
         /// </summary>
         protected bool isDisposed;
-
-        public QueuedThreadPool(
-            OnProcessingError<TQueueTask> onProcessingError,
-            int processingThreadAmount,
-            ThreadPriority processingThreadPriority,
-            Action<TQueueTask> processingDelegate,
-            Action<TQueueTask> processingDelegate,
-            string threadDescription = null)
-        {
-            this.onProcessingError = onProcessingError;
-            ProcessWorkloadDelegate = processWorkloadDelegate;
-        }
 
         /// <summary>
         /// The queue that feeds the thread pool.
@@ -49,11 +37,10 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
         public QueuedThreadPool(
             int threadAmountPerCore,
             ThreadPriority priority,
-            Action<TQueueTask> processWorkloadDelegate,
-            OnProcessingError<TQueueTask> processingWorkloadYieldedError,
             OnWorkloadArrivedDelegate<TQueueTask> onWorkloadArrivedDelegate,
             OnProcessingError<TQueueTask> onProcessingError,
-            string threadDescription = null)
+            string threadDescription = null) : 
+                base(threadAmountPerCore, priority, null, threadDescription)
         {
                 ProcessWorkloadDelegate = task =>
                 {
@@ -63,7 +50,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
                     }
                     catch (Exception e)
                     {
-                        onProcessingError(); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
+                        onProcessingError(task, PoolThread.GetPoolThread(Thread.CurrentThread), e); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
                     }
                 };
             

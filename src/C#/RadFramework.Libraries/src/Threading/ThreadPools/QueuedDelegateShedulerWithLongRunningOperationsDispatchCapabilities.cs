@@ -1,4 +1,5 @@
-﻿using RadFramework.Libraries.Threading.Internals;
+﻿using RadFramework.Libraries.Threading.Interfaces;
+using RadFramework.Libraries.Threading.Internals;
 using RadFramework.Libraries.Threading.ThreadPools.Queued;
 using RadFramework.Libraries.Web;
 
@@ -8,7 +9,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
     {
         public QueuedDelegateShedulerWithLongRunningOperationsDispatchCapabilities(int processingThreadAmount,
             ThreadPriority processingThreadPriority,
-            OnProcessingError<Action> processingMethod,
+            OnWorkloadArrivedDelegate<Action> processingMethod,
             OnProcessingError<Action> onProcessingError,
             int dispatchLongRunningThreadTimeout,
             ThreadPriority longRunningOperationThreadsPriority,

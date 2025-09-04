@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -28,13 +28,8 @@
       <Folder Include="src\Serialization\Xml\" />
       <Folder Include="src\GenericUi\Console\" />
       <Folder Include="src\GenericUi\Gtk\" />
-      <Folder Include="src\Telemetry\Actions\Both\" />
-      <Folder Include="src\Telemetry\Pipelines\ConnectionEstablished\" />
-      <Folder Include="src\Telemetry\Pipelines\PackageReceived\" />
-      <Folder Include="src\Telemetry\UdpWithHashAndOrder\" />
       <Folder Include="src\TextTemplating\" />
       <Folder Include="src\TextTranslation\" />
-      <Folder Include="src\Threading\Tasks\" />
       <Folder Include="src\Threading\Timers\" />
     </ItemGroup>
 
@@ -45,10 +40,19 @@
       <None Update="res\ConsoleInteractionProviderTranslations.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Remove="src\Configuration\**" />
+      <None Remove="src\Telemetry\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Include="src\Telemetry\TelemetrySocketManager.cs" />
+      <Compile Remove="src\Configuration\**" />
+      <Compile Remove="src\Telemetry\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="src\Configuration\**" />
+      <EmbeddedResource Remove="src\Telemetry\**" />
     </ItemGroup>
 
 </Project>

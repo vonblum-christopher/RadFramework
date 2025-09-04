@@ -21,11 +21,10 @@ public class HttpServer : IDisposable
 
         httpRequestProcessingPool = 
             new QueuedThreadPool<System.Net.Sockets.Socket>(
-                onProcessingError,
                 2,
                 ThreadPriority.Highest,
-                processRequest,
                 ProcessHttpSocketConnection,
+                onProcessingError,
                 "RadFramework.Libraries.Web.HttpServer-RequestProcessingPool");
         
         listener = new SocketConnectionListener(

@@ -68,7 +68,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools.Queued
             Action<PoolThread> onShiftedToLongRunningOperationsPool = null, 
             int longRunningOperationLimit = 0,
             int longRunningOperationCancellationTimeout = 0) 
-            : base(processingThreadAmount, processingThreadPriority,v)
+            : base(processingThreadAmount, processingThreadPriority, processingMethod, onProcessingError)
         {
             LongRunningThreadDispatchTimeout = dispatchLongRunningThreadTimeout;
             LongRunningOperationThreadsPriority = longRunningOperationThreadsPriority;
