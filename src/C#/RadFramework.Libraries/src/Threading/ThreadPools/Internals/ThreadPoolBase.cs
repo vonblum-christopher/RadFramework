@@ -1,7 +1,6 @@
-using RadFramework.Libraries.Collections;
-using RadFramework.Libraries.Threading.Interfaces;
+using RadFramework.Libraries.DataTypes;
 
-namespace RadFramework.Libraries.Threading.Internals
+namespace RadFramework.Libraries.Threading.ThreadPools.Internals
 {
     public abstract class ThreadPoolBase
         : IThreadPoolMixinsConsumer, IDisposable

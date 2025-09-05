@@ -1,4 +1,4 @@
-﻿namespace RadFramework.Libraries.DataTypes
+﻿namespace RadFramework.Libraries.Patterns
 {
     internal class Lazy<TValue> where TValue : class
     {

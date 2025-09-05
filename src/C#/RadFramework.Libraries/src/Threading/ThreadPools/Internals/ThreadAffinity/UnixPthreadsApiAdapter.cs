@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace RadFramework.Libraries.Threading.Internals.ThreadAffinity;
+namespace RadFramework.Libraries.Threading.ThreadPools.Internals.ThreadAffinity;
 
 class UnixPthreadsApiAdapter : IThreadAffinityApi
 {

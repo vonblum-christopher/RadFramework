@@ -3,6 +3,7 @@ using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Pipelines.Builder;
 using RadFramework.Libraries.Web;
+using RadFramework.Libraries.Web.Models;
 
 namespace RadDevelopers.Servers.Web;
 

@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
-using RadFramework.Libraries.Collections;
 
-namespace RadFramework.Libraries.Threading.Semaphores
+namespace RadFramework.Libraries.DataTypes
 {
     /// <summary>
     /// A simple Semaphore that is able to trap threads and release them.

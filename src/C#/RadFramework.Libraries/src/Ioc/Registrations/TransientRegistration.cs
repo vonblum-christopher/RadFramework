@@ -7,11 +7,11 @@ namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class TransientRegistration : RegistrationBase
     {
-        private DataTypes.Lazy<Func<IocContainer, object>> construct;
+        private Patterns.Lazy<Func<IocContainer, object>> construct;
         
         public override void Initialize(IocDependency dependency)
         {
-            this.construct = new DataTypes.Lazy<Func<IocContainer, object>>(
+            this.construct = new Patterns.Lazy<Func<IocContainer, object>>(
                 () => 
                     dependency.FactoryFunc 
                     ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency));

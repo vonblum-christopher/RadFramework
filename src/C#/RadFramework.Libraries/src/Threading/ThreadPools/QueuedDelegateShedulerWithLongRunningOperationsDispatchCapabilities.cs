@@ -1,9 +1,8 @@
-﻿using RadFramework.Libraries.Threading.Interfaces;
-using RadFramework.Libraries.Threading.Internals;
-using RadFramework.Libraries.Threading.ThreadPools.Queued;
-using RadFramework.Libraries.Web;
+﻿using RadFramework.Libraries.Abstractions;
+using RadFramework.Libraries.Threading.Interface;
+using RadFramework.Libraries.Threading.ThreadPools.Internals;
 
-namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
+namespace RadFramework.Libraries.Threading.ThreadPools
 {
     public class QueuedDelegateShedulerWithLongRunningOperationsDispatchCapabilities : QueuedThreadPoolWithLongRunningOperationsDispatchCapabilities<Action>, IDelegateSheduler
     {

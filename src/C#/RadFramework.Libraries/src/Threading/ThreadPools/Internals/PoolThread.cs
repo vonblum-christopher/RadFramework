@@ -1,6 +1,6 @@
-using RadFramework.Libraries.Threading.Internals.ThreadAffinity;
+using RadFramework.Libraries.Threading.ThreadPools.Internals.ThreadAffinity;
 
-namespace RadFramework.Libraries.Threading.Internals;
+namespace RadFramework.Libraries.Threading.ThreadPools.Internals;
 
 public class PoolThread : IDisposable
 {

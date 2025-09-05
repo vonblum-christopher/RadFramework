@@ -1,5 +1,3 @@
-using RadFramework.Libraries.Web;
-
-namespace RadDevelopers.Servers.Web;
+namespace RadFramework.Libraries.Web.Interfaces;
 
 public delegate void OnWebsocketConnectedDelegate(HttpConnection httpConnection);

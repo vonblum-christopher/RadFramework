@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.VCS;
+namespace RadFramework.Libraries.Vcs;
 
 public class RadVcsConfig
 {

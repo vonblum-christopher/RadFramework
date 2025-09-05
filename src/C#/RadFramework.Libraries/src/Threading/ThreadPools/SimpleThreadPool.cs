@@ -1,6 +1,6 @@
-﻿using RadFramework.Libraries.Threading.Internals;
+﻿using RadFramework.Libraries.Threading.ThreadPools.Internals;
 
-namespace RadFramework.Libraries.Threading.ThreadPools.Simple
+namespace RadFramework.Libraries.Threading.ThreadPools
 {
     /// <summary>
     /// The simplest form of a MultiThreadProcessor.

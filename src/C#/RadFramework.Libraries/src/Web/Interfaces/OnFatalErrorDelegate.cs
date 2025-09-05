@@ -1,5 +1,5 @@
-using RadFramework.Libraries.Web;
+using RadFramework.Libraries.Web.Models;
 
-namespace RadDevelopers.Servers.Web;
+namespace RadFramework.Libraries.Web.Interfaces;
 
 public delegate void OnFatalErrorDelegate(HttpError fatalError);

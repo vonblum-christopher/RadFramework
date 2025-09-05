@@ -1,6 +1,6 @@
-using RadFramework.Libraries.Threading.Timers;
+using RadFramework.Libraries.Threading;
 
-namespace RadFramework.Libraries.Collections
+namespace RadFramework.Libraries.DataTypes
 {
     /// <summary>
     /// A simple object pool that maintains instances that can be reserved or wait in the pool.

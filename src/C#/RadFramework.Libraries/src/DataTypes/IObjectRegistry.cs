@@ -1,4 +1,4 @@
-﻿namespace RadFramework.Libraries.Collections
+﻿namespace RadFramework.Libraries.DataTypes
 {
     public interface IObjectRegistry<TReferenceType> : IEnumerable<TReferenceType>
         where TReferenceType : class

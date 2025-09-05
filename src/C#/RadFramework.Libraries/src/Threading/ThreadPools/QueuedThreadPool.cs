@@ -1,10 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using RadFramework.Libraries.Threading.Interfaces;
-using RadFramework.Libraries.Threading.Internals;
-using RadFramework.Libraries.Threading.Semaphores;
-using RadFramework.Libraries.Web;
+using RadFramework.Libraries.DataTypes;
+using RadFramework.Libraries.Threading.Interface;
+using RadFramework.Libraries.Threading.ThreadPools.Internals;
 
-namespace RadFramework.Libraries.Threading.ThreadPools.Queued
+namespace RadFramework.Libraries.Threading.ThreadPools
 {
     /// <summary>
     /// A MultiThreadProcessor that processes queue tasks on a pool of threads.

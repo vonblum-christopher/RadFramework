@@ -1,7 +1,7 @@
-using RadFramework.Libraries.Collections;
-using RadFramework.Libraries.Threading.Internals;
+using RadFramework.Libraries.DataTypes;
+using RadFramework.Libraries.Threading.ThreadPools.Internals;
 
-namespace RadFramework.Libraries.Threading.ThreadPools.Simple
+namespace RadFramework.Libraries.Threading.ThreadPools
 {
     /// <summary>
     /// A specialized MultiThreadProcessor that can host long running operations.

@@ -6,7 +6,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
 {
     public class SingletonRegistration : RegistrationBase
     {
-        private DataTypes.Lazy<object> singleton;
+        private Patterns.Lazy<object> singleton;
 
         private Func<IocContainer, object> factoryFunc;
 
@@ -22,7 +22,7 @@ namespace RadFramework.Libraries.Ioc.Registrations
         {
             if (singleton == null)
             {
-                singleton = new DataTypes.Lazy<object>(() => factoryFunc(container));
+                singleton = new Patterns.Lazy<object>(() => factoryFunc(container));
             }
             
             return singleton.Value;

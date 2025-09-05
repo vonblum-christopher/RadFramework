@@ -1,6 +1,6 @@
 using RadFramework.Libraries.Pipelines.Parameters;
 
-namespace RadFramework.Libraries.Pipelines.Base;
+namespace RadFramework.Libraries.Abstractions;
 
 public interface IExtensionPipeline
 {

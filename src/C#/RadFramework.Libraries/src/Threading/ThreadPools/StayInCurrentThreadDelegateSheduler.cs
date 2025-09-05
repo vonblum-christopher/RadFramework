@@ -1,6 +1,6 @@
-﻿using RadFramework.Libraries.Threading.ThreadPools.Queued;
+﻿using RadFramework.Libraries.Abstractions;
 
-namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers
+namespace RadFramework.Libraries.Threading.ThreadPools
 {
     /// <summary>
     /// Dummy class to execute everything on the current thread.

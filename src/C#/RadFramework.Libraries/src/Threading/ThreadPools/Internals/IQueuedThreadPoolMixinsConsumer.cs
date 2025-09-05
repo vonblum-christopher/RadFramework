@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
-using RadFramework.Libraries.Threading.Semaphores;
+using RadFramework.Libraries.DataTypes;
 
-namespace RadFramework.Libraries.Threading.Internals
+namespace RadFramework.Libraries.Threading.ThreadPools.Internals
 {
     public interface IQueuedThreadPoolMixinsConsumer<TQueueTask> : IThreadPoolMixinsConsumer
     {

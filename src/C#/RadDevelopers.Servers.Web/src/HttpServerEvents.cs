@@ -1,3 +1,5 @@
+using RadFramework.Libraries.Web.Interfaces;
+
 namespace RadDevelopers.Servers.Web;
 
 public class HttpServerEvents

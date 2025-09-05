@@ -1,6 +1,6 @@
-﻿using RadFramework.Libraries.Threading.ThreadPools.Queued;
+﻿using RadFramework.Libraries.Abstractions;
 
-namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers.Queued
+namespace RadFramework.Libraries.Threading.ThreadPools
 {
     /// <summary>
     /// Adapter class for the built in ThreadPool of .NET Framework.

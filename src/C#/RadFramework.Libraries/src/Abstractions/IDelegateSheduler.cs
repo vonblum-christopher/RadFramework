@@ -1,4 +1,4 @@
-﻿namespace RadFramework.Libraries.Threading.ThreadPools.DelegateShedulers
+﻿namespace RadFramework.Libraries.Abstractions
 {
     /// <summary>
     /// Abstraction for everything that queues delegates as workload.

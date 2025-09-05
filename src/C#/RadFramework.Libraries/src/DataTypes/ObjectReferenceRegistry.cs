@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace RadFramework.Libraries.Collections
+namespace RadFramework.Libraries.DataTypes
 {
     /// <summary>
     /// A registry that holds references to objects with capabilities to check for objects and remove them.

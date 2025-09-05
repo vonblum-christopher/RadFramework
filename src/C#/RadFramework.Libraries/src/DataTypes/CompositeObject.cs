@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace RadFramework.Libraries.Patterns;
+namespace RadFramework.Libraries.DataTypes;
 
 public class CompositeObject
 {

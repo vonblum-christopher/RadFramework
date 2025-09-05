@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Web;
+namespace RadFramework.Libraries.Web.Models;
 
 public class HttpError
 {

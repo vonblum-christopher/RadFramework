@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Threading.Tasks
+namespace RadFramework.Libraries.Threading
 {
     public class ThreadedTask
         <TIn, TOut>

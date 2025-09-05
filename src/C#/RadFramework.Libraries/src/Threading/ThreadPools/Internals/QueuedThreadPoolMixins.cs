@@ -1,4 +1,4 @@
-namespace RadFramework.Libraries.Threading.Internals
+namespace RadFramework.Libraries.Threading.ThreadPools.Internals
 {
     /// <summary>
     /// Shared methods to create queued ThreadPools.

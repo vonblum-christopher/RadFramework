@@ -1,6 +1,6 @@
-using RadFramework.Libraries.Collections;
+using RadFramework.Libraries.DataTypes;
 
-namespace RadFramework.Libraries.Threading.Internals
+namespace RadFramework.Libraries.Threading.ThreadPools.Internals
 {
     public interface IThreadPoolMixinsConsumer
     {

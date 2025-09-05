@@ -8,6 +8,7 @@ using RadFramework.Libraries.Pipelines;
 using RadFramework.Libraries.Pipelines.Builder;
 using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.Web;
+using RadFramework.Libraries.Web.Models;
 using IocContainer = RadFramework.Libraries.Ioc.IocContainer;
 
 namespace RadDevelopers.Servers.Web

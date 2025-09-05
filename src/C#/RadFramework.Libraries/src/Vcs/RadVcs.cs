@@ -1,6 +1,6 @@
 using RadFramework.Libraries.Checksum;
 
-namespace RadFramework.Libraries.VCS;
+namespace RadFramework.Libraries.Vcs;
 
 public class RadVcs
 {

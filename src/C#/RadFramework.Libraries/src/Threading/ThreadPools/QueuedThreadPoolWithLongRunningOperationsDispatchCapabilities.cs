@@ -1,9 +1,8 @@
-﻿using RadFramework.Libraries.Collections;
-using RadFramework.Libraries.Threading.Interfaces;
-using RadFramework.Libraries.Threading.Internals;
-using RadFramework.Libraries.Web;
+﻿using RadFramework.Libraries.DataTypes;
+using RadFramework.Libraries.Threading.Interface;
+using RadFramework.Libraries.Threading.ThreadPools.Internals;
 
-namespace RadFramework.Libraries.Threading.ThreadPools.Queued
+namespace RadFramework.Libraries.Threading.ThreadPools
 {
     /// <summary>
     /// A MultiThreadProcessor that queues up tasks and executes them on a pool of threads.

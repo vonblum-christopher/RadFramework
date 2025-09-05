@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace RadFramework.Libraries.Web;
+namespace RadFramework.Libraries.Web.Models;
 
 public class HttpDocument
 {
