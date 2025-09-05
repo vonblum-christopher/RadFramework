@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <Folder Include="dep\" />
+      <Folder Include="src\Collections\" />
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\GenericUi\Web\" />
