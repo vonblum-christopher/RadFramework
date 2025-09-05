@@ -26,15 +26,17 @@ namespace RadDevelopers.Servers.Web
             
             iocBuilder.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
 
+            IocContainer container = iocBuilder.CreateContainer();
+            
             PipelineBuilder httpPipeineBuilder = new PipelineBuilder();
             
             ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline =
-                    new ExtensionPipeline<HttpConnection, HttpConnection>(httpPipeineBuilder, );
+                    new ExtensionPipeline<HttpConnection, HttpConnection>(httpPipeineBuilder, container);
             
             PipelineBuilder httpErrorPipeineBuilder = new PipelineBuilder();
             
             ExtensionPipeline<HttpError, HttpError> httpErrorPipeline =
-                    new ExtensionPipeline<HttpError, HttpError>(httpErrorPipeineBuilder, );
+                    new ExtensionPipeline<HttpError, HttpError>(httpErrorPipeineBuilder, container);
             
             // when a web socket connection gets established this class takes care of the socket connection
             /*iocContainer.RegisterSingleton<TelemetrySocketManager>();

@@ -20,9 +20,9 @@ public class HttpServerWithPipeline : IDisposable
             (socket,
                 thread,
                 exception) => events.OnError(new HttpError()
-            {
-                Connection = 
-            }));
+                    {
+                        
+                    }));
     }
         
     private void ProcessRequest(HttpConnection connection)

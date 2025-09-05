@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Libraries.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildTools", "BuildTools", "{EE68723E-6D4E-4016-8C9C-461EB01EC90B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Tools.MsIlRewriting", "RadFramework.Tools.MsIlRewriting\RadFramework.Tools.MsIlRewriting.csproj", "{64ABF8CA-7781-4183-A2F8-1AAE63370DB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadFramework.Tools.MsIlRewriting.MsBuildTask", "RadFramework.Tools.MsIlRewriting.MsBuildTask\RadFramework.Tools.MsIlRewriting.MsBuildTask.csproj", "{64ABF8CA-7781-4183-A2F8-1AAE63370DB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
