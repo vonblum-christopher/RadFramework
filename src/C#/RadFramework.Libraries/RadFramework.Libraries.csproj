@@ -19,11 +19,9 @@
 
     <ItemGroup>
       <Folder Include="dep\" />
-      <Folder Include="src\Collections\" />
       <Folder Include="src\Encryption\AES\" />
       <Folder Include="src\Encryption\RSA\" />
       <Folder Include="src\GenericUi\Web\" />
-      <Folder Include="src\MsIlRewriting\" />
       <Folder Include="src\Net\Interface\" />
       <Folder Include="src\Serialization\Binary\" />
       <Folder Include="src\Serialization\Xml\" />

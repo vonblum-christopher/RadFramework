@@ -1,0 +1,6 @@
+master server
+raid 4tb 2
+raid 4tb 2
+
+slave server
+raid 2tb 2

@@ -1,0 +1,54 @@
+wireguard vpn server
+async processing server
+https://en.cppreference.com/w/cpp/meta.html#Type_traits
+implement platform on top of qemu
+invent ioc soltution for c++
+implement threading and c# wrappers
+implement webserver and c# wrappers with websocket support
+implement telemetry and c# wrappers
+implement z#
+implement os moddable by pipeline patterns
+implement load balancing for telemtry
+implement model language and transpiler that generates the data models in c# and others
+implement window manager based on the webserver with generic ui
+choose a distribution or kernel implementation for an os
+implement a terminal that is generic ui powered
+create wrappers for the low level interrupts
+create hdd format
+implement serializer that serializes the model too and compiles the data model on the fly
+implement generic ui web featuring reflection based properties methods and properties that are lists or so
+build a build server
+implement application bases
+explore c++ meta programming annotations as comment clang compiler extension
+clang addon that saves a reflection database
+aop aspects for logging and auth for c++ and c#
+remoting style proxies based on interceptors and telemetry
+invent ioc container for js
+invent database server based on the serializer format
+invent light in process database server
+invent handshakes for telemetry
+implement unprecise semaphore for the thread pool
+implement patters like authtication aspect
+require permission method that throws if the authentication aspect has no sufficient right
+order server at hetzner
+configure a server as vpn server connect with the home server that way
+create burstable services that spreads over servers or even lend servers
+install qemu alpine vms on phones
+root vmax plus phone
+start buiding the simplest possible kernel
+create c# script interpreter again. c++ interpreter too
+search index impl
+caching impl
+distributed caching impl
+implement ticket system
+implement secret helper
+aop for c++
+aop for c#
+imvent container registry
+invent using pattern for auth
+invent json serializer
+implement bootloader
+os features like package received package sent file created file deleted
+create vpn client and server
+create IDE
+

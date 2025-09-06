@@ -1,0 +1,10 @@
+https://www.amazon.de/Seagate-internal-server-ST14000NM001G-7200RPM/dp/B0D6BR9HLV?crid=KJQDWQV5AYMD&dib=eyJ2IjoiMSJ9.SjssG4wxSyJQ-OIQFPFTsZfIGggoHtW_aLhCn4vbdYBT-XhD9Da6zQcy-C2bfBhAW46S4sbqfvmVXVVf6w43xVHXAnKTD_DMw4UwTTTF6-5HI_T5PyyczQD9vWs64yDBpql_qegjsBMnlGVSQHGQ5wM-DAJxggvY1Rxrs8tK75976J8z4I8pgE645Fy4JiJulu_BtjH4SqPQZGZ26TDxQQ.awJ2dtxKIjoNFudccr2r-3YnAoinLbkzmhkJP1xPQpk&dib_tag=se&keywords=hdd+2+5+zoll+intern&qid=1755867403&refinements=p_n_g-1004209391091%3A10857678031&rnid=187129031&s=computers&sprefix=hdd+2%2C5%2Caps%2C173&sr=1-7
+https://www.servershop24.de/hpe-sff-sc-rahmen/a-109546/
+workload server
+ssd 4tb x6 raid
+
+workstation server
+-gpu
+-ssd 2tb x2 raid
+
+someday buy workstation server and use the other one also as workstation server
