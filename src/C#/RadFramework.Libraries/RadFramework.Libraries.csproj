@@ -6,7 +6,7 @@
         <Nullable>disable</Nullable>
         <LangVersion>latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.2</Version>
+        <Version>1.0.4</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -27,6 +27,7 @@
       <Folder Include="src\Serialization\Xml\" />
       <Folder Include="src\GenericUi\Console\" />
       <Folder Include="src\GenericUi\Gtk\" />
+      <Folder Include="src\Shell\" />
       <Folder Include="src\TextTemplating\" />
       <Folder Include="src\TextTranslation\" />
       <Folder Include="src\Threading\Timers\" />
@@ -34,9 +35,6 @@
 
     <ItemGroup>
       <None Update="dep\libLinuxThreadAffinityAdapter.so">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="res\ConsoleInteractionProviderTranslations.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Remove="src\Configuration\**" />
@@ -52,6 +50,11 @@
     <ItemGroup>
       <EmbeddedResource Remove="src\Configuration\**" />
       <EmbeddedResource Remove="src\Telemetry\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="res\ConsoleInteractionProviderTranslations.json" />
+      <EmbeddedResource Include="res\ConsoleInteractionProviderTranslations.json" />
     </ItemGroup>
 
 </Project>
