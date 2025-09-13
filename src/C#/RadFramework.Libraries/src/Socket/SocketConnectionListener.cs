@@ -7,7 +7,7 @@ namespace RadFramework.Libraries.Socket;
 
 public class SocketConnectionListener : IDisposable
 {
-    private readonly OnSocketConnected onSocketConnected;
+    private readonly OnNetSocketConnected onNetSocketConnected;
     private System.Net.Sockets.Socket listenerSocket;
 
     //private Thread acceptThread;
@@ -17,15 +17,15 @@ public class SocketConnectionListener : IDisposable
     private bool disposed = false;
     
     public SocketConnectionListener(
+        IPEndPoint listenerEndpoint,
         SocketType socketType,
         ProtocolType protocolType,
-        OnSocketConnected onSocketConnected,
-        int port)
+        OnNetSocketConnected onNetSocketConnected)
     {
-        this.onSocketConnected = onSocketConnected;
-        IPEndPoint endPoint = new(IPAddress.Any, port);
+        this.onNetSocketConnected = onNetSocketConnected;
+        IPEndPoint endPoint = listenerEndpoint;
         
-        listenerSocket = new System.Net.Sockets.Socket(IPAddress.Any.AddressFamily, socketType, protocolType);
+        listenerSocket = new System.Net.Sockets.Socket(listenerEndpoint.AddressFamily, socketType, protocolType);
         
         listenerSocket.Bind(endPoint);
         
@@ -44,7 +44,7 @@ public class SocketConnectionListener : IDisposable
         {
             try
             {
-                onSocketConnected(listenerSocket.Accept());
+                onNetSocketConnected(listenerSocket.Accept());
             }
             catch
             {
@@ -57,6 +57,7 @@ public class SocketConnectionListener : IDisposable
         disposed = true;
         acceptThreadPool.Dispose();
         acceptThreadPool = null;
+        listenerSocket.Shutdown(SocketShutdown.Both);
         listenerSocket.Dispose();
         listenerSocket = null;
     }

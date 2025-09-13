@@ -13,12 +13,12 @@ namespace RadFramework.Libraries.Threading.ThreadPools
                 int threadAmountPerCore,
                 ThreadPriority priority,
                 OnWorkloadArrivedDelegate<Action> onWorkloadArrivedDelegate,
-                OnProcessingError<Action> onProcessingError,
+                OnErrorDelegate<Action> onErrorDelegate,
                 string threadDescription = null) : 
                     base(threadAmountPerCore,
                             priority,
                             onWorkloadArrivedDelegate,
-                            onProcessingError,
+                            onErrorDelegate,
                             threadDescription)
         {
         }

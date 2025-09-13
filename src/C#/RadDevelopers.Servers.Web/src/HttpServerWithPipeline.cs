@@ -1,3 +1,4 @@
+using System.Net;
 using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
@@ -13,17 +14,10 @@ public class HttpServerWithPipeline : IDisposable
     private HttpServer server;
     private HttpGlobalServerContext serverContext;
     
-    public HttpServerWithPipeline(int port, HttpServerEvents events)
+    public HttpServerWithPipeline(IEnumerable<IPEndPoint> listenerEndpoints, HttpServerEvents events)
     {
         this.events = events;
-        server = new HttpServer(port,
-            ProcessRequest,
-            (socket,
-                thread,
-                exception) => events.OnError(new HttpError()
-                    {
-                        
-                    }));
+        server = new HttpServer(listenerEndpoints, events);
     }
         
     private void ProcessRequest(HttpConnection connection)
@@ -32,13 +26,13 @@ public class HttpServerWithPipeline : IDisposable
 
         try
         {
-            events.OnRequest(connection);
+            events.OnHttpRequest(connection);
         }
         catch (Exception initialError)
         {
             try
             {
-                events.OnError(new HttpError
+                events.OnHttpError(new HttpError
                 {
                     Connection = connection,
                     Exception = initialError,
@@ -46,7 +40,7 @@ public class HttpServerWithPipeline : IDisposable
             }
             catch (Exception errorWhileErrorHandling)
             {
-                events.OnFatalError(new HttpError
+                events.OnHttpErrorHandlingFailedToo(new HttpError
                 {
                     Connection = connection,
                     Exception = errorWhileErrorHandling,

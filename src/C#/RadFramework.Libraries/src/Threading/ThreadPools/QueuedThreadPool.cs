@@ -11,7 +11,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools
     /// <typeparam name="TQueueTask">Type of the queue task.</typeparam>
     public class QueuedThreadPool<TQueueTask> : ThreadPoolBase, IQueuedThreadPoolMixinsConsumer<TQueueTask>
     {
-        private readonly OnProcessingError<TQueueTask> onProcessingError;
+        private readonly OnErrorDelegate<TQueueTask> onErrorDelegate;
 
         /// <summary>
         /// If true the queue processing will stop.
@@ -37,7 +37,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools
             int threadAmountPerCore,
             ThreadPriority priority,
             OnWorkloadArrivedDelegate<TQueueTask> onWorkloadArrivedDelegate,
-            OnProcessingError<TQueueTask> onProcessingError,
+            OnErrorDelegate<TQueueTask> onErrorDelegate,
             string threadDescription = null) : 
                 base(threadAmountPerCore, priority, null, threadDescription)
         {
@@ -49,7 +49,7 @@ namespace RadFramework.Libraries.Threading.ThreadPools
                     }
                     catch (Exception e)
                     {
-                        onProcessingError(task, PoolThread.GetPoolThread(Thread.CurrentThread), e); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
+                        onErrorDelegate(task, PoolThread.GetPoolThread(Thread.CurrentThread), e); //, PoolThread.GetPoolThread(Thread.CurrentThread), e);
                     }
                 };
             

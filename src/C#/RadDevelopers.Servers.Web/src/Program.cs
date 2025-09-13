@@ -49,9 +49,9 @@ namespace RadDevelopers.Servers.Web
                 80,
                 new HttpServerEvents()
                 {
-                    OnRequest = connection => httpPipeline.Process(connection),
-                    OnError = error => httpErrorPipeline.Process(error),
-                    OnFatalError = error => httpErrorPipeline.Process(error),
+                    OnHttpRequest = connection => httpPipeline.Process(connection),
+                    OnHttpError = error => httpErrorPipeline.Process(error),
+                    OnHttpErrorHandlingFailedToo = error => httpErrorPipeline.Process(error),
                     //OnWebsocketConnected = con => socketManager.RegisterNewClientSocket(socket))
                 });
             

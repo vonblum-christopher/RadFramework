@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Sockets;
 using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.Socket;
@@ -5,44 +6,52 @@ using RadFramework.Libraries.Threading.Interface;
 using RadFramework.Libraries.Threading.ThreadPools;
 using RadFramework.Libraries.Threading.ThreadPools.Internals;
 using RadFramework.Libraries.Web.Interfaces;
+using RadFramework.Libraries.Web.Models;
 
 namespace RadFramework.Libraries.Web;
 
 public class HttpServer : IDisposable
 {
-    private readonly OnRequestDelegate processRequest;
-    private SocketConnectionListener listener;
-    private QueuedThreadPool<System.Net.Sockets.Socket> httpRequestProcessingPool;
+    private readonly OnHttpRequestDelegate processHttpRequestDelegate;
+    private List<SocketConnectionListener> listeners;
+    private QueuedThreadPool<(System.Net.Sockets.Socket socket, HttpConnection connection)> httpRequestProcessingPool;
     public HttpServer(
-        int port,
-        OnRequestDelegate processRequest, 
-        OnProcessingError<System.Net.Sockets.Socket> onProcessingError)
+        IEnumerable<IPEndPoint> listenerEndpoints,
+        HttpServerEvents events)
+        //OnErrorDelegate<(System.Net.Sockets.Socket socket, HttpConnection connection)> onErrorDelegate)
     {
-        this.processRequest = processRequest;
+        this.processHttpRequestDelegate = events.OnHttpRequestDelegate;
 
         httpRequestProcessingPool = 
-            new QueuedThreadPool<System.Net.Sockets.Socket>(
+            new QueuedThreadPool<(System.Net.Sockets.Socket socket, HttpConnection connection)>(
                 2,
                 ThreadPriority.Highest,
                 ProcessHttpSocketConnection,
-                onProcessingError,
+                (task, thread, exception) => 
+                    events.OnHttpErrorDelegate(task.connection,
+                        new HttpError()
+                        {
+                            Connection = task.connection,
+                            Exception = exception
+                        }),
                 "RadFramework.Libraries.Web.HttpServer-RequestProcessingPool");
         
-        listener = new SocketConnectionListener(
+        listeners = listenerEndpoints.Select(endpoint => new SocketConnectionListener(
+            endpoint,
             SocketType.Stream,
             ProtocolType.Tcp,
-            OnSocketAccepted,
-            port);//start the next thread when the listener accepted a socket
+            OnSocketAccepted))
+            .ToList();//start the next thread when the listener accepted a socket
     }
 
     private void OnSocketAccepted(System.Net.Sockets.Socket connectionSocket)
     {
-        httpRequestProcessingPool.Enqueue(connectionSocket);
+        httpRequestProcessingPool.Enqueue((connectionSocket, new HttpConnection()));
     }
 
-    private void ProcessHttpSocketConnection(System.Net.Sockets.Socket socketConnection)
+    private void ProcessHttpSocketConnection((System.Net.Sockets.Socket socket, HttpConnection connection) connectionObjects)
     {
-        NetworkStream networkStream = new(socketConnection);
+        NetworkStream networkStream = new(connectionObjects.socket);
         
         StreamReader requestReader = new(networkStream);
         
@@ -70,12 +79,12 @@ public class HttpServer : IDisposable
                 Request = requestModel,
                 RequestReader = requestReader,
                 UnderlyingStream = networkStream,
-                UnderlyingSocket = socketConnection
+                UnderlyingSocket = connectionObjects.connection.UnderlyingSocket
             };
 
         try
         {
-            processRequest(connection);
+            processHttpRequestDelegate(connection);
         }
         catch (Exception e)
         {
@@ -89,13 +98,12 @@ public class HttpServer : IDisposable
         requestReader.Dispose();
         networkStream.Dispose();
             
-        socketConnection.Close();
-        socketConnection.Dispose();
+        connectionObjects.connection.DisposeReaderAndStream();
     }
 
     public void Dispose()
     {
-        listener.Dispose();
+        listeners.ForEach(l => l.Dispose());
         httpRequestProcessingPool.Dispose();
     }
 }
