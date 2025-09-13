@@ -6,6 +6,6 @@ public class Application
 {
     public void Setup(IocContainerBuilder setupBuilder)
     {
-        
+        ;
     }
 }

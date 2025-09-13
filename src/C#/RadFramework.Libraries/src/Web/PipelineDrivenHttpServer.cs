@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Sockets;
-using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Pipelines;
@@ -20,7 +19,7 @@ public class PipelineDrivenHttpServer : IDisposable
         IEnumerable<IPEndPoint> listenerEndpoints,
         ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline,
         ExtensionPipeline<HttpError, HttpError> httpErrorPipeline,
-        ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> onwe)
+        ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> webSocketConnectedPipeline)
     {
         this.events =
             new HttpServerEvents()

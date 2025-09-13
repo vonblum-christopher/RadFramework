@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using RadDevelopers.Servers.Web.Config;
-using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Caching;
 using RadFramework.Libraries.Ioc.Builder;
@@ -62,7 +61,7 @@ namespace RadDevelopers.Servers.Web
         private static ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> BuildWebsocketConnectedPipeline(IocContainer container)
         {
             var websocketConnectedPipeline = new ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)>(
-                LoadPipelineConfig(""), container);
+                LoadPipelineConfig("cfg/HttpWebsocketConnectedPipelineConfig.json"), container);
             return websocketConnectedPipeline;
         }
 
@@ -72,7 +71,7 @@ namespace RadDevelopers.Servers.Web
 
             ExtensionPipeline<HttpError, HttpError> httpErrorPipeline =
                 new ExtensionPipeline<HttpError, HttpError>(
-                    LoadPipelineConfig("Config/HttpErrorPipelineConfig.json"), container);
+                    LoadPipelineConfig("cfg/HttpErrorPipelineConfig.json"), container);
             return httpErrorPipeline;
         }
 
@@ -82,7 +81,7 @@ namespace RadDevelopers.Servers.Web
 
             ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline =
                 new ExtensionPipeline<HttpConnection, HttpConnection>(
-                    LoadPipelineConfig("Config/HttpPipelineConfig.json"), container);
+                    LoadPipelineConfig("cfg/HttpPipelineConfig.json"), container);
             return httpPipeline;
         }
 
@@ -95,7 +94,7 @@ namespace RadDevelopers.Servers.Web
         {
             IocContainerConfig config = (IocContainerConfig)JsonContractSerializer.Instance.Deserialize(
                 typeof(IocContainerConfig),
-                File.ReadAllBytes("Config/IocContainerConfig.json"));
+                File.ReadAllBytes("cfg/IocContainerConfig.json"));
 
             foreach (var iocRegistration in config.Registrations)
             {
@@ -119,7 +118,7 @@ namespace RadDevelopers.Servers.Web
                     new ILoggerSink[]
                     {
                         new ConsoleLogger(),
-                        new FileLogger("Logs")
+                        new FileLogger("logs")
                     }));
         }
 

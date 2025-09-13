@@ -7,11 +7,6 @@ namespace RadDevelopers.Servers.Web.Pipelines.Http;
 
 public class WebsocketConnectedPipe : ExtensionPipeBase<HttpConnection, HttpConnection>
 {
-    public WebsocketConnectedPipe()
-    {
-        
-    }
-    
     public override void Process(HttpConnection input, ExtensionPipeContext<HttpConnection> pipeContext)
     {
         if (((input.Request.Headers.ContainsKey("Upgrade") && input.Request.Headers["Upgrade"] == "websocket") 

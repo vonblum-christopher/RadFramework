@@ -36,10 +36,22 @@
       <None Update="Config\HttpErrorPipelineConfig.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="cfg\HttpErrorPipelineConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="cfg\HttpPipelineConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="cfg\HttpWebsocketConnectedPipelineConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="cfg\IocContainerConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Logs\" />
+      <Folder Include="logs\" />
     </ItemGroup>
 
 </Project>
