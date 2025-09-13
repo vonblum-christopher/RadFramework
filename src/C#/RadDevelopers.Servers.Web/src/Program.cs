@@ -1,4 +1,5 @@
-﻿using RadDevelopers.Servers.Web.Config;
+﻿using System.Net;
+using RadDevelopers.Servers.Web.Config;
 using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Caching;
@@ -45,15 +46,13 @@ namespace RadDevelopers.Servers.Web
             TelemetrySocketManager socketManager = iocContainer.Resolve<TelemetrySocketManager>();*/
             
             // the server that passes the requests to the pipelines
-            HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(
-                80,
-                new HttpServerEvents()
-                {
-                    OnHttpRequest = connection => httpPipeline.Process(connection),
-                    OnHttpError = error => httpErrorPipeline.Process(error),
-                    OnHttpErrorHandlingFailedToo = error => httpErrorPipeline.Process(error),
-                    //OnWebsocketConnected = con => socketManager.RegisterNewClientSocket(socket))
-                });
+            HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(new List<IPEndPoint>()
+            {
+                IPEndPoint.Parse("127.0.0.1:80")
+            },
+                httpPipeline,
+                httpErrorPipeline
+);
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
             

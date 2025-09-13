@@ -2,6 +2,7 @@ using System.Net;
 using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
+using RadFramework.Libraries.Pipelines;
 using RadFramework.Libraries.Pipelines.Builder;
 using RadFramework.Libraries.Web;
 using RadFramework.Libraries.Web.Models;
@@ -10,13 +11,26 @@ namespace RadDevelopers.Servers.Web;
 
 public class HttpServerWithPipeline : IDisposable
 {
-    private readonly HttpServerEvents events;
     private HttpServer server;
     private HttpGlobalServerContext serverContext;
-    
-    public HttpServerWithPipeline(IEnumerable<IPEndPoint> listenerEndpoints, HttpServerEvents events)
+    private readonly HttpServerEvents events;
+
+    public HttpServerWithPipeline(IEnumerable<IPEndPoint> listenerEndpoints,
+        ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline,
+        ExtensionPipeline<HttpError, HttpError> httpErrorPipeline)
     {
-        this.events = events;
+        this.events =
+            new HttpServerEvents()
+            {
+                OnHttpRequestDelegate = connection => httpPipeline.Process(connection),
+                OnHttpErrorDelegate = (HttpConnection connection, HttpError error) => httpErrorPipeline.Process(new HttpError()
+                {
+                    Connection = connection,
+                    Exception = error.Exception
+                }),
+                OnHttpErrorHandlingFailedTooDelegate = error => error.Connection.Response.Send500()
+            };
+        
         server = new HttpServer(listenerEndpoints, events);
     }
         
@@ -26,13 +40,13 @@ public class HttpServerWithPipeline : IDisposable
 
         try
         {
-            events.OnHttpRequest(connection);
+            events.OnHttpRequestDelegate(connection);
         }
         catch (Exception initialError)
         {
             try
             {
-                events.OnHttpError(new HttpError
+                events.OnHttpErrorDelegate(connection, new HttpError
                 {
                     Connection = connection,
                     Exception = initialError,
@@ -40,7 +54,7 @@ public class HttpServerWithPipeline : IDisposable
             }
             catch (Exception errorWhileErrorHandling)
             {
-                events.OnHttpErrorHandlingFailedToo(new HttpError
+                events.OnHttpErrorHandlingFailedTooDelegate(new HttpError
                 {
                     Connection = connection,
                     Exception = errorWhileErrorHandling,
