@@ -18,7 +18,6 @@ public class HttpServer : IDisposable
     public HttpServer(
         IEnumerable<IPEndPoint> listenerEndpoints,
         HttpServerEvents events)
-        //OnErrorDelegate<(System.Net.Sockets.Socket socket, HttpConnection connection)> onErrorDelegate)
     {
         this.processHttpRequestDelegate = events.OnHttpRequestDelegate;
 

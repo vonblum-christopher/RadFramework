@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Sockets;
 using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
@@ -9,15 +10,17 @@ using RadFramework.Libraries.Web.Models;
 
 namespace RadDevelopers.Servers.Web;
 
-public class HttpServerWithPipeline : IDisposable
+public class PipelineDrivenHttpServer : IDisposable
 {
     private HttpServer server;
     private HttpGlobalServerContext serverContext;
     private readonly HttpServerEvents events;
 
-    public HttpServerWithPipeline(IEnumerable<IPEndPoint> listenerEndpoints,
+    public PipelineDrivenHttpServer(
+        IEnumerable<IPEndPoint> listenerEndpoints,
         ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline,
-        ExtensionPipeline<HttpError, HttpError> httpErrorPipeline)
+        ExtensionPipeline<HttpError, HttpError> httpErrorPipeline,
+        ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> onwe)
     {
         this.events =
             new HttpServerEvents()
@@ -28,7 +31,13 @@ public class HttpServerWithPipeline : IDisposable
                     Connection = connection,
                     Exception = error.Exception
                 }),
-                OnHttpErrorHandlingFailedTooDelegate = error => error.Connection.Response.Send500()
+                OnHttpErrorHandlingFailedTooDelegate = error => error.Connection.Response.Send500(),
+                OnHttpWebsocketConnectedDelegate = (connection, socket) =>
+                {
+                    connection.DisposeReaderAndStream();
+                    socket.Disconnect(false);
+                    socket.Dispose();
+                }
             };
         
         server = new HttpServer(listenerEndpoints, events);

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Sockets;
 using RadDevelopers.Servers.Web.Config;
 using RadDevelopers.Servers.Web.Pipelines.Definitions;
 using RadFramework.Libraries.Abstractions;
@@ -27,32 +28,25 @@ namespace RadDevelopers.Servers.Web
             SetupIocContainer(iocBuilder);
             
             iocBuilder.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
+            
+            new Application().Setup(iocBuilder);
 
             IocContainer container = iocBuilder.CreateContainer();
             
-            PipelineBuilder httpPipeineBuilder = new PipelineBuilder();
-            
-            ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline =
-                    new ExtensionPipeline<HttpConnection, HttpConnection>(httpPipeineBuilder, container);
-            
-            PipelineBuilder httpErrorPipeineBuilder = new PipelineBuilder();
-            
-            ExtensionPipeline<HttpError, HttpError> httpErrorPipeline =
-                    new ExtensionPipeline<HttpError, HttpError>(httpErrorPipeineBuilder, container);
-            
-            // when a web socket connection gets established this class takes care of the socket connection
-            /*iocContainer.RegisterSingleton<TelemetrySocketManager>();
+            var httpPipeline = BuildHttpPipeline(container);
 
-            TelemetrySocketManager socketManager = iocContainer.Resolve<TelemetrySocketManager>();*/
+            var httpErrorPipeline = BuildHttpErrorPipeline(container);
             
-            // the server that passes the requests to the pipelines
-            HttpServerWithPipeline pipelineDrivenHttpServer = new HttpServerWithPipeline(new List<IPEndPoint>()
-            {
-                IPEndPoint.Parse("127.0.0.1:80")
-            },
+            var websocketConnectedPipeline = BuildWebsocketConnectedPipeline(container);
+            
+            PipelineDrivenHttpServer pipelineDrivenHttpServer = new PipelineDrivenHttpServer(
+                new List<IPEndPoint>()
+                {
+                    IPEndPoint.Parse("127.0.0.1:80")
+                },
                 httpPipeline,
-                httpErrorPipeline
-);
+                httpErrorPipeline, 
+                websocketConnectedPipeline);
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
             
@@ -63,6 +57,33 @@ namespace RadDevelopers.Servers.Web
             };
             
             shutdownEvent.WaitOne();
+        }
+
+        private static ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> BuildWebsocketConnectedPipeline(IocContainer container)
+        {
+            var websocketConnectedPipeline = new ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)>(
+                LoadPipelineConfig(""), container);
+            return websocketConnectedPipeline;
+        }
+
+        private static ExtensionPipeline<HttpError, HttpError> BuildHttpErrorPipeline(IocContainer container)
+        {
+            PipelineBuilder httpErrorPipeineBuilder = new PipelineBuilder();
+
+            ExtensionPipeline<HttpError, HttpError> httpErrorPipeline =
+                new ExtensionPipeline<HttpError, HttpError>(
+                    LoadPipelineConfig("Config/HttpErrorPipelineConfig.json"), container);
+            return httpErrorPipeline;
+        }
+
+        private static ExtensionPipeline<HttpConnection, HttpConnection> BuildHttpPipeline(IocContainer container)
+        {
+            PipelineBuilder httpPipelineBuilder = new PipelineBuilder();
+
+            ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline =
+                new ExtensionPipeline<HttpConnection, HttpConnection>(
+                    LoadPipelineConfig("Config/HttpPipelineConfig.json"), container);
+            return httpPipeline;
         }
 
 
@@ -107,7 +128,7 @@ namespace RadDevelopers.Servers.Web
         /// </summary>
         /// <param name="configFilePath"></param>
         /// <returns></returns>
-        private static PipelineBuilder LoadHttpPipelineConfig(string configFilePath)
+        private static PipelineBuilder LoadPipelineConfig(string configFilePath)
         {
             PipelineBuilder httpPipelineBuilder = new();
 
