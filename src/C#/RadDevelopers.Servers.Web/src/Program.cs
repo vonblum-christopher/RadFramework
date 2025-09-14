@@ -39,19 +39,19 @@ namespace RadDevelopers.Servers.Web
                     {
                         IPEndPoint.Parse("127.0.0.1:80")
                     },
-                    httpPipeline,
-                    httpErrorPipeline,
-                    websocketConnectedPipeline,
+                    iocContainer.Resolve<ExtensionPipeline<HttpConnection, HttpConnection>>(),
+                    iocContainer.Resolve<ExtensionPipeline<HttpError, HttpError>>(),
+                    iocContainer.Resolve<ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)>>(),
                     iocContainer.Resolve<HttpServerContext>());
             });
             
             IocContainer container = iocBuilder.CreateContainer();
             
-            var httpPipeline = BuildHttpPipeline(iocBuilder);
+            BuildHttpPipeline(iocBuilder);
 
-            var httpErrorPipeline = BuildHttpErrorPipeline(iocBuilder);
+            BuildHttpErrorPipeline(iocBuilder);
             
-            var websocketConnectedPipeline = BuildWebsocketConnectedPipeline(iocBuilder);
+            BuildWebsocketConnectedPipeline(iocBuilder);
 
             var server = container.Resolve<PipelineDrivenHttpServer>();
             
@@ -66,36 +66,28 @@ namespace RadDevelopers.Servers.Web
             shutdownEvent.WaitOne();
         }
 
-        private static ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> BuildWebsocketConnectedPipeline(IocContainer container)
+        private static void BuildWebsocketConnectedPipeline(IocContainerBuilder containerBuilder)
         {
-            var websocketConnectedPipeline = new ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)>(
-                LoadPipelineConfig("cfg/HttpWebsocketConnectedPipelineConfig.json"), container);
-            return websocketConnectedPipeline;
+            containerBuilder
+                .RegisterSemiAutomaticSingleton<
+                    ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)>>(
+                        iocContainer => 
+                        new ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)>(
+                            LoadPipelineConfig("cfg/HttpErrorPipelineConfig.json"), iocContainer));
         }
 
-        private static ExtensionPipeline<HttpError, HttpError> BuildHttpErrorPipeline(IocContainer container)
+        private static void BuildHttpErrorPipeline(IocContainerBuilder containerBuilder)
         {
-            PipelineBuilder httpErrorPipeineBuilder = new PipelineBuilder();
-
-            ExtensionPipeline<HttpError, HttpError> httpErrorPipeline =
+            containerBuilder.RegisterSemiAutomaticSingleton<ExtensionPipeline<HttpError, HttpError>>(iocContainer => 
                 new ExtensionPipeline<HttpError, HttpError>(
-                    LoadPipelineConfig("cfg/HttpErrorPipelineConfig.json"), container);
-            return httpErrorPipeline;
+                    LoadPipelineConfig("cfg/HttpErrorPipelineConfig.json"), iocContainer));
         }
 
-        private static ExtensionPipeline<HttpConnection, HttpConnection> BuildHttpPipeline(IocContainerBuilder container)
+        private static void BuildHttpPipeline(IocContainerBuilder containerBuilder)
         {
-            PipelineBuilder httpPipelineBuilder = new PipelineBuilder();
-
-            var pipes = LoadPipelineConfig("cfg/HttpPipelineConfig.json");
-            
-            container.RegisterSemiAutomaticSingleton<ExtensionPipeline<HttpConnection, HttpConnection>>(
-                iocContainer =
-                => {
-                return new ExtensionPipeline<HttpConnection, HttpConnection>(LoadPipelineConfig("cfg/HttpPipelineConfig.json"))
-            }
-            ;
-            return httpPipeline;
+            containerBuilder.RegisterSemiAutomaticSingleton<ExtensionPipeline<HttpConnection, HttpConnection>>(iocContainer => 
+                new ExtensionPipeline<HttpConnection, HttpConnection>(
+                LoadPipelineConfig("cfg/HttpPipelineConfig.json"), iocContainer));
         }
 
 
