@@ -32,6 +32,12 @@ namespace RadDevelopers.Servers.Web
             
             iocBuilder.RegisterSingleton<HttpServerContext>();
             
+            BuildHttpPipeline(iocBuilder);
+
+            BuildHttpErrorPipeline(iocBuilder);
+            
+            BuildWebsocketConnectedPipeline(iocBuilder);       
+            
             iocBuilder.RegisterSemiAutomaticSingleton<PipelineDrivenHttpServer>(iocContainer =>
             {
                 return new PipelineDrivenHttpServer(
@@ -47,12 +53,6 @@ namespace RadDevelopers.Servers.Web
             
             IocContainer container = iocBuilder.CreateContainer();
             
-            BuildHttpPipeline(iocBuilder);
-
-            BuildHttpErrorPipeline(iocBuilder);
-            
-            BuildWebsocketConnectedPipeline(iocBuilder);
-
             var server = container.Resolve<PipelineDrivenHttpServer>();
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
