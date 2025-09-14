@@ -29,29 +29,37 @@ namespace RadDevelopers.Servers.Web
             iocBuilder.RegisterSingleton<IContractSerializer, JsonContractSerializer>();
             
             new Application().Setup(iocBuilder);
-
+            
+            iocBuilder.RegisterSingleton<HttpServerContext>();
+            
+            iocBuilder.RegisterSemiAutomaticSingleton<PipelineDrivenHttpServer>(iocContainer =>
+            {
+                return new PipelineDrivenHttpServer(
+                    new List<IPEndPoint>()
+                    {
+                        IPEndPoint.Parse("127.0.0.1:80")
+                    },
+                    httpPipeline,
+                    httpErrorPipeline,
+                    websocketConnectedPipeline,
+                    iocContainer.Resolve<HttpServerContext>());
+            });
+            
             IocContainer container = iocBuilder.CreateContainer();
             
-            var httpPipeline = BuildHttpPipeline(container);
+            var httpPipeline = BuildHttpPipeline(iocBuilder);
 
-            var httpErrorPipeline = BuildHttpErrorPipeline(container);
+            var httpErrorPipeline = BuildHttpErrorPipeline(iocBuilder);
             
-            var websocketConnectedPipeline = BuildWebsocketConnectedPipeline(container);
-            
-            PipelineDrivenHttpServer pipelineDrivenHttpServer = new PipelineDrivenHttpServer(
-                new List<IPEndPoint>()
-                {
-                    IPEndPoint.Parse("127.0.0.1:80")
-                },
-                httpPipeline,
-                httpErrorPipeline, 
-                websocketConnectedPipeline);
+            var websocketConnectedPipeline = BuildWebsocketConnectedPipeline(iocBuilder);
+
+            var server = container.Resolve<PipelineDrivenHttpServer>();
             
             ManualResetEvent shutdownEvent = new ManualResetEvent(false);
             
             AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
             {
-                pipelineDrivenHttpServer.Dispose();
+                server.Dispose();
                 shutdownEvent.Set();
             };
             
@@ -75,13 +83,18 @@ namespace RadDevelopers.Servers.Web
             return httpErrorPipeline;
         }
 
-        private static ExtensionPipeline<HttpConnection, HttpConnection> BuildHttpPipeline(IocContainer container)
+        private static ExtensionPipeline<HttpConnection, HttpConnection> BuildHttpPipeline(IocContainerBuilder container)
         {
             PipelineBuilder httpPipelineBuilder = new PipelineBuilder();
 
-            ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline =
-                new ExtensionPipeline<HttpConnection, HttpConnection>(
-                    LoadPipelineConfig("cfg/HttpPipelineConfig.json"), container);
+            var pipes = LoadPipelineConfig("cfg/HttpPipelineConfig.json");
+            
+            container.RegisterSemiAutomaticSingleton<ExtensionPipeline<HttpConnection, HttpConnection>>(
+                iocContainer =
+                => {
+                return new ExtensionPipeline<HttpConnection, HttpConnection>(LoadPipelineConfig("cfg/HttpPipelineConfig.json"))
+            }
+            ;
             return httpPipeline;
         }
 
@@ -89,8 +102,8 @@ namespace RadDevelopers.Servers.Web
         /// <summary>
         /// Registers all dependencies from the IocContainer config
         /// </summary>
-        /// <param name="iocContainer"></param>
-        private static void SetupIocContainer(IocContainerBuilder iocContainer)
+        /// <param name="iocBuilder"></param>
+        private static void SetupIocContainer(IocContainerBuilder iocBuilder)
         {
             IocContainerConfig config = (IocContainerConfig)JsonContractSerializer.Instance.Deserialize(
                 typeof(IocContainerConfig),
@@ -98,22 +111,22 @@ namespace RadDevelopers.Servers.Web
 
             foreach (var iocRegistration in config.Registrations)
             {
-                if (iocRegistration.Singleton)
+                if (iocRegistration.Lifecycle == IocLifecycles.Singleton)
                 {
-                    iocContainer.RegisterSingleton(
+                    iocBuilder.RegisterSingleton(
                         Type.GetType(iocRegistration.TKey), 
                         Type.GetType(iocRegistration.TImplementation));
                     continue;
                 }
                 
-                iocContainer.RegisterTransient(
+                iocBuilder.RegisterTransient(
                     Type.GetType(iocRegistration.TKey), 
                     Type.GetType(iocRegistration.TImplementation));
             }
             
-            iocContainer.RegisterSingleton<ISimpleCache, SimpleCache>();
+            iocBuilder.RegisterSingleton<ISimpleCache, SimpleCache>();
             
-            iocContainer.RegisterSemiAutomaticSingleton<ILogger>(container =>
+            iocBuilder.RegisterSemiAutomaticSingleton<ILogger>(container =>
                 new StandardLogger(
                     new ILoggerSink[]
                     {

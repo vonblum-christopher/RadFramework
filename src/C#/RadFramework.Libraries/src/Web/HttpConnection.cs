@@ -4,7 +4,7 @@ namespace RadFramework.Libraries.Web;
 
 public class HttpConnection : IDisposable
 {
-    public HttpGlobalServerContext ServerContext { get; set; }
+    public HttpServerContext ServerContext { get; set; }
     private HttpResponse response;
     
     public HttpRequest Request { get; set; }

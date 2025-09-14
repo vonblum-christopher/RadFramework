@@ -12,13 +12,16 @@ namespace RadFramework.Libraries.Web;
 
 public class HttpServer : IDisposable
 {
+    private readonly HttpServerContext httpServerContext;
     private readonly OnHttpRequestDelegate processHttpRequestDelegate;
     private List<SocketConnectionListener> listeners;
     private QueuedThreadPool<(System.Net.Sockets.Socket socket, HttpConnection connection)> httpRequestProcessingPool;
     public HttpServer(
         IEnumerable<IPEndPoint> listenerEndpoints,
-        HttpServerEvents events)
+        HttpServerEvents events,
+        HttpServerContext httpServerContext)
     {
+        this.httpServerContext = httpServerContext;
         this.processHttpRequestDelegate = events.OnHttpRequestDelegate;
 
         httpRequestProcessingPool = 
@@ -78,7 +81,8 @@ public class HttpServer : IDisposable
                 Request = requestModel,
                 RequestReader = requestReader,
                 UnderlyingStream = networkStream,
-                UnderlyingSocket = connectionObjects.connection.UnderlyingSocket
+                UnderlyingSocket = connectionObjects.connection.UnderlyingSocket,
+                ServerContext = httpServerContext
             };
 
         try

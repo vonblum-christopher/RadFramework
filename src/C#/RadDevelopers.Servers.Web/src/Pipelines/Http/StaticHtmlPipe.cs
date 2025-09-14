@@ -20,13 +20,6 @@ public class StaticHtmlPipe : ExtensionPipeBase<HttpConnection, HttpConnection>
     {
         string urlPath = input.Request.UrlPath;
         
-        if (input.Request.UrlPath == "/" || input.Request.UrlPath == "")
-        {
-            input.Response.TryServeStaticHtmlFile(WWWRootPath + "/index.html");
-            pipeContext.Return();
-            return;
-        }
-        
         if (urlPath.EndsWith('/'))
         {
             urlPath = urlPath.TrimEnd('/');

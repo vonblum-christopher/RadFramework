@@ -9,7 +9,7 @@ namespace RadFramework.Libraries.Ioc;
 
 public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServiceProvider
 {
-    public IEnumerable<IocContainer> ParentContainers { get; private set; }
+    public IEnumerable<IocContainer> ParentContainers { get; private set; } = new List<IocContainer>();
     public InjectionOptions InjectionOptions { get; private set; } = new InjectionOptions();
     public IocRegistry Registry { get; private set; } = new();
     public ImmutableList<IocDependency> ServiceList 
@@ -29,13 +29,12 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
         Registry = iocRegistry.Clone();
         InjectionOptions = InjectionOptions.Clone();
     }
-    
+
     public IocContainer(IocContainerBuilder builder)
     {
         Registry = builder.IocRegistry.Clone();
         InjectionOptions = builder.InjectionOptions.Clone();
     }
-    
     public bool HasService(Type t)
     {
         return HasService(new IocKey() { KeyType = t });
@@ -75,8 +74,10 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
         TransientRegistration registration = new()
         {
-            IocDependency = iocDependency
+            IocDependency = iocDependency,
         };
+        
+        registration.Initialize(iocDependency);
         
         return registration.ResolveService(this, iocDependency);
     }

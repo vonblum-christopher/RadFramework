@@ -12,14 +12,15 @@ namespace RadDevelopers.Servers.Web;
 public class PipelineDrivenHttpServer : IDisposable
 {
     private HttpServer server;
-    private HttpGlobalServerContext serverContext;
+    private HttpServerContext serverContext;
     private readonly HttpServerEvents events;
 
     public PipelineDrivenHttpServer(
         IEnumerable<IPEndPoint> listenerEndpoints,
         ExtensionPipeline<HttpConnection, HttpConnection> httpPipeline,
         ExtensionPipeline<HttpError, HttpError> httpErrorPipeline,
-        ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> webSocketConnectedPipeline)
+        ExtensionPipeline<(HttpConnection connection, Socket socket), (HttpConnection connection, Socket socket)> webSocketConnectedPipeline,
+        HttpServerContext httpServerContext)
     {
         this.events =
             new HttpServerEvents()
@@ -39,7 +40,7 @@ public class PipelineDrivenHttpServer : IDisposable
                 }
             };
         
-        server = new HttpServer(listenerEndpoints, events);
+        server = new HttpServer(listenerEndpoints, events, httpServerContext);
     }
         
     private void ProcessRequest(HttpConnection connection)
