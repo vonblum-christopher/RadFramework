@@ -12,6 +12,9 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
     public IEnumerable<IocContainer> ParentContainers { get; private set; } = new List<IocContainer>();
     public InjectionOptions InjectionOptions { get; private set; } = new InjectionOptions();
     public IocRegistry Registry { get; private set; } = new();
+    
+    IocRegistry
+    
     public ImmutableList<IocDependency> ServiceList 
         => Registry.Registrations.Values.ToImmutableList();
 
@@ -72,14 +75,14 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
             IocLifecycle = IocLifecycles.Transient
         };
 
-        TransientRegistration registration = new()
+        TransientInstanceContainer instanceContainer = new()
         {
             IocDependency = iocDependency,
         };
         
-        registration.Initialize(iocDependency);
+        instanceContainer.Initialize(iocDependency);
         
-        return registration.ResolveService(this, iocDependency);
+        return instanceContainer.ResolveService(this, iocDependency);
     }
 
     public T Resolve<T>()

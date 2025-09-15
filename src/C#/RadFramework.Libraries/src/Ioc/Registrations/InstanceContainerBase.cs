@@ -4,7 +4,7 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public abstract class RegistrationBase : ICloneable<RegistrationBase>
+    public abstract class InstanceContainerBase : ICloneable<InstanceContainerBase>
     {
         public IocDependency IocDependency { get; set; }
 
@@ -15,6 +15,6 @@ namespace RadFramework.Libraries.Ioc.Registrations
         
         public abstract object ResolveService(IocContainer container, IocDependency dependency);
         
-        public abstract RegistrationBase Clone();
+        public abstract InstanceContainerBase Clone();
     }
 }

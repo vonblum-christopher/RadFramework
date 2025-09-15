@@ -5,7 +5,7 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class TransientRegistration : RegistrationBase
+    public class TransientInstanceContainer : InstanceContainerBase
     {
         private Patterns.Lazy<Func<IocContainer, object>> construct;
         
@@ -22,9 +22,9 @@ namespace RadFramework.Libraries.Ioc.Registrations
             return construct.Value(container);
         }
 
-        public override RegistrationBase Clone()
+        public override InstanceContainerBase Clone()
         {
-            return new TransientRegistration()
+            return new TransientInstanceContainer()
             {
                 IocDependency = IocDependency.Clone()
             };

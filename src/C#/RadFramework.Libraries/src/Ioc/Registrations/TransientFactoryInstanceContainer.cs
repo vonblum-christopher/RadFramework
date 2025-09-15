@@ -3,7 +3,7 @@ using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class TransientFactoryRegistration : RegistrationBase
+    public class TransientFactoryInstanceContainer : InstanceContainerBase
     {
         private Func<IocContainer, object> factoryFunc;
         
@@ -18,9 +18,9 @@ namespace RadFramework.Libraries.Ioc.Registrations
             return factoryFunc(container);
         }
 
-        public override RegistrationBase Clone()
+        public override InstanceContainerBase Clone()
         {
-            return new TransientRegistration()
+            return new TransientInstanceContainer()
             {
                 IocDependency = IocDependency.Clone(),
             };

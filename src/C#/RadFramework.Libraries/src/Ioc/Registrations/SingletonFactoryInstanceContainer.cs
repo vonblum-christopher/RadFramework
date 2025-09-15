@@ -1,20 +1,15 @@
 using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
-using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class SingletonRegistration : RegistrationBase
+    public class SingletonFactoryInstanceContainer : InstanceContainerBase
     {
         private Patterns.Lazy<object> singleton;
-
         private Func<IocContainer, object> factoryFunc;
-
-        private IocDependency dependency;
         
         public override void Initialize(IocDependency dependency)
         {
-            dependency = this.dependency;
             factoryFunc = dependency.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency);
         }
 
@@ -28,12 +23,12 @@ namespace RadFramework.Libraries.Ioc.Registrations
             return singleton.Value;
         }
 
-        public override RegistrationBase Clone()
+        public override InstanceContainerBase Clone()
         {
-            return new SingletonRegistration()
-                {
-                    IocDependency = dependency.Clone()
-                };
+            return new TransientInstanceContainer()
+            {
+                IocDependency = IocDependency.Clone(),
+            };
         }
     }
 }
