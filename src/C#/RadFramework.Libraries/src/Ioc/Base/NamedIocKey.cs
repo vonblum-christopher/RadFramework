@@ -3,12 +3,12 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc;
 
-public class IocKey : ICloneable<IocKey>
+public struct NamedIocKey : ICloneable<NamedIocKey>
 {
     public CachedType KeyType { get; set; }
     public string KeyName { get; set; }
     
-    protected bool Equals(IocKey other)
+    public bool Equals(NamedIocKey other)
     {
         return KeyName == other.KeyName && other.KeyType == KeyType;
     }
@@ -18,9 +18,9 @@ public class IocKey : ICloneable<IocKey>
         return HashCode.Combine(KeyName, KeyType);
     }
 
-    public IocKey Clone()
+    public NamedIocKey Clone()
     {
-        return new IocKey
+        return new NamedIocKey
         {
             KeyName = KeyName,
             KeyType = KeyType
@@ -32,15 +32,15 @@ public class IocKey : ICloneable<IocKey>
         if (obj is null) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((IocKey)obj);
+        return Equals((NamedIocKey)obj);
     }
     
-    public static bool operator ==(IocKey a, IocKey b)
+    public static bool operator ==(NamedIocKey a, NamedIocKey b)
     {
         return b.Equals(a);
     }
 
-    public static bool operator !=(IocKey a, IocKey b)
+    public static bool operator !=(NamedIocKey a, NamedIocKey b)
     {
         return !b.Equals(a);
     }

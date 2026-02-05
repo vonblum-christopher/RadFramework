@@ -4,13 +4,13 @@ using RadFramework.Libraries.Ioc.Registrations;
 
 namespace RadFramework.Libraries.Ioc.Builder;
 
-public class IocRegistry : ICloneable<IocRegistry>
+public class IocBuilderRegistry : ICloneable<IocBuilderRegistry>
 {
     public ConcurrentDictionary<IocKey, (IocDependency dependency, InstanceContainerBase containerBase)> Registrations = new();
 
-    public IocRegistry Clone()
+    public IocBuilderRegistry Clone()
     {
-        return new IocRegistry
+        return new IocBuilderRegistry
         {
             Registrations = new ConcurrentDictionary<IocKey, (IocDependency dependency, InstanceContainerBase containerBase)>(
                 (IEnumerable<KeyValuePair<IocKey, (IocDependency dependency, InstanceContainerBase containerBase)>>)

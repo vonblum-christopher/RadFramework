@@ -7,55 +7,53 @@ using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc;
 
-public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServiceProvider
+public class TypeOnlyIocContainer : ITypeOnlyIocContainer, ICloneable<TypeOnlyIocContainer>, IServiceProvider
 {
-    public IEnumerable<IocContainer> ParentContainers { get; private set; } = new List<IocContainer>();
+    public IEnumerable<TypeOnlyIocContainer> ParentContainers { get; private set; } = new List<TypeOnlyIocContainer>();
     public InjectionOptions InjectionOptions { get; private set; } = new InjectionOptions();
-    public IocRegistry Registry { get; private set; } = new();
-    
-    IocRegistry
+    public InstanceContainerRegistry BuilderRegistry { get; private set; }
     
     public ImmutableList<IocDependency> ServiceList 
-        => Registry.Registrations.Values.ToImmutableList();
+        => BuilderRegistry.Registrations.ToImmutableList();
 
-    public IImmutableDictionary<IocKey, IocDependency> ServiceLookup
+    public IImmutableDictionary<NamedIocKey, IocDependency> ServiceLookup
     {
         get =>
-            Registry.Registrations.Values
+            BuilderRegistry.Registrations
                 .ToImmutableDictionary(
                     k => k.Key, 
                     v => v);
     }
     
-    public IocContainer(IocRegistry iocRegistry)
+    public TypeOnlyIocContainer(IocBuilderRegistry iocBuilderRegistry)
     {
-        Registry = iocRegistry.Clone();
+        BuilderRegistry = new InstanceContainerRegistry(iocBuilderRegistry);
         InjectionOptions = InjectionOptions.Clone();
     }
 
-    public IocContainer(IocContainerBuilder builder)
+    public TypeOnlyIocContainer(IocContainerBuilder builder)
     {
-        Registry = builder.IocRegistry.Clone();
+        BuilderRegistry = builder.IocBuilderRegistry.Clone();
         InjectionOptions = builder.InjectionOptions.Clone();
     }
     public bool HasService(Type t)
     {
-        return HasService(new IocKey() { KeyType = t });
+        return HasService(new NamedIocKey() { KeyType = t });
     }
 
     public bool HasService(string key, Type t)
     {
-        return HasService(new IocKey() { KeyType = t, KeyName = key});
+        return HasService(new NamedIocKey() { KeyType = t, KeyName = key});
     }
     
-    public bool HasService(IocKey key)
+    public bool HasService(NamedIocKey key)
     {
-        return Registry.Registrations.ContainsKey(key);
+        return BuilderRegistry.Registrations.ContainsKey(key);
     }
     
     public object Resolve(string key, Type t)
     {
-        return ResolveDependency(new IocKey { KeyType = t, KeyName = key});
+        return ResolveDependency(new NamedIocKey { KeyType = t, KeyName = key});
     }
 
     public T Activate<T>()
@@ -65,7 +63,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
     public object Activate(Type t)
     {
-        var key = new IocKey { KeyType = t };
+        var key = new NamedIocKey { KeyType = t };
 
         IocDependency iocDependency = new()
         {
@@ -87,7 +85,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
     public T Resolve<T>()
     {
-        return (T)ResolveDependency(new IocKey()
+        return (T)ResolveDependency(new NamedIocKey()
         {
             KeyType = typeof(T)
         });
@@ -95,7 +93,7 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
     public object Resolve(Type tInterface)
     {
-        return ResolveDependency(new IocKey()
+        return ResolveDependency(new NamedIocKey()
         {
             KeyType = tInterface
         });
@@ -103,36 +101,36 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
 
     public object Resolve(Type tInterface, string key)
     {
-        var iocKey = new IocKey { KeyType = tInterface, KeyName = key };
+        var iocKey = new NamedIocKey { KeyType = tInterface, KeyName = key };
             
         return ResolveDependency(iocKey);
     }
 
-    public object Resolve(IocKey key)
+    public object Resolve(NamedIocKey key)
     {
         return ResolveDependency(key);
     }
 
     public object GetService(Type serviceType)
     {
-        return ResolveDependency(new IocKey()
+        return ResolveDependency(new NamedIocKey()
         {
             KeyType = serviceType
         });
     }
 
-    private object ResolveDependency(IocKey key)
+    private object ResolveDependency(NamedIocKey key)
     {
         if (this.HasService(key))
         {
-            IocDependency dependency = this.Registry[key];
+            IocDependency dependency = this.BuilderRegistry[key];
             
             return (dependency.FactoryFunc 
                     ?? InjectionLambdaManager.GetOrCreateConstructionFunc(key, dependency))
                         (this);
         }
 
-        foreach (IocContainer fallbackResolver in ParentContainers)
+        foreach (TypeOnlyIocContainer fallbackResolver in ParentContainers)
         {
             if (fallbackResolver.HasService(key))
             {
@@ -143,9 +141,19 @@ public class IocContainer : IIocContainer, ICloneable<IocContainer>, IServicePro
         throw new RegistrationNotFoundException(key.KeyType);
     }
 
-    public IocContainer Clone()
+    private InstanceContainerBase GetContainer(IocDependency dependency)
     {
-        return new IocContainer(Registry)
+        switch (dependency.IocLifecycle)
+        {
+            case IocLifecycles.Singleton:
+                return new SingletonFactoryInstanceContainer();
+                break;
+        }
+    }
+
+    public TypeOnlyIocContainer Clone()
+    {
+        return new TypeOnlyIocContainer(BuilderRegistry)
         {
             ParentContainers = ParentContainers,
             InjectionOptions = InjectionOptions.Clone()
