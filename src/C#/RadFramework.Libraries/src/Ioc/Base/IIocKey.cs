@@ -1,6 +1,9 @@
+using System.Collections.Immutable;
+using RadFramework.Libraries.Reflection.Caching;
+
 namespace RadFramework.Libraries.Ioc.Base;
 
-public class IIocKey
+public interface IIocKey
 {
-    
+    IImmutableDictionary<string, object> KeyProperties { get; set; }
 }

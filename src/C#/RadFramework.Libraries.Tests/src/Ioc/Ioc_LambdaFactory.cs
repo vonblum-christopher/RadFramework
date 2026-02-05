@@ -1,5 +1,5 @@
+using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
-using IocContainer = RadFramework.Libraries.Ioc.IocContainer;
 
 namespace RadFramework.Libraries.Tests.Ioc;
 
@@ -18,7 +18,7 @@ public class Ioc_Factory
         builder.RegisterTransient<A>();
         builder.RegisterTransient<B>();
 
-        var container = new IocContainer(builder);
+        var container = new TypeOnlyIocContainer(builder);
 
         B Binstance = container.Resolve<B>();
         

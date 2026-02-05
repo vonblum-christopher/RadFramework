@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using RadDevelopers.Servers.Web.Config;
 using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Caching;
+using RadFramework.Libraries.Ioc;
 using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Logging;
 using RadFramework.Libraries.Pipelines;
@@ -10,7 +11,6 @@ using RadFramework.Libraries.Pipelines.Builder;
 using RadFramework.Libraries.Serialization.Json;
 using RadFramework.Libraries.Web;
 using RadFramework.Libraries.Web.Models;
-using IocContainer = RadFramework.Libraries.Ioc.IocContainer;
 
 namespace RadDevelopers.Servers.Web
 {
@@ -46,7 +46,7 @@ namespace RadDevelopers.Servers.Web
                     iocContainer.Resolve<HttpServerContext>());
             });
             
-            IocContainer container = iocBuilder.CreateContainer();
+            TypeOnlyIocContainer container = iocBuilder.CreateContainer();
             
             var server = container.Resolve<PipelineDrivenHttpServer>();
             

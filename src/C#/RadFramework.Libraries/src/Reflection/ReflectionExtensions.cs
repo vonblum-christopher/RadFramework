@@ -6,35 +6,27 @@ namespace RadFramework.Libraries;
 
 public static class ReflectionExtensions
 {
-    private class ObjectDictionary : Dictionary<string, object>
-    {
-    }
-    
-    public static IDictionary<CachedPropertyInfo, Func<object>> SerializeToDictionary(this object o)
+    public static IDictionary<CachedPropertyInfo, Func<object>> ToLiveDictionary(this object o)
     {
         return ((CachedType)o.GetType())
             .Query(t => t.GetProperties()
                 .Select(p => (CachedPropertyInfo)p))
-            .Select(p => new KeyValuePair<CachedPropertyInfo, Func<object>>(p, () => p.InnerMetaData.GetValue(o)))
+            .Select(p => new KeyValuePair<CachedPropertyInfo, Func<object>>(
+                p, 
+                () =>
+                {
+                    object value = p.InnerMetaData.GetValue(o);
+
+                    if (value == null)
+                    {
+                        return null;
+                    }
+                    
+                    return p.InnerMetaData.PropertyType.IsPrimitive || p.InnerMetaData.PropertyType == typeof(string)
+                        ? () => value
+                        : () => ToLiveDictionary(value);
+                }))
             .ToDictionary();
-    }
-
-    public static IDictionary<string, object> FlattenAndSerializeToDictionary(this object o)
-    {
-        IDictionary<CachedPropertyInfo, object> properties = SerializeToDictionary(o);
-        
-        foreach (KeyValuePair<CachedPropertyInfo, object> property in properties)
-        {
-            if (property.Key.InnerMetaData.PropertyType.IsValueType || property.Key.InnerMetaData.PropertyType == typeof(string))
-            {
-                properties[property.Key] = property.Value;
-                continue;
-            }
-
-            properties[property.Key] = FlattenAndSerializeToDictionary(property.Value);
-        }
-
-        return properties;
     }
 
     /*object GetProperty(object o, string property)

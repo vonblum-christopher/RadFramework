@@ -4,26 +4,25 @@ using RadFramework.Libraries.Ioc.Registrations;
 
 namespace RadFramework.Libraries.Ioc.Builder;
 
-public class IocBuilderRegistry : ICloneable<IocBuilderRegistry>
+public class IocBuilderRegistry<TIocKey> : ICloneable<IocBuilderRegistry<TIocKey>> where TIocKey : ICloneable<TIocKey>
 {
-    public ConcurrentDictionary<IocKey, (IocDependency dependency, InstanceContainerBase containerBase)> Registrations = new();
+    public ConcurrentDictionary<TIocKey, IocDependency<TIocKey>> Registrations = new();
 
-    public IocBuilderRegistry Clone()
+    public IocBuilderRegistry<TIocKey> Clone()
     {
-        return new IocBuilderRegistry
+        return new IocBuilderRegistry<TIocKey>()
         {
-            Registrations = new ConcurrentDictionary<IocKey, (IocDependency dependency, InstanceContainerBase containerBase)>(
-                (IEnumerable<KeyValuePair<IocKey, (IocDependency dependency, InstanceContainerBase containerBase)>>)
-                Registrations
-                    .ToDictionary(
-                        k => k.Key.Clone(),
-                        v => (v.Value.dependency.Clone(), v.Value.containerBase))
+            Registrations = new ConcurrentDictionary<TIocKey, IocDependency<TIocKey>>
+            (Registrations
+                .ToDictionary(
+                    k => k.Key.Clone(),
+                    v => v.Value.Clone()))
         };
     }
 
-    public IocDependency this[IocKey iocKey]
+    public IocDependency<TIocKey> this[TIocKey namedIocKey]
     {
-        get => Registrations[iocKey].dependency;
-        set => Registrations[iocKey] = value;
+        get => Registrations[namedIocKey];
+        set => Registrations[namedIocKey] = value;
     }
 }

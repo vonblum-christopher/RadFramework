@@ -6,10 +6,10 @@ namespace RadFramework.Libraries.Pipelines.Base;
 
 public class ExtensionPipelineBase
 {
-    private IIocContainer container;
+    private ITypeOnlyIocContainer container;
     public LinkedList<IExtensionPipe> pipes;
 
-    public ExtensionPipelineBase(IEnumerable<PipeDefinition> pipeDefinitions, IIocContainer container)
+    public ExtensionPipelineBase(IEnumerable<PipeDefinition> pipeDefinitions, ITypeOnlyIocContainer container)
     {
         this.container = container;
         this.pipes = new LinkedList<IExtensionPipe>(pipeDefinitions.Select(CreatePipe));

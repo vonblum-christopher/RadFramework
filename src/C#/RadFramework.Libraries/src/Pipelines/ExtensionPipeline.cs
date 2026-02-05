@@ -8,7 +8,7 @@ namespace RadFramework.Libraries.Pipelines;
 
 public class ExtensionPipeline<TInput, TOutput> : ExtensionPipelineBase
 {
-    public ExtensionPipeline(PipelineBuilder builder, IIocContainer container) : base(builder.Clone().PipeDefinitions, container)
+    public ExtensionPipeline(PipelineBuilder builder, ITypeOnlyIocContainer container) : base(builder.Clone().PipeDefinitions, container)
     {
     }
     

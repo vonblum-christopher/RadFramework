@@ -3,51 +3,26 @@ using RadFramework.Libraries.Ioc.Builder;
 
 namespace RadFramework.Libraries.Tests.Ioc;
 
-public class Ioc_Builder
+public partial class Ioc_Builder
 {
     [Test]
     public void OneBuilderManyContainers()
     {
-        IocContainerBuilder builder = 
-            new IocContainerBuilder()
-                .RegisterTransient(typeof(Test))
-                .RegisterSingleton(typeof(TestDep));
+        IocContainerBuilder<Type> builder = 
+            new IocContainerBuilder<Type>()
+                .RegisterTransient(typeof(TestDep1))
+                .RegisterSingleton(typeof(TestDep2));
         
-        IocContainer container = new IocContainer(builder);
+        TypeOnlyIocContainer container = new TypeOnlyIocContainer(builder);
 
-        Test res = container.Resolve<Test>();
+        TestDep1 res = container.Resolve<TestDep1>();
         
-        IocContainer container2 = new IocContainer(builder);
+        TypeOnlyIocContainer container2 = new TypeOnlyIocContainer(builder);
 
-        Test res2 = container2.Resolve<Test>();
+        TestDep1 res2 = container2.Resolve<TestDep1>();
         
         Assert.That(res != res2);
         Assert.That(container != container2);
-        Assert.That(container.Registry != container2.Registry);
-    }
-    
-    public class Test
-    {
-        public TestDep Dep { get; set; }
-        private readonly TestDep dep;
-
-        public Test(TestDep dep)
-        {
-            this.dep = dep;
-        }
-
-        private TestDep fromMethod;
-
-        public void InjectHere(TestDep dep)
-        {
-            fromMethod = dep;
-        }
-    }
-
-    public class TestDep
-    {
-        public TestDep()
-        {
-        }
+        Assert.That(container.BuilderRegistry != container2.BuilderRegistry);
     }
 }

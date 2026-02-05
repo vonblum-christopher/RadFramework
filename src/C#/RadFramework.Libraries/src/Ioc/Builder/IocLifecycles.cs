@@ -2,8 +2,8 @@ namespace RadFramework.Libraries.Ioc.Builder;
 
 public static class IocLifecycles
 {
-    public static readonly string Transient = "Transient";
-    public static readonly string Singleton = "Singleton";
-    public static readonly string Scoped = "Scoped";
-    public static readonly string ThreadScoped = "ThreadScoped";
+    public const string Transient = "Transient";
+    public const string Singleton = "Singleton";
+    public const string Scoped = "Scoped";
+    public const string ThreadScoped = "ThreadScoped";
 }

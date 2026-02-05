@@ -2,13 +2,13 @@ using System.Reflection;
 
 namespace RadFramework.Libraries.Reflection.DispatchProxy
 {
-    public class InterfaceProxy : System.Reflection.DispatchProxy
+    public class ObjectDictionaryProxy : System.Reflection.DispatchProxy
     {
         Dictionary<string, object> properties = new();
         
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            if (!targetMethod.IsSpecialName)
+            if (!targetMethod.Name == "Proper")
             {
                 return null;
             }

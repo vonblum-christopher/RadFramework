@@ -6,31 +6,31 @@ using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
 {
-    public class DependencyInjectionLambdaGenerator
+    public class DependencyInjectionLambdaGenerator<TIocKey>
     {
         private static CachedMethodInfo dependencyMethod;
         private static CachedMethodInfo dependencyMethodWithKey;
         
         static DependencyInjectionLambdaGenerator()
         {
-            CachedType argType = typeof (IocContainer);
+            CachedType argType = typeof (TypeOnlyIocContainer);
 
             dependencyMethod = argType
-                .Query(t => t.GetMethod(nameof(IocContainer.Resolve), new Type[] {typeof(Type)}));
+                .Query(t => t.GetMethod(nameof(TypeOnlyIocContainer.Resolve), new Type[] {typeof(Type)}));
             
             dependencyMethodWithKey = argType
-                .Query(t => t.GetMethod(nameof(IocContainer.Resolve), new Type[] { typeof(Type), typeof(string) }));
+                .Query(t => t.GetMethod(nameof(TypeOnlyIocContainer.Resolve), new Type[] { typeof(Type), typeof(string) }));
         }
 
         public DependencyInjectionLambdaGenerator()
         {
         }
         
-        public Func<IocContainer, object> CreateConstructorInjectionLambda(IocDependency dependency, CachedConstructorInfo injectionConstructor)
+        public Func<TypeOnlyIocContainer, object> CreateConstructorInjectionLambda(IocDependency<TIocKey> dependency, CachedConstructorInfo injectionConstructor)
         {
             Type returnType = typeof (object);
             
-            ParameterExpression containerArg = Expression.Parameter(typeof(IocContainer), "container");
+            ParameterExpression containerArg = Expression.Parameter(typeof(TypeOnlyIocContainer), "container");
             ParameterExpression constructionResult = Expression.Variable(returnType, "constructionResult");
 
             var returnLabel = Expression.Label(returnType, "returnLabel");
@@ -48,7 +48,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
                                           };
 
             return Expression
-                .Lambda<Func<IocContainer, object>>(
+                .Lambda<Func<TypeOnlyIocContainer, object>>(
                     Expression
                         .Block(
                             new List<ParameterExpression> { constructionResult },
@@ -57,9 +57,9 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
                 .Compile();
         }
 
-        public Action<IocContainer, object> CreateMethodInjectionLambda(Type targetType, CachedMethodInfo injectionMethod)
+        public Action<TypeOnlyIocContainer, object> CreateMethodInjectionLambda(Type targetType, CachedMethodInfo injectionMethod)
         {
-            ParameterExpression containerArg = Expression.Parameter(typeof(IocContainer), "container");
+            ParameterExpression containerArg = Expression.Parameter(typeof(TypeOnlyIocContainer), "container");
             ParameterExpression injectionTarget = Expression.Parameter(typeof(object), "injectionTarget");
             ParameterExpression typedInjectionTarget = Expression.Variable(targetType, "typedInjectionTarget");
 
@@ -76,13 +76,13 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
 
 
             return Expression
-                .Lambda<Action<IocContainer, object>>(Expression.Block(new [] { typedInjectionTarget }, methodBody), containerArg, injectionTarget)
+                .Lambda<Action<TypeOnlyIocContainer, object>>(Expression.Block(new [] { typedInjectionTarget }, methodBody), containerArg, injectionTarget)
                 .Compile();
         }
 
-        public Action<IocContainer, object> CreatePropertyInjectionLambda(Type targetType, CachedPropertyInfo[] injectionProperties)
+        public Action<TypeOnlyIocContainer, object> CreatePropertyInjectionLambda(Type targetType, CachedPropertyInfo[] injectionProperties)
         {
-            ParameterExpression containerArg = Expression.Parameter(typeof(IocContainer), "container");
+            ParameterExpression containerArg = Expression.Parameter(typeof(TypeOnlyIocContainer), "container");
             ParameterExpression injectionTarget = Expression.Parameter(typeof(object), "injectionTarget");
 
             ParameterExpression typedInjectionTarget = Expression.Parameter(targetType, "typedInjectionTarget");
@@ -96,13 +96,13 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
             {
                 MemberExpression propertyExpression = Expression.Property(typedInjectionTarget, propertyInfo);
 
-                Expression argInjectionPlaceholder = DependencyPlacehlder(containerArg, propertyInfo.PropertyType);
+                Expression argInjectionPlaceholder = DependencyPlaceholder(containerArg, propertyInfo.PropertyType);
 
                 injectionExpressions.Add(Expression.Assign(propertyExpression, argInjectionPlaceholder));
             }
 
             return Expression
-                    .Lambda<Action<IocContainer, object>>(
+                    .Lambda<Action<TypeOnlyIocContainer, object>>(
                         Expression.Block(
                             new[] { typedInjectionTarget }, 
                             injectionExpressions), 
@@ -126,7 +126,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
                     continue;
                 }
                 
-                arguments.Add(DependencyPlacehlder(containerInstance, parameter.InnerMetaData.ParameterType));
+                arguments.Add(DependencyPlaceholder(containerInstance, parameter.InnerMetaData.ParameterType));
             }
 
             return arguments.ToArray();
@@ -143,7 +143,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
                     placeholderType);
         }
         
-        private static Expression DependencyPlacehlder(Expression instance, Type placeholderType)
+        private static Expression DependencyPlaceholder(Expression instance, Type placeholderType)
         {
             return Expression
                 .Convert(Expression

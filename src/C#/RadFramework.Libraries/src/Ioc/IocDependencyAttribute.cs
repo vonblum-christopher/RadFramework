@@ -4,7 +4,7 @@ namespace RadFramework.Libraries.Ioc;
 
 public class IocDependencyAttribute : Attribute
 {
-    public IocKey Key { get; set; } = new();
+    public NamedIocKey Key { get; set; } = new();
     
     public IocDependencyAttribute()
     {

@@ -4,17 +4,17 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Builder;
 
-public class IocDependency : ICloneable<IocDependency>
+public class IocDependency<TIocKey> : ICloneable<IocDependency<TIocKey>>
 {
-    public IocKey Key { get; set; }
+    public TIocKey Key { get; set; }
     public CachedType ImplementationType { get; set; }
     public InjectionOptions InjectionOptions { get; set; }
     public string IocLifecycle { get; set; }
-    public Func<IocContainer, object> FactoryFunc { get; set; }
+    public Func<IocDependency<TIocKey>, TypeOnlyIocContainer, object> FactoryFunc { get; set; }
     
-    public IocDependency Clone()
+    public IocDependency<TIocKey> Clone()
     {
-        return new IocDependency
+        return new IocDependency<TIocKey>
         {
             Key = Key,
             ImplementationType = ImplementationType,

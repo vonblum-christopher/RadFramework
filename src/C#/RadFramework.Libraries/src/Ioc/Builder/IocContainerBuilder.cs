@@ -4,9 +4,9 @@ using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc.Builder;
 
-public class IocContainerBuilder : ICloneable<IocContainerBuilder>
+public class IocContainerBuilder<TIocKey> : ICloneable<IocContainerBuilder<TIocKey>> where TIocKey : ICloneable<TIocKey>
 {
-    private IocRegistry registrations = new();
+    private IocBuilderRegistry<TIocKey> registrations = new();
     
     public InjectionOptions InjectionOptions { get; set; } = new()
     {
@@ -17,13 +17,11 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         ConstructorParameterInjection = infos => infos
     };
 
-    public IocRegistry IocRegistry => registrations;
+    public IocBuilderRegistry<TIocKey> IocBuilderRegistry => registrations;
 
-    public IocContainerBuilder RegisterTransient(Type tInterface, Type tImplementation)
+    public IocContainerBuilder<TIocKey> RegisterTransient(TIocKey key, Type tImplementation)
     {
-        var key = new IocKey { KeyType = tInterface };
-        
-        registrations[key] = new IocDependency
+        registrations[key] = new IocDependency<TIocKey>
         {
             Key = key,
             ImplementationType = tImplementation,
@@ -34,11 +32,11 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterTransient<TInterface, TImplementation>()
+    public IocContainerBuilder<TIocKey> RegisterTransient<TInterface, TImplementation>()
     {
-        var key = new IocKey { KeyType = typeof(TInterface)};
+        TIocKey key = new TIocKey { KeyType = typeof(TInterface)};
         
-        registrations[key] = new IocDependency
+        registrations[key] = new IocDependency<TIocKey>
         {
             Key = key,
             ImplementationType = typeof(TImplementation),
@@ -49,9 +47,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterTransient(Type tImplementation)
+    public IocContainerBuilder<TIocKey> RegisterTransient(Type tImplementation)
     {
-        var key = new IocKey { KeyType = tImplementation};
+        var key = new NamedIocKey { KeyType = tImplementation};
         
         registrations[key] = new IocDependency
         {
@@ -64,9 +62,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
     
-    public IocContainerBuilder RegisterTransient<TImplementation>()
+    public IocContainerBuilder<TIocKey> RegisterTransient<TImplementation>()
     {
-        var key = new IocKey { KeyType = typeof(TImplementation)};
+        var key = new NamedIocKey { KeyType = typeof(TImplementation)};
         
         registrations[key] = new IocDependency
         {
@@ -79,9 +77,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterSemiAutomaticTransient(Type tImplementation, Func<IocContainer, object> construct)
+    public IocContainerBuilder<TIocKey> RegisterSemiAutomaticTransient(Type tImplementation, Func<TypeOnlyIocContainer, object> construct)
     {
-        var key = new IocKey { KeyType = tImplementation};
+        var key = new NamedIocKey { KeyType = tImplementation};
         
         registrations[key] = new IocDependency
         {
@@ -95,11 +93,11 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
     
-    public IocContainerBuilder RegisterSemiAutomaticTransient<TImplementation>(Func<IocContainer, object> construct)
+    public IocContainerBuilder<TIocKey> RegisterSemiAutomaticTransient<TImplementation>(Func<TypeOnlyIocContainer, object> construct)
     {
         Type tImplementation = typeof(TImplementation);
         
-        var key = new IocKey { KeyType = tImplementation};
+        var key = new NamedIocKey { KeyType = tImplementation};
         
         registrations[key] = new IocDependency
         {
@@ -113,9 +111,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
     
-    public IocContainerBuilder RegisterSingleton(Type tInterface, Type tImplementation)
+    public IocContainerBuilder<TIocKey> RegisterSingleton(Type tInterface, Type tImplementation)
     {
-        var key = new IocKey { KeyType = tInterface};
+        var key = new NamedIocKey { KeyType = tInterface};
         
         registrations[key] = new IocDependency
         {
@@ -128,9 +126,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterSingleton<TInterface, TImplementation>()
+    public IocContainerBuilder<TIocKey> RegisterSingleton<TInterface, TImplementation>()
     {
-        var key = new IocKey { KeyType = typeof(TInterface)};
+        var key = new NamedIocKey { KeyType = typeof(TInterface)};
         
         registrations[key] =
             new IocDependency
@@ -144,9 +142,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterSingleton(Type tImplementation)
+    public IocContainerBuilder<TIocKey> RegisterSingleton(Type tImplementation)
     {
-        var key = new IocKey { KeyType = tImplementation};
+        var key = new NamedIocKey { KeyType = tImplementation};
         
         registrations[key] =
             new IocDependency
@@ -160,11 +158,11 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
     
-    public IocContainerBuilder RegisterSingleton<TImplementation>()
+    public IocContainerBuilder<TIocKey> RegisterSingleton<TImplementation>()
     {
         Type tImplementation = typeof(TImplementation);
         
-        var key = new IocKey { KeyType = tImplementation};
+        var key = new NamedIocKey { KeyType = tImplementation};
         
         registrations[key] = new IocDependency
         {
@@ -177,9 +175,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainerBuilder RegisterSemiAutomaticSingleton(Type tImplementation, Func<IocContainer, object> construct)
+    public IocContainerBuilder<TIocKey> RegisterSemiAutomaticSingleton(Type tImplementation, Func<TypeOnlyIocContainer, object> construct)
     {
-        var key = new IocKey { KeyType = tImplementation};
+        var key = new NamedIocKey { KeyType = tImplementation};
         
         registrations[key] =
             new IocDependency
@@ -194,9 +192,9 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
     
-    public IocContainerBuilder RegisterSemiAutomaticSingleton<TImplementation>(Func<IocContainer, object> construct)
+    public IocContainerBuilder<TIocKey> RegisterSemiAutomaticSingleton<TImplementation>(Func<TypeOnlyIocContainer, object> construct)
     {
-        var key = new IocKey { KeyType = typeof(TImplementation)  };
+        var key = new NamedIocKey { KeyType = typeof(TImplementation)  };
         
         registrations[key] =
             new IocDependency
@@ -211,14 +209,14 @@ public class IocContainerBuilder : ICloneable<IocContainerBuilder>
         return this;
     }
 
-    public IocContainer CreateContainer()
+    public TypeOnlyIocContainer CreateContainer()
     {
-        return new IocContainer(this);
+        return new TypeOnlyIocContainer(this);
     }
 
-    public IocContainerBuilder Clone()
+    public IocContainerBuilder<TIocKey> Clone()
     {
-        return new IocContainerBuilder
+        return new IocContainerBuilder<TIocKey>
         {
             InjectionOptions = InjectionOptions.Clone(),
             registrations = registrations.Clone()

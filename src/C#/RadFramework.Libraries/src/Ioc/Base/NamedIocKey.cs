@@ -1,9 +1,11 @@
+using System.Collections.Immutable;
 using RadFramework.Libraries.Abstractions;
+using RadFramework.Libraries.Ioc.Base;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc;
 
-public struct NamedIocKey : ICloneable<NamedIocKey>
+public struct NamedIocKey : IIocKey, ICloneable<NamedIocKey>
 {
     public CachedType KeyType { get; set; }
     public string KeyName { get; set; }
@@ -44,4 +46,9 @@ public struct NamedIocKey : ICloneable<NamedIocKey>
     {
         return !b.Equals(a);
     }
+
+    public IImmutableDictionary<string, object> KeyProperties { get
+    {
+        
+    };
 }

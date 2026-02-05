@@ -11,9 +11,9 @@ public class TypeOnlyIocContainer : ITypeOnlyIocContainer, ICloneable<TypeOnlyIo
 {
     public IEnumerable<TypeOnlyIocContainer> ParentContainers { get; private set; } = new List<TypeOnlyIocContainer>();
     public InjectionOptions InjectionOptions { get; private set; } = new InjectionOptions();
-    public InstanceContainerRegistry BuilderRegistry { get; private set; }
+    public InstanceContainerRegistry<Type> BuilderRegistry { get; private set; }
     
-    public ImmutableList<IocDependency> ServiceList 
+    public ImmutableList<IocDependency<Type>> ServiceList 
         => BuilderRegistry.Registrations.ToImmutableList();
 
     public IImmutableDictionary<NamedIocKey, IocDependency> ServiceLookup
@@ -25,9 +25,9 @@ public class TypeOnlyIocContainer : ITypeOnlyIocContainer, ICloneable<TypeOnlyIo
                     v => v);
     }
     
-    public TypeOnlyIocContainer(IocBuilderRegistry iocBuilderRegistry)
+    public TypeOnlyIocContainer(IocBuilderRegistry<Type> iocBuilderRegistry)
     {
-        BuilderRegistry = new InstanceContainerRegistry(iocBuilderRegistry);
+        BuilderRegistry = new InstanceContainerRegistry<Type>(iocBuilderRegistry);
         InjectionOptions = InjectionOptions.Clone();
     }
 

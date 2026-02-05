@@ -8,4 +8,8 @@
         <RootNamespace>RadDevelopers.Servers.Database</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RadFramework.Libraries\RadFramework.Libraries.csproj" />
+    </ItemGroup>
+
 </Project>

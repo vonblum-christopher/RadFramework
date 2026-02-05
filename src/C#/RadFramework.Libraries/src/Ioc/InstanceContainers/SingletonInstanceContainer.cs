@@ -4,21 +4,21 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class SingletonInstanceContainer : InstanceContainerBase
+    public class SingletonInstanceContainer<TIocKey> : InstanceContainerBase<TIocKey> where TIocKey : ICloneable<TIocKey>
     {
         private Patterns.Lazy<object> singleton;
 
-        private Func<IocContainer, object> factoryFunc;
+        private Func<TypeOnlyIocContainer, object> factoryFunc;
 
-        private IocDependency dependency;
+        private IocDependency<TIocKey> dependency;
         
-        public override void Initialize(IocDependency dependency)
+        public override void Initialize(IocDependency<TIocKey> dependency)
         {
             dependency = this.dependency;
             factoryFunc = dependency.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency);
         }
 
-        public override object ResolveService(IocContainer container, IocDependency dependency)
+        public override object ResolveService(TypeOnlyIocContainer container, IocDependency<TIocKey> dependency)
         {
             if (singleton == null)
             {
@@ -28,9 +28,9 @@ namespace RadFramework.Libraries.Ioc.Registrations
             return singleton.Value;
         }
 
-        public override InstanceContainerBase Clone()
+        public override InstanceContainerBase<TIocKey> Clone()
         {
-            return new SingletonInstanceContainer()
+            return new SingletonInstanceContainer<TIocKey>()
                 {
                     IocDependency = dependency.Clone()
                 };

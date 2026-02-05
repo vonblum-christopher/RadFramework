@@ -35,7 +35,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
         {
         }
         
-        public void RenderServiceOverview(IIocContainer iocContainer)
+        public void RenderServiceOverview(ITypeOnlyIocContainer typeOnlyIocContainer)
         {
             while (true)
             {
@@ -45,7 +45,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
                 
                 Dictionary<int, IocDependency> choices = new();
 
-                foreach (IocDependency service in iocContainer.ServiceList)
+                foreach (IocDependency service in typeOnlyIocContainer.ServiceList)
                 {
                     _console.WriteLine($"{i}) {service.Key.KeyType.InnerMetaData.FullName}");
                     choices[i] = service;
@@ -80,7 +80,7 @@ namespace RadFramework.Libraries.GenericUi.Console.Interaction
 
                 RenderService(
                     selectedDependency.ImplementationType, 
-                    iocContainer
+                    typeOnlyIocContainer
                         .Resolve(selectedDependency.ImplementationType));
             }
         }
