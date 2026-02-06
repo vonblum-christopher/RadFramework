@@ -1,22 +1,23 @@
 using System.Diagnostics;
 using RadFramework.Libraries.Abstractions;
+using RadFramework.Libraries.Ioc.Base;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Builder;
 
-public class IocDependency<TIocKey> : ICloneable<IocDependency<TIocKey>>
+public class IocDependency : ICloneable<IocDependency>
 {
-    public TIocKey Key { get; set; }
+    public IIocKey Key { get; set; }
     public CachedType ImplementationType { get; set; }
     public InjectionOptions InjectionOptions { get; set; }
     public string IocLifecycle { get; set; }
-    public Func<IocDependency<TIocKey>, TypeOnlyIocContainer, object> FactoryFunc { get; set; }
+    public Func<IocDependency, IIocContainer, object> FactoryFunc { get; set; }
     
-    public IocDependency<TIocKey> Clone()
+    public IocDependency Clone()
     {
-        return new IocDependency<TIocKey>
+        return new IocDependency
         {
-            Key = Key,
+            Key = Key.Clone(),
             ImplementationType = ImplementationType,
             InjectionOptions = InjectionOptions.Clone(),
             IocLifecycle = IocLifecycle

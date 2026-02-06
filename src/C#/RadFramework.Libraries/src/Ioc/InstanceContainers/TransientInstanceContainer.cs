@@ -1,30 +1,31 @@
 ﻿using System.Collections.Concurrent;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class TransientInstanceContainer<TIocKey> : InstanceContainerBase<TIocKey> where TIocKey : ICloneable<TIocKey>
+    public class TransientInstanceContainer : InstanceContainerBase
     {
-        private Patterns.Lazy<Func<TypeOnlyIocContainer, object>> construct;
+        private Patterns.Lazy<Func<IocDependency, IIocContainer, object>> construct;
         
-        public override void Initialize(IocDependency<TIocKey> dependency)
+        public override void Initialize(IocDependency dependency)
         {
-            this.construct = new Patterns.Lazy<Func<TypeOnlyIocContainer, object>>(
+            this.construct = new Patterns.Lazy<Func<IocDependency, IIocContainer, object>>(
                 () => 
                     dependency.FactoryFunc 
                     ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency));
         }
 
-        public override object ResolveService(TypeOnlyIocContainer container, IocDependency<TIocKey> dependency)
+        public override object ResolveService(TypeOnlyIocContainer container, IocDependency dependency)
         {
-            return construct.Value(container);
+            return construct.Value(dependency, container);
         }
 
-        public override InstanceContainerBase<TIocKey> Clone()
+        public override InstanceContainerBase Clone()
         {
-            return new TransientInstanceContainer<TIocKey>()
+            return new TransientInstanceContainer()
             {
                 IocDependency = IocDependency.Clone()
             };

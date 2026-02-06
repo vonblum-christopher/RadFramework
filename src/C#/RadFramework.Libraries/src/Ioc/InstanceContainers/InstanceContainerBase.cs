@@ -4,17 +4,17 @@ using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public abstract class InstanceContainerBase<TIocKey> : ICloneable<InstanceContainerBase<TIocKey>> where TIocKey : ICloneable<TIocKey>
+    public abstract class InstanceContainerBase : ICloneable<InstanceContainerBase>
     {
-        public IocDependency<TIocKey> IocDependency { get; set; }
+        public IocDependency IocDependency { get; set; }
 
-        public virtual void Initialize(IocDependency<TIocKey> dependency)
+        public virtual void Initialize(IocDependency dependency)
         {
             IocDependency = dependency;
         }
         
-        public abstract object ResolveService(TypeOnlyIocContainer container, IocDependency<TIocKey> dependency);
+        public abstract object ResolveService(TypeOnlyIocContainer container, IocDependency dependency);
         
-        public abstract InstanceContainerBase<TIocKey> Clone();
+        public abstract InstanceContainerBase Clone();
     }
 }

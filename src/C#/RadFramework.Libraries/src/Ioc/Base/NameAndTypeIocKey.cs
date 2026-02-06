@@ -1,26 +1,25 @@
-using System.Collections.Immutable;
-using RadFramework.Libraries.Abstractions;
-using RadFramework.Libraries.Ioc.Base;
 using RadFramework.Libraries.Reflection.Caching;
 
-namespace RadFramework.Libraries.Ioc;
+namespace RadFramework.Libraries.Ioc.Base;
 
-public class NamedIocKey : IIocKey
+public class NameAndTypeIocKey : IIocKey
 {
     public string KeyName { get; set; }
+    public CachedType KeyType { get; set; }
     
     public SortedDictionary<string, object> KeyProperties =>
         new()
         {
+            { nameof(KeyType), KeyType },
             { nameof(KeyName), KeyName }
         };
 
     public IIocKey Clone()
     {
-        return new NamedIocKey
+        return new NameAndTypeIocKey
         {
-            KeyName = KeyName
+            KeyName = KeyName,
+            KeyType = KeyType
         };
     }
-
 }

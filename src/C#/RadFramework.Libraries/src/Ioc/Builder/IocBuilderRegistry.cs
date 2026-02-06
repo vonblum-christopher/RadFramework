@@ -1,18 +1,19 @@
 using System.Collections.Concurrent;
 using RadFramework.Libraries.Abstractions;
+using RadFramework.Libraries.Ioc.Base;
 using RadFramework.Libraries.Ioc.Registrations;
 
 namespace RadFramework.Libraries.Ioc.Builder;
 
-public class IocBuilderRegistry<TIocKey> : ICloneable<IocBuilderRegistry<TIocKey>> where TIocKey : ICloneable<TIocKey>
+public class IocBuilderRegistry : ICloneable<IocBuilderRegistry>
 {
-    public ConcurrentDictionary<TIocKey, IocDependency<TIocKey>> Registrations = new();
+    public ConcurrentDictionary<IIocKey, IocDependency> Registrations = new();
 
-    public IocBuilderRegistry<TIocKey> Clone()
+    public IocBuilderRegistry Clone()
     {
-        return new IocBuilderRegistry<TIocKey>()
+        return new IocBuilderRegistry()
         {
-            Registrations = new ConcurrentDictionary<TIocKey, IocDependency<TIocKey>>
+            Registrations = new ConcurrentDictionary<IIocKey, IocDependency>
             (Registrations
                 .ToDictionary(
                     k => k.Key.Clone(),
@@ -20,7 +21,7 @@ public class IocBuilderRegistry<TIocKey> : ICloneable<IocBuilderRegistry<TIocKey
         };
     }
 
-    public IocDependency<TIocKey> this[TIocKey namedIocKey]
+    public IocDependency this[IIocKey namedIocKey]
     {
         get => Registrations[namedIocKey];
         set => Registrations[namedIocKey] = value;

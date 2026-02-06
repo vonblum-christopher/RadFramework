@@ -4,24 +4,24 @@ using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class TransientFactoryInstanceContainer<TIocKey> : InstanceContainerBase<TIocKey> where TIocKey : ICloneable<TIocKey>
+    public class TransientFactoryInstanceContainer : InstanceContainerBase
     {
-        private Func<TypeOnlyIocContainer, object> factoryFunc;
+        private Func<IocDependency, IIocContainer, object> factoryFunc;
         
-        public override void Initialize(IocDependency<TIocKey> dependency)
+        public override void Initialize(IocDependency dependency)
         {
             factoryFunc = dependency.FactoryFunc
                           ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency);
         }
 
-        public override object ResolveService(TypeOnlyIocContainer container, IocDependency<TIocKey> dependency)
+        public override object ResolveService(TypeOnlyIocContainer container, IocDependency dependency)
         {
-            return factoryFunc(container);
+            return factoryFunc(dependency, container);
         }
 
-        public override InstanceContainerBase<TIocKey> Clone()
+        public override InstanceContainerBase Clone()
         {
-            return new TransientInstanceContainer<TIocKey>()
+            return new TransientInstanceContainer()
             {
                 IocDependency = IocDependency.Clone(),
             };

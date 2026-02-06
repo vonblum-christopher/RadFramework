@@ -4,12 +4,12 @@ using RadFramework.Libraries.Ioc.Builder;
 
 namespace RadFramework.Libraries.Ioc.Registrations;
 
-public class InstanceContainerRegistry<TIocKey> where TIocKey : ICloneable<TIocKey>
+public class InstanceContainerRegistry
 {
-    private IocBuilderRegistry<TIocKey> builderRegistry;
+    private IocBuilderRegistry builderRegistry;
 
-    private ConcurrentDictionary<NamedIocKey, InstanceContainerBase<TIocKey>> Containers;
-    public InstanceContainerRegistry(IocBuilderRegistry<TIocKey> builderRegistry)
+    private ConcurrentDictionary<NamedIocKey, InstanceContainerBase> Containers;
+    public InstanceContainerRegistry(IocBuilderRegistry builderRegistry)
     {
         this.builderRegistry = builderRegistry.Clone();
     }

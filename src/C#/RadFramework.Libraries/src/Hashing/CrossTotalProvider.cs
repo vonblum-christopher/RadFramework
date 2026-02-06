@@ -8,11 +8,14 @@ public class CrossTotalProvider : IHashingProvider
     {
         ulong crossTotal = 0;
 
-        foreach (var b in data)
+        unchecked
         {
-            crossTotal += b;
+            foreach (var b in data)
+            {
+                crossTotal += b;
+            }            
         }
-
+        
         return BitConverter.GetBytes(crossTotal);
     }
 }

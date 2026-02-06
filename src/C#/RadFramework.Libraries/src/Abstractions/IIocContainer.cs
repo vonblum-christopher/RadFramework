@@ -1,16 +1,17 @@
 using System.Collections.Immutable;
+using RadFramework.Libraries.Ioc.Base;
 using RadFramework.Libraries.Ioc.Builder;
 
 namespace RadFramework.Libraries.Abstractions;
 
-public interface IIocContainer<TIocKey>
+public interface IIocContainer
 {
-    ImmutableList<IocDependency<TIocKey>> ServiceList { get; }
-    IImmutableDictionary<TIocKey, IocDependency<TIocKey>> ServiceLookup { get; }
+    ImmutableList<IocDependency> ServiceList { get; }
+    IImmutableDictionary<IIocKey, IocDependency> ServiceLookup { get; }
         
-    bool HasService(TIocKey key);
+    bool HasService(IIocKey key);
         
-    object Resolve(TIocKey key);
+    object Resolve(IIocKey key);
 
-    object Activate(TIocKey key);
+    object Activate(IIocKey key);
 }

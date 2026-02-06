@@ -1,36 +1,37 @@
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Ioc.Builder;
 using RadFramework.Libraries.Ioc.ConstructionLambdaFactory;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Registrations
 {
-    public class SingletonInstanceContainer<TIocKey> : InstanceContainerBase<TIocKey> where TIocKey : ICloneable<TIocKey>
+    public class SingletonInstanceContainer : InstanceContainerBase
     {
         private Patterns.Lazy<object> singleton;
 
-        private Func<TypeOnlyIocContainer, object> factoryFunc;
+        private Func<IocDependency, IIocContainer, object> factoryFunc;
 
-        private IocDependency<TIocKey> dependency;
+        private IocDependency dependency;
         
-        public override void Initialize(IocDependency<TIocKey> dependency)
+        public override void Initialize(IocDependency dependency)
         {
             dependency = this.dependency;
             factoryFunc = dependency.FactoryFunc ?? ServiceFactoryLambdaGenerator.DefaultInstance.CreateTypeFactoryLambda(dependency);
         }
 
-        public override object ResolveService(TypeOnlyIocContainer container, IocDependency<TIocKey> dependency)
+        public override object ResolveService(TypeOnlyIocContainer container, IocDependency dependency)
         {
             if (singleton == null)
             {
-                singleton = new Patterns.Lazy<object>(() => factoryFunc(container));
+                singleton = new Patterns.Lazy<object>(() => factoryFunc(dependency, container));
             }
             
             return singleton.Value;
         }
 
-        public override InstanceContainerBase<TIocKey> Clone()
+        public override InstanceContainerBase Clone()
         {
-            return new SingletonInstanceContainer<TIocKey>()
+            return new SingletonInstanceContainer()
                 {
                     IocDependency = dependency.Clone()
                 };

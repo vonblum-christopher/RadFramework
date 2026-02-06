@@ -1,9 +1,10 @@
 using System.Collections.Immutable;
+using RadFramework.Libraries.Abstractions;
 using RadFramework.Libraries.Reflection.Caching;
 
 namespace RadFramework.Libraries.Ioc.Base;
 
-public interface IIocKey
+public interface IIocKey : ICloneable<IIocKey>
 {
-    IImmutableDictionary<string, object> KeyProperties { get; set; }
+    SortedDictionary<string, object> KeyProperties { get; }
 }

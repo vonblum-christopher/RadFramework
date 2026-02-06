@@ -8,7 +8,7 @@ public class InjectionLambdaManager<TIocKey> where TIocKey : ICloneable<TIocKey>
 {
     private static ConcurrentDictionary<TIocKey, Func<TypeOnlyIocContainer, object>> factoryCache = new();
     
-    public static Func<TypeOnlyIocContainer, object> GetOrCreateConstructionFunc(TIocKey key, IocDependency<TIocKey> registration)
+    public static Func<TypeOnlyIocContainer, object> GetOrCreateConstructionFunc(TIocKey key, IocDependency registration)
     {
         return factoryCache.GetOrAdd(
             key,

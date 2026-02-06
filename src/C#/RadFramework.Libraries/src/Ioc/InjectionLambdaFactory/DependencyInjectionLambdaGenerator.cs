@@ -6,7 +6,7 @@ using RadFramework.Libraries.Reflection.Caching.Queries;
 
 namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
 {
-    public class DependencyInjectionLambdaGenerator<TIocKey>
+    public class DependencyInjectionLambdaGenerator
     {
         private static CachedMethodInfo dependencyMethod;
         private static CachedMethodInfo dependencyMethodWithKey;
@@ -26,7 +26,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
         {
         }
         
-        public Func<TypeOnlyIocContainer, object> CreateConstructorInjectionLambda(IocDependency<TIocKey> dependency, CachedConstructorInfo injectionConstructor)
+        public Func<TypeOnlyIocContainer, object> CreateConstructorInjectionLambda(IocDependency dependency, CachedConstructorInfo injectionConstructor)
         {
             Type returnType = typeof (object);
             
@@ -122,7 +122,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
 
                 if (attribute != null && attribute.Key != null && attribute.Key.KeyName != null)
                 {
-                    arguments.Add(NamedDependencPlaceholder(containerInstance, parameter.InnerMetaData.ParameterType, attribute.Key.KeyName));
+                    arguments.Add(NamedDependencyPlaceholder(containerInstance, parameter.InnerMetaData.ParameterType, attribute.Key.KeyName));
                     continue;
                 }
                 
@@ -132,7 +132,7 @@ namespace RadFramework.Libraries.Ioc.ConstructionLambdaFactory
             return arguments.ToArray();
         }
 
-        private static Expression NamedDependencPlaceholder(Expression instance, Type placeholderType, string iocKeyString)
+        private static Expression NamedDependencyPlaceholder(Expression instance, Type placeholderType, string iocKeyString)
         {
             return Expression
                 .Convert(Expression
